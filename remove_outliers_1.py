@@ -2,7 +2,7 @@ import json
 import math
 
 
-def get_all(file='./filtered_books.txt'):
+def get_all(file='./books.txt'):
     books = []
     with open(file, 'r') as f:
         for line in f.readlines():
@@ -11,20 +11,20 @@ def get_all(file='./filtered_books.txt'):
 
 
 def write_all(data):
-    with open('./filtered_books.txt', 'w') as f:
+    with open('./filtered_books_1.txt', 'w') as f:
         f.writelines(data)
 
 
 def get_books_without(column):
     found = []
-    with open('./filtered_books.txt', 'r') as f:
+    with open('./books.txt', 'r') as f:
         for line in f.readlines():
             book = json.loads(line)
             if column not in book.keys(): found.append(line)
     return found
 
 
-def get_books_with(column, file='./filtered_books.txt'):
+def get_books_with(column, file='./books.txt'):
     found = []
     with open(file, 'r') as f:
         for line in f.readlines():
@@ -51,13 +51,13 @@ def remove_books_with(column):
 
 def remove_columns():
     remove_books_without('authors')
-    remove_books_with('notifications')
-    remove_books_with('series')
-    remove_books_with('works')
-    remove_books_with('translated_titles')
-    remove_books_with('original_languages')
-    remove_books_with('cover_edition')
-    remove_books_with('number_of_editions')
+    #remove_books_with('notifications')
+    #remove_books_with('series')
+    #remove_books_with('works')
+    #remove_books_with('translated_titles')
+    #remove_books_with('original_languages')
+    #remove_books_with('cover_edition')
+    #remove_books_with('number_of_editions')
 
 
 def stats(file):
@@ -68,5 +68,6 @@ def stats(file):
 
 
 if __name__ == '__main__':
+    remove_columns()
     #stats('./filtered_books.txt')
-    stats('./even_more_filtered_books.txt')
+    #stats('./even_more_filtered_books.txt')

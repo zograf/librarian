@@ -3,3 +3,5 @@
 .vscode/*
 .idea/
 .idea/*
+librarian-db/data
+librarian-db/data/*

@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.librarian.model.Model;
 import com.librarian.service.SampleAppService;
 
 
@@ -23,12 +22,12 @@ public class SampleAppController {
 		this.sampleService = sampleService;
 	}
 
-	@RequestMapping(value = "/item", method = RequestMethod.GET, produces = "application/json")
-	public Model getQuestions(@RequestParam(required = true) String id, @RequestParam(required = true) String name,
-			@RequestParam(required = true) double cost, @RequestParam(required = true) double salePrice) {
+	//@RequestMapping(value = "/item", method = RequestMethod.GET, produces = "application/json")
+	//public Model getQuestions(@RequestParam(required = true) String id, @RequestParam(required = true) String name,
+	//		@RequestParam(required = true) double cost, @RequestParam(required = true) double salePrice) {
 
-		return new Model();
-	}
+	//	return new Model();
+	//}
 	
 	
 	

@@ -3,9 +3,9 @@ services:
   postgres:
     image: postgres
     environment:
-      - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=root
-      - POSTGRES_DB=test_db
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=postgres_password
+      - POSTGRES_DB=librariandb
     volumes:
       - postgres-db-volume:/var/lib/postgresql/data
     ports:

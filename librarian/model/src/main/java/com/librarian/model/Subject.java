@@ -1,8 +1,22 @@
 package com.librarian.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+import javax.persistence.Column;
+
+@Entity
 public class Subject {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
+
+    @Column
     public String parent;
+
+    @Column
     public String keyword;
 
     public Subject() {

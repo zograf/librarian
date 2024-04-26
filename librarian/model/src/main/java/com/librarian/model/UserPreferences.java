@@ -2,15 +2,39 @@ package com.librarian.model;
 
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+@Entity
 public class UserPreferences {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
+
+    @OneToMany
     public List<Book> readBooks;
+
+    @OneToMany
     public List<Book> library;
+
+    @OneToMany
     public List<Subject> likedSubjects;
+
+    @OneToMany
     public List<Subject> additionalSubjects;
+
+    @OneToMany
     public List<Author> likedAuthors;
+
+    @Column
     public Integer age;
+
     public ETargetYear targetYear;
+
     public EGender gender;
 
     public UserPreferences() {

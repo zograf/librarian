@@ -1,9 +1,27 @@
 package com.librarian.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="users")
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
+
+    @Column
     public String email;
+
+    @Column
     public String password;
+
+    @OneToOne
     public UserPreferences preferences;
 
     public User() {

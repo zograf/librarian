@@ -2,10 +2,26 @@ package com.librarian.model;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+
+@Entity
 public class Rating { 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
+
+    @ManyToOne
     public Book book;
+
+    @Column
     public Integer rating;
+
+    @Column
     public LocalDateTime date;
 
     public Rating() {

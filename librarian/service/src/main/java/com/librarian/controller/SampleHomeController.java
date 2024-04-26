@@ -1,4 +1,4 @@
-package com.ftn.sbnz.service;
+package com.librarian.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -1,4 +1,4 @@
-package com.ftn.sbnz.service;
+package com.librarian.service;
 
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;

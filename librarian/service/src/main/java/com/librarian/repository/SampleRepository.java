@@ -1,4 +1,4 @@
-package com.ftn.sbnz.repository;
+package com.librarian.repository;
 
 public class SampleRepository {
 

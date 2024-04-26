@@ -1,4 +1,4 @@
-package com.librarian.model;
+package com.librarian;
 
 public class ModelApplication {
 

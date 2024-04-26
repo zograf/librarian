@@ -1,4 +1,4 @@
-package com.ftn.sbnz.service;
+package com.librarian;
 
 import java.util.Arrays;
 

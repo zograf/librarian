@@ -6,19 +6,26 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
-import org.springframework.context.ApplicationContext;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.kie.api.KieServices;
+import org.kie.api.builder.KieScanner;
+import org.kie.api.runtime.KieContainer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.validation.FieldError;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.librarian.model.Author;
 import com.librarian.model.Book;
 import com.librarian.model.EAge;
@@ -28,19 +35,6 @@ import com.librarian.repository.AuthorsRepo;
 import com.librarian.repository.BooksRepo;
 import com.librarian.repository.RatingsRepo;
 import com.librarian.repository.SubjectsRepo;
-
-import org.apache.tomcat.util.json.JSONParser;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.kie.api.KieServices;
-import org.kie.api.builder.KieScanner;
-import org.kie.api.runtime.KieContainer;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @SpringBootApplication
 public class ServiceApplication  {
@@ -57,10 +51,15 @@ public class ServiceApplication  {
 
     @PostConstruct
     public void onApplicationStart() {
-        //LoadAuthors("D:\\FTN\\librarian\\data_processing\\authors_filtered.txt");
-        //LoadSubjects("D:\\FTN\\librarian\\data_processing\\subjects_mod.txt");
-        LoadBooks("D:\\FTN\\librarian\\data_processing\\filtered_books_6.txt");
-        //LoadRatings("D:\\FTN\\librarian\\data_processing\\ratings.txt");
+        log.info("Loading authors");
+        LoadAuthors("L:\\FTN\\sbnz\\authors_filtered.txt");
+        log.info("Loading subjects");
+        LoadSubjects("L:\\FTN\\sbnz\\filtered_subjects.txt");
+        log.info("Loading books");
+        LoadBooks("L:\\FTN\\sbnz\\filtered_books_7.txt");
+        log.info("Loading ratings");
+        LoadRatings("L:\\FTN\\sbnz\\ratings.txt");
+        log.info("Finished loading");
     }
 
 
@@ -81,7 +80,7 @@ public class ServiceApplication  {
                 JSONObject item = new JSONObject(line);
                 items.add(new Author(item.getString("key"), item.getString("name")));
             }
-            authorsRepo.saveAllAndFlush(items);
+            authorsRepo.saveAll(items);
         }
         catch(FileNotFoundException notFound) { }
         catch(IOException ioException) { }
@@ -93,9 +92,9 @@ public class ServiceApplication  {
         try(BufferedReader br = new BufferedReader(new FileReader(path))) {
             for(String line; (line = br.readLine()) != null;) {
                 JSONObject item = new JSONObject(line);
-                items.add(new Subject(item.getString("parent"), item.getString("keyword")));
+                items.add(new Subject(item.getString("parent"), item.getString("keyword"), item.getInt("relevance")));
             }
-            subjectsRepo.saveAllAndFlush(items);
+            subjectsRepo.saveAll(items);
         }
         catch(FileNotFoundException notFound) { }
         catch(IOException ioException) { }
@@ -104,57 +103,139 @@ public class ServiceApplication  {
 
     public void LoadRatings(String path) {
         List<Rating> items = new ArrayList<>();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        HashMap<String, Book> bookMap = new HashMap<>();
+        for (Book b : booksRepo.findAll())
+            bookMap.put(b.key, b);
+
         try(BufferedReader br = new BufferedReader(new FileReader(path))) {
             for(String line; (line = br.readLine()) != null;) {
                 JSONObject item = new JSONObject(line);
                 // item.getString("book_key")
                 // item.getInt("rating")
                 // item.getString("date")
-                List<Book> potentialBooks = booksRepo.findByKey(item.getString("book_key"));
-                if (potentialBooks.isEmpty()) continue;
-                items.add(new Rating(potentialBooks.get(0), item.getInt("rating"), LocalDateTime.parse(item.getString("date"), formatter)));
+                //List<Book> potentialBooks = booksRepo.findByKey(item.getString("book_key"));
+                //if (potentialBooks.isEmpty()) continue;
+                String[] dateArray = item.getString("date").split("-");
+                String key = item.getString("key");
+                LocalDateTime dateTime = LocalDateTime.of(Integer.parseInt(dateArray[0]), Integer.parseInt(dateArray[1]), Integer.parseInt(dateArray[2]), 0, 0);
+                if (bookMap.get(key) != null)
+                    items.add(new Rating(bookMap.get(key), item.getInt("rating"), dateTime));
             }
-            ratingsRepo.saveAllAndFlush(items);
+            ratingsRepo.saveAll(items);
         }
-        catch(FileNotFoundException notFound) { }
-        catch(IOException ioException) { }
-        catch(JSONException jsonException) { }
+        catch(FileNotFoundException notFound) { 
+            System.out.println("ERROR notFound");
+            System.out.println(notFound.getMessage());
+        }
+        catch(IOException ioException) { 
+            System.out.println("ERROR ioException");
+            System.out.println(ioException.getMessage());
+        }
+        catch(JSONException jsonException) { 
+            System.out.println("ERROR jsonException");
+            System.out.println(jsonException.getMessage());
+        }
     }
 
     public void LoadBooks(String path) {
+        Integer counter = 0;
+        LocalDateTime start = LocalDateTime.now();
         List<Book> items = new ArrayList<>();
+        HashMap<String, Subject> subjectMap = new HashMap<>();
+        HashMap<String, Author> authorMap = new HashMap<>();
+        log.info("Started adding books");
+
+        for (Author a : authorsRepo.findAll())
+            authorMap.put(a.key, a);
+        log.info("Added Author map");
+
+        for (Subject s : subjectsRepo.findAll()) 
+            subjectMap.put(s.keyword, s);
+        log.info("Added Subject map");
+
         try(BufferedReader br = new BufferedReader(new FileReader(path))) {
             for(String line; (line = br.readLine()) != null;) {
                 JSONObject item = new JSONObject(line);
 
-                List<Subject> subjects = new ArrayList<>();
+                Set<Subject> subjects = new HashSet<Subject>();
                 for(int i = 0; i < item.getJSONArray("subjects").length(); i++) {
-                    List<Subject> potentialSubjects = subjectsRepo.findByKeyword(item.getJSONArray("subjects").getString(i));
-                    if (potentialSubjects.size() > 0) subjects.add(potentialSubjects.get(0)); 
+                    String keyword = item.getJSONArray("subjects").getString(i);
+                    if (subjectMap.get(keyword) != null)
+                        subjects.add(subjectMap.get(keyword));
                 }
                 List<Author> authors = new ArrayList<>();
                 for(int i = 0; i < item.getJSONArray("authors").length(); i++) {
-                    List<Author> potentialAuthors = authorsRepo.findByKey(item.getJSONArray("authors").getString(i));
-                    if (potentialAuthors.size() > 0) authors.add(potentialAuthors.get(0));
+                    String keyword = item.getJSONArray("authors").getString(i);
+                    if (authorMap.get(keyword) != null)
+                        authors.add(authorMap.get(keyword));
                 }
                 if (authors.isEmpty()) continue;
+                if (subjects.isEmpty()) continue;
+                Integer year = -1;
+                try {
+                    year = item.getInt("first_published_year");
+                } catch(Exception ex) {
+                    log.info("THIS MF: " + item.getString("first_published_year"));
+                }
+
+                String desc = item.getString("description");
+                String firstSentence = item.getString("first_sentence");
+                String title = item.getString("title");
+                String subtitle = item.getString("subtitle");
+
+                if (desc.length() > 250) 
+                    desc = item.getString("description").substring(0, 245) + "...";
+
+                if (firstSentence.length() > 250) 
+                    firstSentence = item.getString("first_sentence").substring(0, 245) + "...";
+
+                if (title.length() > 250) {
+                    title = item.getString("title").substring(0, 245) + "...";
+                }
+
+                if (subtitle.length() > 250) {
+                    subtitle = item.getString("subtitle").substring(0, 245) + "...";
+                }
+
+                Subject main_cat = subjectMap.get(item.getString("category"));
+                try{
+                    //log.info("BOOK START");
+                    //log.info("Main cat: " + main_cat.keyword);
+                    //log.info("REMOVING");
+                    //for (Subject s : subjects)
+                    //    log.info(s.keyword);
+                    subjects.remove(main_cat);
+                    //log.info("REMOVED");
+                    //for (Subject s : subjects)
+                    //    log.info(s.keyword);
+                    //log.info("END");
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                
+                List<Subject> subjectList = new ArrayList<Subject>(subjects);
+
                 Book book = new Book(
                     item.getString("key"),
-                    item.getString("title"),
-                    subjectsRepo.findByKeyword(item.getString("category")).get(0),
+                    title,
+                    main_cat,
                     authors,
-                    subjects,
-                    item.getString("description"),
-                    item.getString("first_sentence"),
-                    item.getString("subtitle"),
-                    item.getInt("first_published_year"),
+                    subjectList,
+                    desc,
+                    firstSentence,
+                    subtitle,
+                    year,
                     item.getString("cover"),
                     EAge.values()[item.getInt("age_group")]
                 );
                 items.add(book);
+                counter += 1;
+                if (counter % 10000 == 0) {
+                    log.info("Counter: " + counter.toString());
+                }
+                //booksRepo.save(book);
             }
-            booksRepo.saveAllAndFlush(items);
+            booksRepo.saveAll(items);
         }
         catch(FileNotFoundException notFound) { 
             System.out.println("ERROR notFound");

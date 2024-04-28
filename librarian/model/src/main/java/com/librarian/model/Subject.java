@@ -19,13 +19,17 @@ public class Subject {
     @Column
     public String keyword;
 
+    @Column
+    public Integer relevance;
+
     public Subject() {
         
     }
 
-    public Subject(String parent, String keyword) {
+    public Subject(String parent, String keyword, Integer relevance) {
         this.parent = parent;
         this.keyword = keyword;
+        this.relevance = relevance;
     }
 
     public Long getId() {
@@ -50,5 +54,13 @@ public class Subject {
 
     public void setKeyword(String keyword) {
         this.keyword = keyword;
+    }
+
+    public Integer getRelevance() {
+        return relevance;
+    }
+
+    public void setRelevance(Integer relevance) {
+        this.relevance = relevance;
     }
 }

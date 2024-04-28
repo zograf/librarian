@@ -1,12 +1,15 @@
 package com.librarian.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -17,12 +20,18 @@ public class Book {
     public Long id; 
 
     @Column
+    public String key;
+
+    @Column
     public String title;
 
-    @ManyToOne
-    public Author author;
+    @ManyToOne(cascade = CascadeType.MERGE)
+    public Subject category;
 
-    @OneToMany
+    @ManyToMany(cascade = CascadeType.MERGE)
+    public List<Author> authors;
+
+    @OneToMany(cascade = CascadeType.MERGE)
     public List<Subject> subjects;
 
     @Column
@@ -43,11 +52,27 @@ public class Book {
     @Column
     public EAge age;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.MERGE)
     public List<Rating> ratings;
 
     public Book() {
 
+    }
+
+    public Book(String key, String title, Subject category, List<Author> authors, List<Subject> subjects, String description,
+            String firstSentence, String subtitle, Integer firstPublishedYear, String cover, EAge age) {
+        this.key = key;
+        this.title = title;
+        this.category = category;
+        this.authors = authors;
+        this.subjects = subjects;
+        this.description = description;
+        this.firstSentence = firstSentence;
+        this.subtitle = subtitle;
+        this.firstPublishedYear = firstPublishedYear;
+        this.cover = cover;
+        this.age = age;
+        this.ratings = new ArrayList<>();
     }
 
     public Long getId() {
@@ -64,14 +89,6 @@ public class Book {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public Author getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(Author author) {
-        this.author = author;
     }
 
     public List<Subject> getSubjects() {
@@ -137,4 +154,29 @@ public class Book {
     public void setRatings(List<Rating> ratings) {
         this.ratings = ratings;
     }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public List<Author> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(List<Author> authors) {
+        this.authors = authors;
+    }
+
+    public Subject getCategory() {
+        return category;
+    }
+
+    public void setCategory(Subject category) {
+        this.category = category;
+    }
+    
 }

@@ -2,6 +2,7 @@ package com.librarian.model;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,7 +16,7 @@ public class Rating {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     public Book book;
 
     @Column
@@ -27,6 +28,18 @@ public class Rating {
     public Rating() {
 
     }
+
+    public Rating(Book book, Integer rating, LocalDateTime date) {
+        this.book = book;
+        this.rating = rating;
+        this.date = date;
+    }
+
+    public Rating(Integer rating, LocalDateTime date) {
+        this.rating = rating;
+        this.date = date;
+    }
+
 
     public Long getId() {
         return id;

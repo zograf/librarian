@@ -23,6 +23,11 @@ public class Subject {
         
     }
 
+    public Subject(String parent, String keyword) {
+        this.parent = parent;
+        this.keyword = keyword;
+    }
+
     public Long getId() {
         return id;
     }

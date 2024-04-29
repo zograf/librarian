@@ -25,13 +25,16 @@ public class Book {
     @Column
     public String title;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+    //@ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne
     public Subject category;
 
-    @ManyToMany(cascade = CascadeType.MERGE)
+    //@ManyToMany(cascade = CascadeType.MERGE)
+    @ManyToMany
     public List<Author> authors;
 
-    @OneToMany(cascade = CascadeType.MERGE)
+    //@OneToMany(cascade = CascadeType.MERGE)
+    @ManyToMany
     public List<Subject> subjects;
 
     @Column

@@ -28,7 +28,7 @@ function LoginForm() {
                 <input placeholder="Email" type="email" value={email} onChange={handleEmail} />
             </div>
             <div className="input-wrapper regular-border v-spacer-xs">
-                <span className="material-symbols-outlined icon input-icon">key</span>
+                <span className="material-symbols-outlined icon input-icon">lock</span>
                 <input placeholder="Password" type="Password" value={password} onChange={handlePassword}/>
             </div>
             <button className='solid-accent-button w-100 v-spacer-xs' onClick={handleSubmit}>Login</button>

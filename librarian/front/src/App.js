@@ -1,7 +1,7 @@
-import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { LoginPage } from './pages/login/LoginPage';
+import { RegisterPage } from './pages/login/RegisterPage';
 
 function App() {
     return(
@@ -9,6 +9,7 @@ function App() {
             <Router>
                 <Routes>
                     <Route exact path='/' element={<LoginPage />} />
+                    <Route exact path='/register' element={<RegisterPage/>} />
                 </Routes>
             </Router>
         </main>

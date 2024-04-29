@@ -155,6 +155,7 @@ body {
   .h-100 { height: 100%; }
   .mw-100 { min-width: 100%; }
   .mh-100 { min-height: 100%; }
+  .fh-100 { height: 100vh; }
   .flex { display: flex;}
   .gap-xxs { gap: 4px; }
   .gap-xs { gap: 8px; }

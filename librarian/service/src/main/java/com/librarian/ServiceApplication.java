@@ -51,15 +51,16 @@ public class ServiceApplication  {
 
     @PostConstruct
     public void onApplicationStart() {
-        log.info("Loading authors");
-        LoadAuthors("L:\\FTN\\sbnz\\authors_filtered.txt");
-        log.info("Loading subjects");
-        LoadSubjects("L:\\FTN\\sbnz\\filtered_subjects.txt");
-        log.info("Loading books");
-        LoadBooks("L:\\FTN\\sbnz\\filtered_books_7.txt");
-        log.info("Loading ratings");
-        LoadRatings("L:\\FTN\\sbnz\\ratings.txt");
-        log.info("Finished loading");
+        String path = "D:\\FTN\\librarian\\data_processing\\";
+        // log.info("Loading authors");
+        // LoadAuthors(path + "authors_filtered.txt");
+        // log.info("Loading subjects");
+        // LoadSubjects(path + "filtered_subjects.txt");
+        // log.info("Loading books");
+        // LoadBooks(path + "filtered_books_7.txt");
+        // log.info("Loading ratings");
+        // LoadRatings(path + "ratings.txt");
+        // log.info("Finished loading");
     }
 
 

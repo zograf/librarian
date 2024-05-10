@@ -73,12 +73,12 @@ def main():
 
         for id in author_id_map:
             author = author_id_map[id] 
-            f.write("INSERT INTO author VALUES (" + str(id) + ", \"" + author['key'] + "\", \"" + author['name'] + "\")\n")
+            f.write("INSERT INTO author VALUES (" + str(id) + ", \'" + author['key'] + "\', \'" + author['name'] + "\')\n")
         f.write("\n")
 
         for id in subject_id_map:
             subject = subject_id_map[id] 
-            f.write("INSERT INTO subject VALUES (" + str(id) + ", \"" + subject['keyword'] + "\", \"" + subject['parent'] + "\", " + str(subject['relevance']) + ")\n")
+            f.write("INSERT INTO subject VALUES (" + str(id) + ", \'" + subject['keyword'] + "\', \'" + subject['parent'] + "\', " + str(subject['relevance']) + ")\n")
         f.write("\n")
 
         for id in book_id_map:
@@ -89,10 +89,10 @@ def main():
             raw_subtitle = book['subtitle'].replace("\n", "\\n").replace("\r", "\\r")
             raw_first_sentence = book['first_sentence'].replace("\n", "\\n").replace("\r", "\\r")
 
-            f.write("INSERT INTO book VALUES (" + str(id) + ", " + str(book['age_group']) + ", \"" + book['cover'] + 
-                    "\", \"" + raw_description[:245] + "\", " + str(book['first_published_year']) + 
-                    ", \"" + raw_first_sentence[:245] + "\", \"" + raw_subtitle[:245] + 
-                    "\", \"" + raw_title[:245] + "\", " + str(category_id) + ")\n")
+            f.write("INSERT INTO book VALUES (" + str(id) + ", " + str(book['age_group']) + ", \'" + book['cover'] + 
+                    "\', \'" + raw_description[:245] + "\', " + str(book['first_published_year']) + 
+                    ", \'" + raw_first_sentence[:245] + "\', \'" + raw_subtitle[:245] + 
+                    "\', \'" + raw_title[:245] + "\', " + str(category_id) + ")\n")
         f.write("\n")
 
         # INSERT JOINED
@@ -102,7 +102,7 @@ def main():
             if (rating['key'] not in book_map):
                 continue
             book_id = book_map[rating['key']]
-            f.write("INSERT INTO rating VALUES (\"" + str(rating['date']) + "\", " + str(rating['rating']) + ", " + str(book_id) + ")\n")
+            f.write("INSERT INTO rating VALUES (\'" + str(rating['date']) + "\', " + str(rating['rating']) + ", " + str(book_id) + ")\n")
         f.write("\n")
    
         for book_id in book_id_map:

@@ -1,5 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { DropDownInput } from "../../components/drop_down/DropDown";
+import axios from "axios";
+import { API } from "../../enviroment";
 
 export function RegisterPage() {
     return(
@@ -29,6 +31,16 @@ function RegisterForm() {
     
     const handleSubmit = (e) => {
         e.preventDefault()
+        let payload = {
+            "name" : name,
+            "email" : email,
+            "age" : Number(age),
+            "gender" : gender,
+            "password" : password
+        }
+        axios.post(API + "/user/register", payload)
+            .then(res => { window.location.href = "/" })
+            .catch(e => alert("Opsie - Registration failed"))
     }
 
     return(

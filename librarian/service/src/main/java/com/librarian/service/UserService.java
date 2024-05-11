@@ -26,7 +26,9 @@ import com.librarian.dto.RegisterDTO;
 import com.librarian.dto.TokenDTO;
 import com.librarian.model.ERole;
 import com.librarian.model.User;
+import com.librarian.model.UserPreferences;
 import com.librarian.repository.IUserRepository;
+import com.librarian.repository.UserPreferencesRepo;
 import com.librarian.security.JwtUtils;
 
 @Service
@@ -36,6 +38,9 @@ public class UserService {
 
     @Autowired
     private IUserRepository userRepository;
+
+    @Autowired
+    private UserPreferencesRepo userPreferencesRepo;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -95,10 +100,16 @@ public class UserService {
 
         logger.info("Saving user to database...");
         User user = new User();
+        user.setName(dto.getName());
         user.setEmail(dto.getEmail());
         user.setPassword(dto.getPassword());
         user.setRole(ERole.ROLE_USER);
 
+        UserPreferences preferences = new UserPreferences();
+        preferences.setAge(dto.getAge());
+        preferences.setGender(dto.getGender());
+        user.setPreferences(userPreferencesRepo.save(preferences));
+        
         logger.info("Registered new user!");
         return save(user);
     }

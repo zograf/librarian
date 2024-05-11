@@ -1,9 +1,9 @@
 import json
 
-BOOK_PATH = "../filtered_books_7.txt"
-AUTHOR_PATH = "../authors_filtered.txt"
-SUBJECT_PATH = "../filtered_subjects.txt"
-RATING_PATH = "../ratings.txt"
+BOOK_PATH = "./filtered_books_7.txt"
+AUTHOR_PATH = "./authors_filtered.txt"
+SUBJECT_PATH = "./filtered_subjects.txt"
+RATING_PATH = "./ratings.txt"
 
 BOOK_ID = 1
 AUTHOR_ID = 1
@@ -71,17 +71,17 @@ def main():
 
     # INSERT ENTITIES
 
-    with open("../author.csv", "w", encoding="utf-8") as f:
+    with open("./sql/author.csv", "w", encoding="utf-8") as f:
         for id in author_id_map:
             author = author_id_map[id] 
             f.write(str(id) + "," + author['key'] + "," + author['name'].replace(",", "") + "\n")
 
-    with open("../subject.csv", "w", encoding="utf-8") as f:
+    with open("./sql/subject.csv", "w", encoding="utf-8") as f:
         for id in subject_id_map:
             subject = subject_id_map[id] 
             f.write(str(id) + "," + subject['keyword'] + "," + subject['parent'] + "," + str(subject['relevance']) + "\n")
 
-    with open("../book.csv", "w", encoding="utf-8") as f:
+    with open("./sql/book.csv", "w", encoding="utf-8") as f:
         for id in book_id_map:
             book = book_id_map[id] 
             category_id = subject_map[book['category']]
@@ -97,7 +97,7 @@ def main():
 
     # INSERT JOINED
 
-    with open("../rating.csv", "w", encoding="utf-8") as f:
+    with open("./sql/rating.csv", "w", encoding="utf-8") as f:
         for id in rating_id_map:
             rating = rating_id_map[id] 
             if (rating['key'] not in book_map):
@@ -105,14 +105,14 @@ def main():
             book_id = book_map[rating['key']]
             f.write(str(id) + "," + str(rating['date']) + "," + str(rating['rating']) + "," + str(book_id) + "\n")
 
-    with open("../book_subjects.csv", "w", encoding="utf-8") as f:
+    with open("./sql/book_subjects.csv", "w", encoding="utf-8") as f:
         for book_id in book_id_map:
             book = book_id_map[id]
             for s in book['subjects']:
                 subject_id = subject_map[s]
                 f.write(str(book_id) + "," + str(subject_id) + "\n")
 
-    with open("../book_authors.csv", "w", encoding="utf-8") as f:
+    with open("./sql/book_authors.csv", "w", encoding="utf-8") as f:
         for book_id in book_id_map:
             book = book_id_map[id]
             for a in book['authors']:

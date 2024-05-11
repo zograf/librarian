@@ -19,6 +19,9 @@ public class User implements UserDetails{
     public Long id;
 
     @Column
+    public String name;
+
+    @Column
     public String email;
 
     @Column
@@ -107,5 +110,13 @@ public class User implements UserDetails{
 
     public void setRole(ERole role) {
         this.role = role;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

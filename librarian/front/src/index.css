@@ -13,37 +13,29 @@ body {
   }
   
   :root {
-      --foreground-rgb: 0, 0, 0;
-      --background-start-rgb: 214, 219, 220;
-      --background-end-rgb: 255, 255, 255;
-      --primary-dark: 46, 60, 88;
-      --on-primary-dark: 254, 254, 254;
-      --primary-light: 60, 78, 115;
-      --on-primary-light: 255, 255, 255;
-      --primary-lighter: 75, 136, 222;
-      --background: 240, 240, 240;
-      --on-background: 8, 8, 8;
+      --background: 40, 43, 52;
+      --on-background: 255, 255, 255;
+
+      --primary-dark: 220, 220, 220;
+      --on-primary-dark: 8, 8, 8;
+
+      --primary-light: 250, 250, 250;
+      --on-primary-light: 8, 8, 8;
+
+      --neutral: 150 150 150;
+      --accent: 250, 250, 250;
+      
       --surface: 250, 250, 250;
       --error: 219, 66, 39;
-      --accent: 200, 130, 20;
-      --neutral: 150 150 150;
       --positive: 39, 219, 54;
   
       --card-radius: 20px;
       --inner-card-radius: 12px;
       --input-radius: 24px;
+
+      --standard-padding: 48px;
+      --font-fam: 'Roboto'
   
-  
-      /* Animations */
-      --right-start-top: 42%;
-      --right-start-left: 26.2%;
-      --right-end-top: 35.7%;
-      --right-end-left: 23%;
-  
-      --left-start-top: 42%;
-      --left-start-left: 33.2%;
-      --left-end-top: 35.7%;
-      --left-end-left: 30.5%;
   }
   
   /* ------------------------------------------------------------------------------------------------------ Colors */
@@ -68,7 +60,7 @@ body {
       color: rgb(var(--on-background));
       background: rgb(var(--background));
       overflow: hidden;
-      font-family: "Dosis";
+      font-family: var(--font-fam);
   }
   body {
       overflow-y: scroll;
@@ -135,6 +127,10 @@ body {
       font-weight: 100;
       padding: 22px 0;
   }
+  .hero-title {
+    font-size: 1.5rem;
+    font-weight: 300;
+  }
   .error-text {
       color: rgb(var(--error));
       font-weight: 400;
@@ -177,6 +173,15 @@ body {
       opacity: 0.5;
       height: 100%;
       margin: 0 12px;
+  }
+  .standard-padding {
+    padding: var(--standard-padding);
+  }
+  .standard-padding-s {
+    padding: calc(var(--standard-padding) / 2);
+  }
+  .standard-padding-xs {
+    padding: calc(var(--standard-padding) / 4) calc(var(--standard-padding) / 3) calc(var(--standard-padding) / 4) calc(var(--standard-padding) / 3);
   }
   
   /* ------------------------------------------------------------------------------------------------------ Containers */
@@ -267,7 +272,7 @@ body {
       font-family: "Roboto";
       font-weight: 500;
       padding: 0 12px;
-      color: rgb(var(--on-background));
+      color: rgba(var(--on-background), 85%);
   }
   button:active { scale: 0.98; }
   
@@ -311,10 +316,15 @@ body {
       letter-spacing: 0.09em;
       font-size: 0.89em;
   }
-  .text-button:hover {
+  .text-button:not(.text-button-selected):hover, .icon-button:hover {
       background-color: rgba(var(--primary-light), 0.15);
       color: var(--on-primary-light);
   }
+  .text-button-selected {
+    background-color: rgb(var(--accent));
+    color: rgb(var(--on-primary-dark));
+  }
+
   .small-button {
       height: 32px;
       font-size: 0.79em;
@@ -322,7 +332,18 @@ body {
   .outline-button.small-button {
       height: 32px;
   }
-  
+
+  .icon-button {
+    background-color: transparent;
+    border-radius: var(--input-radius);
+    height: 40px;
+    aspect-ratio: 1;
+    user-select: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
   .solid-icon-button {
       background-color: rgb(var(--primary-dark));
       color: rgb(var(--on-primary-dark));
@@ -411,9 +432,9 @@ body {
       background-color: transparent;
       color: rgb(var(--on-background));
       transition: all 0.1s;
-      font-size: 1.1em;
-      font-weight: 500;
-      font-family: "Dosis";
+      font-size: 1.05em;
+      font-weight: 300;
+      font-family: var(--font-fam);
   }
   input::placeholder, textarea::placeholder {
       color: rgba(var(--on-background), 0.7);

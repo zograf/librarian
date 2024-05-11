@@ -2,13 +2,7 @@ package com.librarian.model;
 
 import java.time.LocalDateTime;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
 public class Rating { 
@@ -24,6 +18,12 @@ public class Rating {
 
     @Column
     public LocalDateTime date;
+
+    @Transient
+    public String dateString;
+
+    @Transient
+    public Long bookId;
 
     public Rating() {
 
@@ -71,5 +71,21 @@ public class Rating {
 
     public void setDate(LocalDateTime date) {
         this.date = date;
+    }
+
+    public String getDateString() {
+        return dateString;
+    }
+
+    public void setDateString(String dateString) {
+        this.dateString = dateString;
+    }
+
+    public Long getBookId() {
+        return bookId;
+    }
+
+    public void setBookId(Long bookId) {
+        this.bookId = bookId;
     }
 }

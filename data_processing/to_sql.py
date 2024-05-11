@@ -67,56 +67,57 @@ def main():
     load_subjects()
     load_ratings()
 
-    with open("../sql.txt", "w", encoding="utf-8") as f:
+    #with open("../data.sql", "w", encoding="utf-8") as f:
 
-        # INSERT ENTITIES
+    # INSERT ENTITIES
 
+    with open("../author.csv", "w", encoding="utf-8") as f:
         for id in author_id_map:
             author = author_id_map[id] 
-            f.write("INSERT INTO author VALUES (" + str(id) + ", \"" + author['key'] + "\", \"" + author['name'] + "\")\n")
-        f.write("\n")
+            f.write(str(id) + "," + author['key'] + "," + author['name'].replace(",", "") + "\n")
 
+    with open("../subject.csv", "w", encoding="utf-8") as f:
         for id in subject_id_map:
             subject = subject_id_map[id] 
-            f.write("INSERT INTO subject VALUES (" + str(id) + ", \"" + subject['keyword'] + "\", \"" + subject['parent'] + "\", " + str(subject['relevance']) + ")\n")
-        f.write("\n")
+            f.write(str(id) + "," + subject['keyword'] + "," + subject['parent'] + "," + str(subject['relevance']) + "\n")
 
+    with open("../book.csv", "w", encoding="utf-8") as f:
         for id in book_id_map:
             book = book_id_map[id] 
             category_id = subject_map[book['category']]
-            raw_description = book['description'].replace("\n", "\\n").replace("\r", "\\r")
-            raw_title = book['title'].replace("\n", "\\n").replace("\r", "\\r")
-            raw_subtitle = book['subtitle'].replace("\n", "\\n").replace("\r", "\\r")
-            raw_first_sentence = book['first_sentence'].replace("\n", "\\n").replace("\r", "\\r")
+            raw_description = book['description'].replace("\n", "\\n").replace("\r", "\\r").replace(",", "")
+            raw_title = book['title'].replace("\n", "\\n").replace("\r", "\\r").replace(",", "")
+            raw_subtitle = book['subtitle'].replace("\n", "\\n").replace("\r", "\\r").replace(",", "")
+            raw_first_sentence = book['first_sentence'].replace("\n", "\\n").replace("\r", "\\r").replace(",", "")
 
-            f.write("INSERT INTO book VALUES (" + str(id) + ", " + str(book['age_group']) + ", \"" + book['cover'] + 
-                    "\", \"" + raw_description[:245] + "\", " + str(book['first_published_year']) + 
-                    ", \"" + raw_first_sentence[:245] + "\", \"" + raw_subtitle[:245] + 
-                    "\", \"" + raw_title[:245] + "\", " + str(category_id) + ")\n")
-        f.write("\n")
+            f.write(str(id) + "," + str(book['age_group']) + "," + book['cover'] + 
+                    "," + raw_description[:245] + "," + str(book['first_published_year']) + 
+                    "," + raw_first_sentence[:245] + "," + book['key'] + "," + raw_subtitle[:245] + 
+                    "," + raw_title[:245] + "," + str(category_id) + "\n")
 
-        # INSERT JOINED
+    # INSERT JOINED
 
+    with open("../rating.csv", "w", encoding="utf-8") as f:
         for id in rating_id_map:
             rating = rating_id_map[id] 
             if (rating['key'] not in book_map):
                 continue
             book_id = book_map[rating['key']]
-            f.write("INSERT INTO rating VALUES (\"" + str(rating['date']) + "\", " + str(rating['rating']) + ", " + str(book_id) + ")\n")
-        f.write("\n")
-   
+            f.write(str(id) + "," + str(rating['date']) + "," + str(rating['rating']) + "," + str(book_id) + "\n")
+
+    with open("../book_subjects.csv", "w", encoding="utf-8") as f:
         for book_id in book_id_map:
             book = book_id_map[id]
             for s in book['subjects']:
                 subject_id = subject_map[s]
-                f.write(f"INSERT INTO book_subjects VALUES({book_id}, {subject_id})\n")
-        f.write("\n")
+                f.write(str(book_id) + "," + str(subject_id) + "\n")
 
+    with open("../book_authors.csv", "w", encoding="utf-8") as f:
         for book_id in book_id_map:
             book = book_id_map[id]
             for a in book['authors']:
                 author_id = author_map[a]
-                f.write(f"INSERT INTO book_authors VALUES({book_id}, {author_id})\n")
+                f.write(str(book_id) + "," + str(author_id) + "\n")
         
 
 if __name__ == "__main__":

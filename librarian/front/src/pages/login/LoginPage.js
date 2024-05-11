@@ -1,4 +1,6 @@
 import React, { useState, useMemo } from "react";
+import axios from "axios";
+import { API } from "../../enviroment";
 
 export function LoginPage() {
     return(
@@ -16,8 +18,35 @@ function LoginForm() {
     const handleEmail = (e) => setEmail(e.target.value);
     const handlePassword = (e) => setPassword(e.target.value);
     
+    useMemo(() => {
+        localStorage.setItem("token", "")
+        localStorage.setItem("username", "")
+        localStorage.setItem("id", "")
+        localStorage.setItem("isUser", false)
+        localStorage.setItem("isSuperAdmin", false)
+    }, [])
+
+
     const handleSubmit = (e) => {
         e.preventDefault()
+        let payload = {
+            "email" : email,
+            "password" : password
+        }
+        axios.post(API + "/user/login", payload)
+            .then(resp => {
+                console.log(resp);
+                localStorage.setItem("token", resp.data.accessToken)
+                localStorage.setItem("username", resp.data.email)
+                localStorage.setItem("id", resp.data.userId)
+                localStorage.setItem("isUser", resp.data.userRole == "ROLE_USER")
+                localStorage.setItem("isAdmin", resp.data.userRole == "ROLE_ADMIN")
+
+                if (resp.data.userRole == "ROLE_USER") window.location.href = '/library'
+                else alert("Bi**h we don't even have admin *smh*")
+
+            })
+            .catch(e => alert("Opsie - Login failed"))
     }
 
     return(

@@ -3,6 +3,7 @@ package com.librarian.model;
 public class BookRank {
     public Book book;
     public Integer rating;
+    public UserPreferences userPreferences;
 
     public BookRank() {
 
@@ -22,5 +23,13 @@ public class BookRank {
 
     public void setRating(Integer rating) {
         this.rating = rating;
+    }
+
+    public UserPreferences getUserPreferences() {
+        return userPreferences;
+    }
+
+    public void setUserPreferences(UserPreferences userPreferences) {
+        this.userPreferences = userPreferences;
     }
 }

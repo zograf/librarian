@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -61,18 +60,19 @@ public class ServiceApplication  {
     }
 
     public void LoadData() {
+        String path = "D:\\FTN\\librarian\\data_processing\\sql\\";
         log.info("Loading authors");
-        LoadAuthors("L:\\FTN\\sbnz\\author.csv");
+        LoadAuthors(path + "author.csv");
         log.info("Loading subjects");
-        LoadSubjects("L:\\FTN\\sbnz\\subject.csv");
+        LoadSubjects(path + "subject.csv");
         log.info("Loading books");
-        LoadBooks("L:\\FTN\\sbnz\\book.csv");
+        LoadBooks(path + "book.csv");
         log.info("Loading ratings");
-        LoadRatings("L:\\FTN\\sbnz\\rating.csv");
+        LoadRatings(path + "rating.csv");
         log.info("Loading book_authors");
-        LoadJoined("L:\\FTN\\sbnz\\book_authors.csv", "book_authors");
+        LoadJoined(path + "book_authors.csv", "book_authors");
         log.info("Loading book_subjects");
-        LoadJoined("L:\\FTN\\sbnz\\book_subjects.csv", "book_subjects");
+        LoadJoined(path + "book_subjects.csv", "book_subjects");
         log.info("Finished loading");
     }
 

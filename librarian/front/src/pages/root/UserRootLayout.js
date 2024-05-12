@@ -5,7 +5,7 @@ export default function UserRootLayout(props) {
     return(
         <main>
             <div style={{height:'100vh'}}>
-                <div className="w-100 standard-padding-xs center" style={{position:'fixed', display:'grid', gridTemplateColumns:'0.2fr 2fr 0.2fr', justifyContent:'end', backgroundColor:'rgba(var(--background), 50%)', backdropFilter:'blur(40px)'}}>
+                <div className="w-100 standard-padding-xs center" style={{position:'fixed', display:'grid', gridTemplateColumns:'0.2fr 2fr 0.2fr', justifyContent:'end', backgroundColor:'rgba(var(--background), 50%)', backdropFilter:'blur(40px)', zIndex:'10'}}>
                     <p className="hero-title"><b>Librari</b>an</p>
                     <div className="flex justify-center gap-l">
                         <button className={`text-button ${window.location.href.includes('/library') ? 'text-button-selected' : ''}`} onClick={() => { window.location.href = '/library' }}>My Library</button>
@@ -20,7 +20,7 @@ export default function UserRootLayout(props) {
                         </button>
                     </div>
                 </div>
-                <div className="w-100">
+                <div className="w-100" style={{paddingTop:"40px"}}>
                     {props.children}
                 </div>
             </div>

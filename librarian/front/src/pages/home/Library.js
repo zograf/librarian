@@ -4,7 +4,7 @@ export default function LibraryPage() {
     const email = localStorage.getItem("username")
 
     return(
-        <div className="w-100 standard-padding gap-s" style={{display:'grid', gridTemplateColumns:'1fr 1fr 1fr 1fr 1fr 1fr', paddingTop:'88px'}}>
+        <div className="w-100 standard-padding gap-s" style={{display:'grid', gridTemplateColumns:'1fr 1fr 1fr 1fr 1fr 1fr'}}>
             <p className="card" style={{width:'100%', height:'400px', textAlign:'center'}}></p>
             <p className="card" style={{width:'100%', height:'400px', textAlign:'center'}}></p>
             <p className="card" style={{width:'100%', height:'400px', textAlign:'center'}}></p>

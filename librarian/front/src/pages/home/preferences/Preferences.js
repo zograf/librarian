@@ -4,23 +4,21 @@ import { API } from "../../../enviroment"
 import AdditionalSubjects from "./AdditionalSubjects"
 import LikedAuthors from "./LikedAuthors"
 
-// { headers: {"Authorization" : `Bearer ${token}`} }
-
 export default function Preferences() {    
     let path = '/user/preferences/'
     const token = localStorage.getItem("token")
 
     const [age, setAge] = useState(undefined)
-    const [likedKeywords, setLikedKeywords] = useState([])
+    const [additionalKeywords, setAdditionalKeywords] = useState([])
     const [likedAuthors, setLikedAuthors] = useState([])
 
     useEffect(() => {
         axios.get(API + path,  { headers: {"Authorization" : `Bearer ${token}`} })
             .then(res => {
                 setAge(res.data.age)
-                setLikedKeywords(res.data.additionalSubjects)
+                setAdditionalKeywords(res.data.additionalSubjects)
                 setLikedAuthors(res.data.likedAuthors)
-                console.log(res.data)
+                console.log(res.data) // TODO Delete eventually
             })
             .catch(e => console.log(e))
     }, [])
@@ -39,7 +37,7 @@ export default function Preferences() {
                 </div>
             </div>
 
-            <AdditionalSubjects subjects={likedKeywords} />
+            <AdditionalSubjects subjects={additionalKeywords} />
             <LikedAuthors authors={likedAuthors}/>
         </div>
     )

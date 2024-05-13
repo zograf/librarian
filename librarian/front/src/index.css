@@ -28,6 +28,8 @@ body {
       
       --surface: 8, 12, 16;
       --error: 219, 66, 39;
+      --on-error: 250, 250, 250;
+
       --positive: 39, 219, 54;
   
       --card-radius: 20px;

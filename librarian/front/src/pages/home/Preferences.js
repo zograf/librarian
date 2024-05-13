@@ -36,6 +36,11 @@ export default function Preferences() {
                     setFoundKeywords(resp.data)
                     setSearchSent(true)
                 })
+        else if (phrase.length == 0) clearKeywords()
+        else {
+            setFoundKeywords([])
+            setSearchSent(true)
+        }
     }
     const clearKeywords = () => {
         setFoundKeywords([])
@@ -93,7 +98,18 @@ export default function Preferences() {
                     <input placeholder="Search" value={phrase} onChange={handlePhrase} onKeyUp={searchKeywords}/>
                     {searchSent && <button className="icon-button"><span className="material-symbols-outlined icon" onClick={clearKeywords}>cancel</span></button>}
                 </div>
-                {searchSent && <p className="flex center showing card-body" style={{height:'50px', backgroundColor:'rgb(var(--accent))', color:'rgb(var(--on-primary-dark))', borderRadius:'var(--input-radius)', padding:'0 16px'}}>{foundKeywords.length} Results</p>}
+                {searchSent && 
+                    <p className="flex center showing card-body" 
+                        style={{
+                            height:'50px', 
+                            transition:'all 0.08s ease-in-out', 
+                            backgroundColor: phrase.length < 3 ? 'rgb(var(--error))' : 'rgb(var(--accent))', 
+                            color: phrase.length < 3 ? 'rgb(var(--on-error))' : 'rgb(var(--on-primary-dark))',
+                            borderRadius:'var(--input-radius)',
+                            padding:'0 16px'
+                        }}>{phrase.length < 3 ? 'Phrase Too Short' : foundKeywords.length} Results
+                    </p>
+                }
             </div>
             <div className="flex center wrap gap-xs">{
                 foundKeywords.map((keyword) => {
@@ -103,13 +119,13 @@ export default function Preferences() {
                         </button>)}
                     )
             }</div>
-            {!searchSent && <div className="dashed-card flex column gap-xs center justify-center">
+            {(!searchSent || (searchSent && phrase.length < 3)) && <div className="dashed-card showing flex column gap-xs center justify-center">
                 <p className="card-title neutral">About Keywords</p>
                 <p className="card-body">Each book has multiple keywords that describe it's content. Adding keywords to your favorites will fine tune your recommendations.</p>
             </div>}
-            {searchSent && phrase.length != 0 && foundKeywords.length == 0 && <div className="dashed-card flex column gap-xs center justify-center">
+            {searchSent && phrase.length >= 3 && foundKeywords.length == 0 && <div className="dashed-card showing flex column gap-xs center justify-center">
                 <p className="card-title neutral">No Results</p>
-                <p className="card-body">Try shortening the phrase or trying something different!</p>
+                <p className="card-body">Try something different!</p>
             </div>}
         </div>
     )

@@ -1,7 +1,11 @@
 package com.librarian.service;
 
+import java.util.stream.Collectors;
+
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpResponseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -21,6 +25,8 @@ public class UserPreferencesService {
     @Autowired SubjectsRepo subjectsRepo;
     @Autowired IUserRepository userRepo;
 
+    Logger logger = LoggerFactory.getLogger(UserPreferencesService.class);
+
     private UserPreferences _get(String username) {
         User user = userRepo.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
         return user.getPreferences();
@@ -34,7 +40,15 @@ public class UserPreferencesService {
     public UserPreferencesDTO addAdditionalSubject(String username, Long subjectId) throws HttpResponseException {
         UserPreferences preferences = _get(username);
         Subject subject = subjectsRepo.findById(subjectId).orElseThrow(() -> new HttpResponseException(HttpStatus.SC_NOT_FOUND, "Subject not found"));
-        preferences.additionalSubjects.add(subject);
+        preferences.getAdditionalSubjects().add(subject);
+        return new UserPreferencesDTO(repo.save(preferences));
+    }
+
+    public UserPreferencesDTO deleteAdditionalSubject(String username, Long subjectId) throws HttpResponseException {
+        UserPreferences preferences = _get(username);
+        //Subject subject = subjectsRepo.findById(subjectId).orElseThrow(() -> new HttpResponseException(HttpStatus.SC_NOT_FOUND, "Subject not found"));
+        //preferences.setAdditionalSubjects(preferences.additionalSubjects.stream().filter((item) -> item.getId().equals(subjectId)).collect(Collectors.toList()));
+        preferences.getAdditionalSubjects().removeIf((item) -> item.getId().equals(subjectId));
         return new UserPreferencesDTO(repo.save(preferences));
     }
 }

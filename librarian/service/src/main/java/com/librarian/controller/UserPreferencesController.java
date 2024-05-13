@@ -9,13 +9,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.librarian.dto.SubjectDTO;
 import com.librarian.dto.UserPreferencesDTO;
 import com.librarian.service.UserPreferencesService;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 
 
 
@@ -31,8 +31,13 @@ public class UserPreferencesController {
         return new ResponseEntity<UserPreferencesDTO>(service.get(user.getUsername()), HttpStatus.OK);
     }
 
-    @PostMapping("/additional")
-    public ResponseEntity<UserPreferencesDTO> AddAdditional(@AuthenticationPrincipal UserDetails user, @RequestBody SubjectDTO subject) throws HttpResponseException{
-        return new ResponseEntity<UserPreferencesDTO>(service.addAdditionalSubject(user.getUsername(), subject.getId()), HttpStatus.OK);
+    @PutMapping("/additional/{subjectId}")
+    public ResponseEntity<UserPreferencesDTO> addAdditional(@AuthenticationPrincipal UserDetails user, @PathVariable Long subjectId) throws HttpResponseException{
+        return new ResponseEntity<UserPreferencesDTO>(service.addAdditionalSubject(user.getUsername(), subjectId), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/additional/{subjectId}")
+    public ResponseEntity<UserPreferencesDTO> deleteAdditional(@AuthenticationPrincipal UserDetails user, @PathVariable Long subjectId) throws HttpResponseException{
+        return new ResponseEntity<UserPreferencesDTO>(service.deleteAdditionalSubject(user.getUsername(), subjectId), HttpStatus.OK);
     }
 }

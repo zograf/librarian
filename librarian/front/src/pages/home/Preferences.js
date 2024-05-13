@@ -23,6 +23,7 @@ export default function Preferences() {
                 setLikedKeywords(res.data.additionalSubjects)
                 console.log(res.data)
             })
+            .catch(e => console.log(e))
     }, [])
 
     const handleAge = (e) => setAge(e.target.value)
@@ -42,7 +43,7 @@ export default function Preferences() {
         setSearchSent(false)
     }
     const addKeyword = (keyword) => {
-        axios.post(API + path + "additional", keyword, { headers: {"Authorization" : `Bearer ${token}`} })
+        axios.put(API + path + "additional/" + keyword.id, null, { headers: {"Authorization" : `Bearer ${token}`} })
             .then(res => {
                 console.log(res.data);
                 setLikedKeywords((prevList) => {
@@ -52,9 +53,14 @@ export default function Preferences() {
             .catch(e => alert(e))
     }
     const removeKeyword = (keyword) => {
-        setLikedKeywords((prevList) => {
-            return prevList.filter((x) => x.id !== keyword.id)
-        })
+        axios.delete(API + path + "additional/" + keyword.id, { headers: {"Authorization" : `Bearer ${token}`} })
+            .then(res => {
+                console.log(res.data);
+                setLikedKeywords((prevList) => {
+                    return prevList.filter((x) => x.id !== keyword.id)
+                })
+            })
+            .catch(e => alert(e))
     }
 
     return(

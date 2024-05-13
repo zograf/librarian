@@ -30,7 +30,7 @@ public class User implements UserDetails{
     @Column
     private ERole role;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     public UserPreferences preferences;
 
     public User() {

@@ -1,10 +1,11 @@
 import axios from "axios"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { API } from "../../enviroment"
 
 // { headers: {"Authorization" : `Bearer ${token}`} }
 
 export default function Preferences() {    
+    let path = '/user/preferences/'
     const userId = localStorage.getItem("id")
     const token = localStorage.getItem("token")
     const email = localStorage.getItem("username")
@@ -15,17 +16,25 @@ export default function Preferences() {
     const [likedKeywords, setLikedKeywords] = useState([])
     const [searchSent, setSearchSent] = useState(false)
 
+    useEffect(() => {
+        axios.get(API + path,  { headers: {"Authorization" : `Bearer ${token}`} })
+            .then(res => {
+                setAge(res.data.age)
+                setLikedKeywords(res.data.additionalSubjects)
+                console.log(res.data)
+            })
+    }, [])
+
     const handleAge = (e) => setAge(e.target.value)
     const handlePhrase = (e) => setPhrase(e.target.value)
 
     const searchKeywords = (e) => {
-        if (e.code != "Enter") return
-        if (phrase.length < 3) return
-        axios.post(API + "/subjects/like", null, { params: { phrase : phrase }})
-            .then(resp => {
-                setFoundKeywords(resp.data)
-                setSearchSent(true)
-            })
+        if (phrase.length >= 3)
+            axios.post(API + "/subjects/like", null, { params: { phrase : phrase }})
+                .then(resp => {
+                    setFoundKeywords(resp.data)
+                    setSearchSent(true)
+                })
     }
     const clearKeywords = () => {
         setFoundKeywords([])
@@ -33,9 +42,14 @@ export default function Preferences() {
         setSearchSent(false)
     }
     const addKeyword = (keyword) => {
-        setLikedKeywords((prevList) => {
-            return [...prevList, keyword]
-        })
+        axios.post(API + path + "additional", keyword, { headers: {"Authorization" : `Bearer ${token}`} })
+            .then(res => {
+                console.log(res.data);
+                setLikedKeywords((prevList) => {
+                    return [...prevList, keyword]
+                })
+            })
+            .catch(e => alert(e))
     }
     const removeKeyword = (keyword) => {
         setLikedKeywords((prevList) => {

@@ -22,11 +22,11 @@ public class SubjectsController {
     Logger logger = LoggerFactory.getLogger(SubjectsController.class);
 
     @Autowired
-    private SubjectsService subjectsService;
+    private SubjectsService service;
 
     @PostMapping("/like")
     public List<SubjectDTO> getFilteredKeywords(@RequestParam String phrase) {
-        return subjectsService.findByKeyword(phrase);
+        return service.findByKeyword(phrase);
     }
     
 }

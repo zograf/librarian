@@ -13,9 +13,9 @@ import com.librarian.dto.SubjectDTO;
 public class SubjectsService {
 
     @Autowired
-    private SubjectsRepo subjectsRepo;
+    private SubjectsRepo repo;
 
     public List<SubjectDTO> findByKeyword(String phrase) {
-        return subjectsRepo.findByKeywordContains(phrase).stream().map(SubjectDTO::new).collect(Collectors.toList());
+        return repo.findByKeywordContains(phrase).stream().map(SubjectDTO::new).collect(Collectors.toList());
     }
 }

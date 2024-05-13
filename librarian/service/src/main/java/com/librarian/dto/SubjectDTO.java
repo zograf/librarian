@@ -9,6 +9,8 @@ public class SubjectDTO {
     public String keyword;
     public Integer relevance;
 
+    public SubjectDTO() { }
+
     public SubjectDTO(Subject subject) {
         this.id = subject.getId();
         this.parent = subject.getParent();

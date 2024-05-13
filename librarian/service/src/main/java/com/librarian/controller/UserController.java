@@ -61,7 +61,7 @@ public class UserController {
         logger.info("Trying login with email {}...", loginDto.getEmail());
         return ResponseEntity.ok(userService.login(loginDto));
     }
-
+    
     @PostConstruct
     public void init() {
         ks = KieServices.Factory.get();

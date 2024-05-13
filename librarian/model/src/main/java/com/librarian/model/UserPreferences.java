@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.*;
 
+
 @Entity
 public class UserPreferences {
     @Id
@@ -19,7 +20,7 @@ public class UserPreferences {
     @OneToMany
     public List<Subject> likedSubjects;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     public List<Subject> additionalSubjects;
 
     @OneToMany

@@ -2,22 +2,22 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import { API } from "../../../enviroment"
 
-export default function AdditionalSubjects({subjects}) {
-    let path = '/user/preferences/additional/'
+export default function LikedAuthors({authors}) {
+    let path = '/user/preferences/authors/'
     const token = localStorage.getItem("token")
 
     const [phrase, setPhrase] = useState("")
     const handlePhrase = (e) => setPhrase(e.target.value)
-
+ 
     const [found, setFound] = useState([])
-    const [additionalKeywords, setAdditionalKeywords] = useState([])
-    useEffect(() => { setAdditionalKeywords(subjects) }, [subjects])
     const [searchSent, setSearchSent] = useState(false)
-
+    const [likedAuthors, setLikedAuthors] = useState([])
+    useEffect(() => { setLikedAuthors(authors) }, [authors])
+ 
 
     const search = (e) => {
         if (phrase.length >= 3)
-            axios.post(API + "/subjects/like", null, { params: { phrase : phrase }})
+            axios.post(API + "/authors/like", null, { params: { phrase : phrase }})
                 .then(resp => {
                     setFound(resp.data)
                     setSearchSent(true)
@@ -33,42 +33,40 @@ export default function AdditionalSubjects({subjects}) {
         setPhrase("")
         setSearchSent(false)
     }
-    const add = (keyword) => {
-        axios.put(API + path + keyword.id, null, { headers: {"Authorization" : `Bearer ${token}`} })
+    const add = (item) => {
+        axios.put(API + path + item.id, null, { headers: {"Authorization" : `Bearer ${token}`} })
             .then(res => {
-                console.log(res.data);
-                setAdditionalKeywords((prevList) => {
-                    return [...prevList, keyword]
+                setLikedAuthors((prevList) => {
+                    return [...prevList, item]
                 })
             })
             .catch(e => alert(e))
     }
-    const remove = (keyword) => {
-        axios.delete(API + path + keyword.id, { headers: {"Authorization" : `Bearer ${token}`} })
+    const remove = (item) => {
+        axios.delete(API + path + item.id, { headers: {"Authorization" : `Bearer ${token}`} })
             .then(res => {
-                console.log(res.data);
-                setAdditionalKeywords((prevList) => {
-                    return prevList.filter((x) => x.id !== keyword.id)
+                setLikedAuthors((prevList) => {
+                    return prevList.filter((x) => x.id !== item.id)
                 })
             })
             .catch(e => alert(e))
     }
-
+ 
     return(
         <div>
-            {additionalKeywords.length > 0 && <div className="showing">
-                <p className="section-title vi-spacer-xl hi-spacer-xs">Additional Keywords</p>
+            {likedAuthors.length > 0 && <div className="showing">
+                <p className="section-title vi-spacer-xl hi-spacer-xs">Liked Authors</p>
                 <div className="flex center wrap gap-xs">{
-                    additionalKeywords.map((keyword) => {return (
+                    likedAuthors.map((item) => {return (
                         <button className="flex center showing" style={{paddingRight:'0px'}} disabled={true}>
-                            <p>{keyword.keyword}</p>
-                            <button className="icon-button"><span className="material-symbols-outlined icon" onClick={() => { remove(keyword) }}>cancel</span></button>
+                            <p>{item.name}</p>
+                            <button className="icon-button"><span className="material-symbols-outlined icon" onClick={() => { remove(item) }}>cancel</span></button>
                         </button>
                 )})
                 }</div>
             </div>}
 
-            <p className="card-body neutral v-spacer-xs vi-spacer-l hi-spacer-xs">Add more Keywords</p>
+            <p className="card-body neutral v-spacer-xs vi-spacer-l hi-spacer-xs">Add more Authors</p>
             <div className="flex v-spacer-xs gap-xs">
                 <div className="input-wrapper regular-border v-spacer-xs" style={{paddingRight:'4px'}}>
                     <span className="material-symbols-outlined icon input-icon">search</span>
@@ -90,10 +88,11 @@ export default function AdditionalSubjects({subjects}) {
             </div>
             
             <div className="flex center wrap gap-xs">{
-                found.map((keyword) => {
-                        var found = additionalKeywords.find(x => x.id == keyword.id) != undefined
-                        return (<button className={`flex center showing ${found ? 'text-button-selected' : 'outline-button'}`} onClick={() => { if(!found) add(keyword) }}>
-                            {keyword.keyword} <p className="neutral hi-spacer-xs">{keyword.relevance}</p>
+                found.map((item) => {
+                        var found = likedAuthors.find(x => x.id == item.id) != undefined
+                        return (<button className={`flex center showing ${found ? 'text-button-selected' : 'outline-button'}`} onClick={() => { if(!found) add(item) }}>
+                            {item.name} 
+                            {/* <p className="neutral hi-spacer-xs">{item.relevance}</p> */}
                         </button>)}
                     )
             }</div>
@@ -108,7 +107,6 @@ export default function AdditionalSubjects({subjects}) {
                 <p className="card-body">Try something different!</p>
             </div>}
 
-        </div>   
+        </div>
     )
-
 }

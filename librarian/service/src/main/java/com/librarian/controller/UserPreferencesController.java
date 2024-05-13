@@ -40,4 +40,14 @@ public class UserPreferencesController {
     public ResponseEntity<UserPreferencesDTO> deleteAdditional(@AuthenticationPrincipal UserDetails user, @PathVariable Long subjectId) throws HttpResponseException{
         return new ResponseEntity<UserPreferencesDTO>(service.deleteAdditionalSubject(user.getUsername(), subjectId), HttpStatus.OK);
     }
+    
+    @PutMapping("/authors/{authorId}")
+    public ResponseEntity<UserPreferencesDTO> addLikedAuthor(@AuthenticationPrincipal UserDetails user, @PathVariable Long authorId) throws HttpResponseException{
+        return new ResponseEntity<UserPreferencesDTO>(service.addLikedAuthor(user.getUsername(), authorId), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/authors/{authorId}")
+    public ResponseEntity<UserPreferencesDTO> deleteLikedAuthor(@AuthenticationPrincipal UserDetails user, @PathVariable Long authorId) throws HttpResponseException{
+        return new ResponseEntity<UserPreferencesDTO>(service.deleteLikedAuthor(user.getUsername(), authorId), HttpStatus.OK);
+    }
 }

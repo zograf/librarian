@@ -3,16 +3,22 @@ package com.librarian.dto;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.librarian.model.EGender;
 import com.librarian.model.UserPreferences;
 
 public class UserPreferencesDTO {
+    
+    Logger logger = LoggerFactory.getLogger(UserPreferencesDTO.class);
+
     public Long id;
     // readBooks
     // library
     public List<SubjectDTO> likedSubjects;
     public List<SubjectDTO> additionalSubjects;
-    // likedAuthors
+    public List<AuthorDTO> likedAuthors;
     public Integer age;
     // targetYear
     public EGender gender;
@@ -20,9 +26,11 @@ public class UserPreferencesDTO {
     public UserPreferencesDTO(UserPreferences preferences) {
         this.id = preferences.id;
         //this.likedSubjects = preferences.likedSubjects.stream().map(SubjectDTO::new).collect(Collectors.toList());
-        this.additionalSubjects = preferences.additionalSubjects.stream().map(SubjectDTO::new).collect(Collectors.toList());
+        this.additionalSubjects = preferences.getAdditionalSubjects().stream().map(SubjectDTO::new).collect(Collectors.toList());
+        this.likedAuthors = preferences.getLikedAuthors().stream().map(AuthorDTO::new).collect(Collectors.toList());
         this.age = preferences.age;
         this.gender = preferences.gender;
+        logger.debug("Found: " + preferences.getLikedAuthors().size());
     }
     public Long getId() {
         return id;

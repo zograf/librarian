@@ -2,24 +2,24 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import { API } from "../../../enviroment"
 import AdditionalSubjects from "./AdditionalSubjects"
+import LikedAuthors from "./LikedAuthors"
 
 // { headers: {"Authorization" : `Bearer ${token}`} }
 
 export default function Preferences() {    
     let path = '/user/preferences/'
-    const userId = localStorage.getItem("id")
     const token = localStorage.getItem("token")
-    const email = localStorage.getItem("username")
 
     const [age, setAge] = useState(undefined)
     const [likedKeywords, setLikedKeywords] = useState([])
-    const [searchSent, setSearchSent] = useState(false)
+    const [likedAuthors, setLikedAuthors] = useState([])
 
     useEffect(() => {
         axios.get(API + path,  { headers: {"Authorization" : `Bearer ${token}`} })
             .then(res => {
                 setAge(res.data.age)
                 setLikedKeywords(res.data.additionalSubjects)
+                setLikedAuthors(res.data.likedAuthors)
                 console.log(res.data)
             })
             .catch(e => console.log(e))
@@ -39,8 +39,8 @@ export default function Preferences() {
                 </div>
             </div>
 
-            <AdditionalSubjects additionalSubjects={likedKeywords} />
-
+            <AdditionalSubjects subjects={likedKeywords} />
+            <LikedAuthors authors={likedAuthors}/>
         </div>
     )
 }

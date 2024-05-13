@@ -25,7 +25,7 @@ public class SubjectsController {
     private SubjectsService service;
 
     @PostMapping("/like")
-    public List<SubjectDTO> getFilteredKeywords(@RequestParam String phrase) {
+    public List<SubjectDTO> getFiltered(@RequestParam String phrase) {
         return service.findByKeyword(phrase);
     }
     

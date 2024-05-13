@@ -8,4 +8,5 @@ import com.librarian.model.Author;
 @Repository
 public interface AuthorsRepo extends JpaRepository<Author, Long> {
     List<Author> findByKey(String key);
+    List<Author> findByNameContains(String phrase);
 }

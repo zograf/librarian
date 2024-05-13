@@ -1,7 +1,6 @@
 package com.librarian.model;
 
-import java.util.List;
-
+import java.util.Set;
 import javax.persistence.*;
 
 
@@ -12,19 +11,19 @@ public class UserPreferences {
     public Long id;
 
     @OneToMany
-    public List<Book> readBooks;
+    public Set<Book> readBooks;
 
     @OneToMany
-    public List<Book> library;
+    public Set<Book> library;
 
     @OneToMany
-    public List<Subject> likedSubjects;
+    public Set<Subject> likedSubjects;
 
     @OneToMany(fetch = FetchType.EAGER)
-    public List<Subject> additionalSubjects;
+    public Set<Subject> additionalSubjects;
 
-    @OneToMany
-    public List<Author> likedAuthors;
+    @OneToMany(fetch = FetchType.EAGER)
+    public Set<Author> likedAuthors;
 
     @Column
     public Integer age;
@@ -33,9 +32,7 @@ public class UserPreferences {
 
     public EGender gender;
 
-    public UserPreferences() {
-
-    }
+    public UserPreferences() { }
 
     public Long getId() {
         return id;
@@ -45,43 +42,43 @@ public class UserPreferences {
         this.id = id;
     }
 
-    public List<Book> getReadBooks() {
+    public Set<Book> getReadBooks() {
         return readBooks;
     }
 
-    public void setReadBooks(List<Book> readBooks) {
+    public void setReadBooks(Set<Book> readBooks) {
         this.readBooks = readBooks;
     }
 
-    public List<Book> getLibrary() {
+    public Set<Book> getLibrary() {
         return library;
     }
 
-    public void setLibrary(List<Book> library) {
+    public void setLibrary(Set<Book> library) {
         this.library = library;
     }
 
-    public List<Subject> getLikedSubjects() {
+    public Set<Subject> getLikedSubjects() {
         return likedSubjects;
     }
 
-    public void setLikedSubjects(List<Subject> likedSubjects) {
+    public void setLikedSubjects(Set<Subject> likedSubjects) {
         this.likedSubjects = likedSubjects;
     }
 
-    public List<Subject> getAdditionalSubjects() {
+    public Set<Subject> getAdditionalSubjects() {
         return additionalSubjects;
     }
 
-    public void setAdditionalSubjects(List<Subject> additionalSubjects) {
+    public void setAdditionalSubjects(Set<Subject> additionalSubjects) {
         this.additionalSubjects = additionalSubjects;
     }
 
-    public List<Author> getLikedAuthors() {
+    public Set<Author> getLikedAuthors() {
         return likedAuthors;
     }
 
-    public void setLikedAuthors(List<Author> likedAuthors) {
+    public void setLikedAuthors(Set<Author> likedAuthors) {
         this.likedAuthors = likedAuthors;
     }
 

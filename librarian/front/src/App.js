@@ -4,7 +4,7 @@ import { LoginPage } from './pages/login/LoginPage';
 import { RegisterPage } from './pages/login/RegisterPage';
 import LibraryPage from './pages/home/Library';
 import UserRootLayout from './pages/root/UserRootLayout';
-import Preferences from './pages/home/Preferences';
+import Preferences from './pages/home/preferences/Preferences';
 import Recommend from './pages/home/Recommend';
 
 export default function App() {

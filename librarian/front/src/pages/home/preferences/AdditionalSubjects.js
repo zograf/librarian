@@ -1,32 +1,16 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
-import { API } from "../../enviroment"
+import { API } from "../../../enviroment"
 
-// { headers: {"Authorization" : `Bearer ${token}`} }
-
-export default function Preferences() {    
+export default function AdditionalSubjects({additionalSubjects}) {
     let path = '/user/preferences/'
-    const userId = localStorage.getItem("id")
     const token = localStorage.getItem("token")
-    const email = localStorage.getItem("username")
 
-    const [age, setAge] = useState(undefined)
     const [phrase, setPhrase] = useState("")
     const [foundKeywords, setFoundKeywords] = useState([])
-    const [likedKeywords, setLikedKeywords] = useState([])
+    const [additionalKeywords, setAdditionalKeywords] = useState([...additionalSubjects])
     const [searchSent, setSearchSent] = useState(false)
 
-    useEffect(() => {
-        axios.get(API + path,  { headers: {"Authorization" : `Bearer ${token}`} })
-            .then(res => {
-                setAge(res.data.age)
-                setLikedKeywords(res.data.additionalSubjects)
-                console.log(res.data)
-            })
-            .catch(e => console.log(e))
-    }, [])
-
-    const handleAge = (e) => setAge(e.target.value)
     const handlePhrase = (e) => setPhrase(e.target.value)
 
     const searchKeywords = (e) => {
@@ -51,7 +35,7 @@ export default function Preferences() {
         axios.put(API + path + "additional/" + keyword.id, null, { headers: {"Authorization" : `Bearer ${token}`} })
             .then(res => {
                 console.log(res.data);
-                setLikedKeywords((prevList) => {
+                setAdditionalKeywords((prevList) => {
                     return [...prevList, keyword]
                 })
             })
@@ -61,7 +45,7 @@ export default function Preferences() {
         axios.delete(API + path + "additional/" + keyword.id, { headers: {"Authorization" : `Bearer ${token}`} })
             .then(res => {
                 console.log(res.data);
-                setLikedKeywords((prevList) => {
+                setAdditionalKeywords((prevList) => {
                     return prevList.filter((x) => x.id !== keyword.id)
                 })
             })
@@ -69,20 +53,11 @@ export default function Preferences() {
     }
 
     return(
-        <div className="w-100 standard-padding">
-        <p className="section-title">Main Information</p>
-
-            <div className="flex">
-                <div className="input-wrapper regular-border v-spacer-xs">
-                    <span className="material-symbols-outlined icon input-icon">elderly</span>
-                    <input placeholder="Age" type="number" min={5} value={age} onChange={handleAge}/>
-                </div>
-            </div>
-
-            { likedKeywords.length > 0 && <div className="showing">
-                <p className="section-title vi-spacer-xl">Favorite Keywords</p>
+        <div>        
+            {additionalKeywords.length > 0 && <div className="showing">
+                <p className="section-title vi-spacer-xl hi-spacer-xs">Additional Keywords</p>
                 <div className="flex center wrap gap-xs">{
-                    likedKeywords.map((keyword) => {return (
+                    additionalKeywords.map((keyword) => {return (
                         <button className="flex center showing" style={{paddingRight:'0px'}} disabled={true}>
                             <p>{keyword.keyword}</p>
                             <button className="icon-button"><span className="material-symbols-outlined icon" onClick={() => { removeKeyword(keyword) }}>cancel</span></button>
@@ -91,7 +66,7 @@ export default function Preferences() {
                 }</div>
             </div>}
 
-            <p className="section-title vi-spacer-xl">Add Keywords</p>
+            <p className="card-body neutral v-spacer-xs vi-spacer-l hi-spacer-xs">Add more Keywords</p>
             <div className="flex v-spacer-xs gap-xs">
                 <div className="input-wrapper regular-border v-spacer-xs" style={{paddingRight:'4px'}}>
                     <span className="material-symbols-outlined icon input-icon">search</span>
@@ -111,22 +86,27 @@ export default function Preferences() {
                     </p>
                 }
             </div>
+            
             <div className="flex center wrap gap-xs">{
                 foundKeywords.map((keyword) => {
-                        var found = likedKeywords.find(x => x.id == keyword.id) != undefined
+                        var found = additionalKeywords.find(x => x.id == keyword.id) != undefined
                         return (<button className={`flex center showing ${found ? 'text-button-selected' : 'outline-button'}`} onClick={() => { if(!found) addKeyword(keyword) }}>
                             {keyword.keyword} <p className="neutral hi-spacer-xs">{keyword.relevance}</p>
                         </button>)}
                     )
             }</div>
+            
             {(!searchSent || (searchSent && phrase.length < 3)) && <div className="dashed-card showing flex column gap-xs center justify-center">
                 <p className="card-title neutral">About Keywords</p>
                 <p className="card-body">Each book has multiple keywords that describe it's content. Adding keywords to your favorites will fine tune your recommendations.</p>
             </div>}
+            
             {searchSent && phrase.length >= 3 && foundKeywords.length == 0 && <div className="dashed-card showing flex column gap-xs center justify-center">
                 <p className="card-title neutral">No Results</p>
                 <p className="card-body">Try something different!</p>
             </div>}
-        </div>
+
+        </div>   
     )
+
 }

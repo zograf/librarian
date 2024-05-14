@@ -8,4 +8,5 @@ import com.librarian.model.Book;
 @Repository
 public interface BooksRepo extends JpaRepository<Book, Long> {
     List<Book> findByKey(String key);
+    List<Book> findByTitleContains(String phrase);
 }

@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.librarian.model.EGender;
+import com.librarian.model.ETargetYear;
 import com.librarian.model.UserPreferences;
 
 public class UserPreferencesDTO {
@@ -20,15 +21,16 @@ public class UserPreferencesDTO {
     public List<SubjectDTO> additionalSubjects;
     public List<AuthorDTO> likedAuthors;
     public Integer age;
-    // targetYear
+    public ETargetYear targetYear;
     public EGender gender;
 
     public UserPreferencesDTO(UserPreferences preferences) {
         this.id = preferences.id;
-        //this.likedSubjects = preferences.likedSubjects.stream().map(SubjectDTO::new).collect(Collectors.toList());
+        this.likedSubjects = preferences.likedSubjects.stream().map(SubjectDTO::new).collect(Collectors.toList());
         this.additionalSubjects = preferences.getAdditionalSubjects().stream().map(SubjectDTO::new).collect(Collectors.toList());
         this.likedAuthors = preferences.getLikedAuthors().stream().map(AuthorDTO::new).collect(Collectors.toList());
         this.age = preferences.age;
+        this.targetYear = preferences.targetYear;
         this.gender = preferences.gender;
         logger.debug("Found: " + preferences.getLikedAuthors().size());
     }

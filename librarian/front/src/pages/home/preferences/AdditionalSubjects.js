@@ -3,14 +3,17 @@ import { useEffect, useState } from "react"
 import { API } from "../../../enviroment"
 
 export default function AdditionalSubjects({subjects}) {
-    let path = '/user/preferences/additional/'
+    let path = '/user/preferences/subjects/additional/'
     const token = localStorage.getItem("token")
 
     const [phrase, setPhrase] = useState("")
     const handlePhrase = (e) => setPhrase(e.target.value)
 
     const [items, setItems] = useState([])
-    useEffect(() => { setItems(subjects) }, [subjects])
+    useEffect(() => { 
+        setItems(subjects) 
+        setEditMode(subjects.length == 0)
+    }, [subjects])
 
     const [found, setFound] = useState([])
     const [searchSent, setSearchSent] = useState(false)
@@ -57,11 +60,11 @@ export default function AdditionalSubjects({subjects}) {
 
     return(
         <div>
+            <div className="flex center space-between gap-l vi-spacer-xl">
+                <p className="section-title hi-spacer-xs">Additional Keywords</p>
+                <button className="text-button v-spacer-s" onClick={() => setEditMode(!editMode)}>{editMode ? 'Save' : 'Edit Subjects'}</button>
+            </div>
             {items.length > 0 && <div className="showing">
-                <div className="flex center space-between gap-l vi-spacer-xl">
-                    <p className="section-title hi-spacer-xs">Additional Keywords</p>
-                    <button className="text-button v-spacer-s" onClick={() => setEditMode(!editMode)}>{editMode ? 'Save' : 'Edit Subjects'}</button>
-                </div>
                 <div className="flex center wrap gap-xs">{
                     items.map((keyword) => {return (
                         <button className="flex center showing" style={{paddingRight:'0px'}} disabled={true}>

@@ -53,7 +53,7 @@ export function DropDownInput({options, icon, placeholder, callback}) {
     ) 
 }
 
-export function DropDownSelect({options, icon, placeholder, callback}) {
+export function DropDownSelect({options, icon, placeholder, callback, enabled, initialValue}) {
     const [value, setValue] = useState("")
     const [isVisible, setIsVisible] = useState(false)
     const [showError, setError] = useState(false)
@@ -64,6 +64,11 @@ export function DropDownSelect({options, icon, placeholder, callback}) {
             setValue("")
         }
     }, [options.length])
+
+    useEffect(() => {
+        let value = options.find((x) => x.value == initialValue)
+        if(value != undefined) setValue(value.label)
+    }, [initialValue])
 
     const handleOnClick = () => {
         //console.log("Click")
@@ -85,7 +90,7 @@ export function DropDownSelect({options, icon, placeholder, callback}) {
     return(
         <div className={['input-wrapper', showError ? 'error-border' : "regular-border", options.length === 0 ? 'disabled-input' : ''].join(' ')} onMouseLeave={hide}>
             <span className="material-symbols-outlined icon input-icon">{icon}</span>
-            <input className={['select-input'].join(' ')} style={{userSelect:"none"}} contentEditable={false} readOnly={true} placeholder={placeholder} value={value} onClick={handleOnClick} onSelect={handleSelect}/>
+            <input className={['select-input'].join(' ')} disabled={!enabled} style={{userSelect:"none"}} contentEditable={false} readOnly={true} placeholder={placeholder} value={value} onClick={handleOnClick} onSelect={handleSelect}/>
             <div className={['drop-down', isVisible ? 'visible' : ""].join(' ')}>
                 { options?.map((item) => {
                     return( <li onClick={(e) => { itemSelected(item) }}>{item.label}</li> )

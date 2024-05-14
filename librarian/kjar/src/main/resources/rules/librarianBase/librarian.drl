@@ -9,35 +9,37 @@ end
 
 // AGE RULES
 
-rule "Adult"
-salience 100
-no-loop
-    when
-        $u: UserPreferences(age > 22)
-        not Flag(name == "flag_adult", up == $u)
-    then
-        insert(new Flag("flag_adult", $u));
-end
-
-rule "Young adult"
-salience 100
-no-loop
-    when
-        $u: UserPreferences(age > 12)
-        not Flag(name == "flag_ya", up == $u)
-    then
-        insert(new Flag("flag_ya", $u));
-end
-
-rule "Juvenile"
-salience 100
-no-loop
-    when
-        $u: UserPreferences(age > 2)
-        not Flag(name == "flag_juvenile", up == $u)
-    then
-        insert(new Flag("flag_juvenile", $u));
-end
+//rule "Adult"
+//salience 100
+//no-loop
+//    when
+//        $u: UserPreferences(age > 22)
+//        not Flag(name == "flag_adult", up == $u)
+//        not Flag(name == "flag_juvenile", up == $u)
+//        not Flag(name == "flag_ya", up == $u)
+//    then
+//        insert(new Flag("flag_adult", $u));
+//end
+//
+//rule "Young adult"
+//salience 100
+//no-loop
+//    when
+//        $u: UserPreferences(age > 12)
+//        not Flag(name == "flag_ya", up == $u)
+//    then
+//        insert(new Flag("flag_ya", $u));
+//end
+//
+//rule "Juvenile"
+//salience 100
+//no-loop
+//    when
+//        $u: UserPreferences(age > 2)
+//        not Flag(name == "flag_juvenile", up == $u)
+//    then
+//        insert(new Flag("flag_juvenile", $u));
+//end
 
 rule "Filter juvenile books"
 salience 99

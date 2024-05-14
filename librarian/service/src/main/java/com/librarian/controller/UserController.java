@@ -1,11 +1,17 @@
 package com.librarian.controller;
 
+import java.io.InputStream;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
+import org.drools.template.DataProvider;
+import org.drools.template.DataProviderCompiler;
+import org.drools.template.objects.ArrayDataProvider;
 import org.kie.api.KieServices;
+import org.kie.api.io.Resource;
+import org.kie.api.io.ResourceType;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.slf4j.Logger;
@@ -67,6 +73,20 @@ public class UserController {
         ks = KieServices.Factory.get();
         kContainer = ks.getKieClasspathContainer(); 
         ksession = kContainer.newKieSession("librarian-session");
+
+        //InputStream template = this.getClass().getResourceAsStream("/rules/templateBase/librarianTempl.drt");
+        //InputStream data = this.getClass().getResourceAsStream("template-data.xls");
+        //ExternalSpreadsheetCompiler converter = new ExternalSpreadsheetCompiler();
+        //String drl = converter.compile(data, template, 3, 2);
+        //DataProvider provider = new ArrayDataProvider(new String [][]{
+        //    new String[] {"22", "flag_adult"},
+        //    new String[] {"12", "flag_ya"},
+        //    new String[] {"2", "flag_juvenile"}
+        //});
+
+        //DataProviderCompiler compiler = new DataProviderCompiler();
+        //String drl = compiler.compile(provider, template);
+
         List<Book> books = bookRepository.findAll();
         for (Book b : books) {
             ksession.insert(b);

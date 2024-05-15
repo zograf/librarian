@@ -1,5 +1,10 @@
 <kmodule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://jboss.org/kie/6.0.0/kmodule">
-    <kbase name="librarianBase" packages="librarianBase">
+    <kbase name="librarianBase" packages="rules">
+        <ruleTemplate 
+            dtable="./templates/ageRules.xlsx"
+            template="./templates/librarianTempl.drt"
+            row="2" col="1"/>
+
         <ksession name="librarian-session" type="stateful"/>
     </kbase>
 </kmodule>

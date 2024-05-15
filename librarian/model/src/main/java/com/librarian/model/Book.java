@@ -1,7 +1,9 @@
 package com.librarian.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.*;
 
@@ -23,11 +25,11 @@ public class Book {
 
     //@ManyToMany(cascade = CascadeType.MERGE)
     @ManyToMany
-    public List<Author> authors;
+    public Set<Author> authors;
 
     //@OneToMany(cascade = CascadeType.MERGE)
     @ManyToMany
-    public List<Subject> subjects;
+    public Set<Subject> subjects;
 
     @Column
     public String description;
@@ -48,7 +50,7 @@ public class Book {
     public EAge age;
 
     @OneToMany(cascade = CascadeType.MERGE)
-    public List<Rating> ratings;
+    public Set<Rating> ratings;
 
     @Transient
     public Long categoryId;
@@ -57,7 +59,7 @@ public class Book {
 
     }
 
-    public Book(String key, String title, Subject category, List<Author> authors, List<Subject> subjects, String description,
+    public Book(String key, String title, Subject category, Set<Author> authors, Set<Subject> subjects, String description,
             String firstSentence, String subtitle, Integer firstPublishedYear, String cover, EAge age) {
         this.key = key;
         this.title = title;
@@ -70,7 +72,7 @@ public class Book {
         this.firstPublishedYear = firstPublishedYear;
         this.cover = cover;
         this.age = age;
-        this.ratings = new ArrayList<>();
+        this.ratings = new HashSet<>();
     }
 
     public Long getId() {
@@ -89,11 +91,11 @@ public class Book {
         this.title = title;
     }
 
-    public List<Subject> getSubjects() {
+    public Set<Subject> getSubjects() {
         return subjects;
     }
 
-    public void setSubjects(List<Subject> subjects) {
+    public void setSubjects(Set<Subject> subjects) {
         this.subjects = subjects;
     }
 
@@ -145,11 +147,11 @@ public class Book {
         this.age = age;
     }
 
-    public List<Rating> getRatings() {
+    public Set<Rating> getRatings() {
         return ratings;
     }
 
-    public void setRatings(List<Rating> ratings) {
+    public void setRatings(Set<Rating> ratings) {
         this.ratings = ratings;
     }
 
@@ -161,11 +163,11 @@ public class Book {
         this.key = key;
     }
 
-    public List<Author> getAuthors() {
+    public Set<Author> getAuthors() {
         return authors;
     }
 
-    public void setAuthors(List<Author> authors) {
+    public void setAuthors(Set<Author> authors) {
         this.authors = authors;
     }
 

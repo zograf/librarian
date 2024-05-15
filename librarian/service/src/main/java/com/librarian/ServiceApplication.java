@@ -60,7 +60,7 @@ public class ServiceApplication  {
     }
 
     public void LoadData() {
-        String path = "/home/zograf/librarian/";
+        String path = "L:\\FTN\\sbnz\\data_processing\\sql\\";
         log.info("Loading authors");
         LoadAuthors(path + "author.csv");
         log.info("Loading subjects");
@@ -244,120 +244,6 @@ public class ServiceApplication  {
         catch(IOException ioException) { 
             System.out.println("ERROR ioException");
             System.out.println(ioException.getMessage());
-        }
-    }
-
-    public void LoadBooksOld(String path) {
-        Integer counter = 0;
-        LocalDateTime start = LocalDateTime.now();
-        List<Book> items = new ArrayList<>();
-        HashMap<String, Subject> subjectMap = new HashMap<>();
-        HashMap<String, Author> authorMap = new HashMap<>();
-        log.info("Started adding books");
-
-        for (Author a : authorsRepo.findAll())
-            authorMap.put(a.key, a);
-        log.info("Added Author map");
-
-        for (Subject s : subjectsRepo.findAll()) 
-            subjectMap.put(s.keyword, s);
-        log.info("Added Subject map");
-
-        try(BufferedReader br = new BufferedReader(new FileReader(path))) {
-            for(String line; (line = br.readLine()) != null;) {
-                JSONObject item = new JSONObject(line);
-
-                Set<Subject> subjects = new HashSet<Subject>();
-                for(int i = 0; i < item.getJSONArray("subjects").length(); i++) {
-                    String keyword = item.getJSONArray("subjects").getString(i);
-                    if (subjectMap.get(keyword) != null)
-                        subjects.add(subjectMap.get(keyword));
-                }
-                List<Author> authors = new ArrayList<>();
-                for(int i = 0; i < item.getJSONArray("authors").length(); i++) {
-                    String keyword = item.getJSONArray("authors").getString(i);
-                    if (authorMap.get(keyword) != null)
-                        authors.add(authorMap.get(keyword));
-                }
-                if (authors.isEmpty()) continue;
-                if (subjects.isEmpty()) continue;
-                Integer year = -1;
-                try {
-                    year = item.getInt("first_published_year");
-                } catch(Exception ex) {
-                    log.info("THIS MF: " + item.getString("first_published_year"));
-                }
-
-                String desc = item.getString("description");
-                String firstSentence = item.getString("first_sentence");
-                String title = item.getString("title");
-                String subtitle = item.getString("subtitle");
-
-                if (desc.length() > 250) 
-                    desc = item.getString("description").substring(0, 245) + "...";
-
-                if (firstSentence.length() > 250) 
-                    firstSentence = item.getString("first_sentence").substring(0, 245) + "...";
-
-                if (title.length() > 250) {
-                    title = item.getString("title").substring(0, 245) + "...";
-                }
-
-                if (subtitle.length() > 250) {
-                    subtitle = item.getString("subtitle").substring(0, 245) + "...";
-                }
-
-                Subject main_cat = subjectMap.get(item.getString("category"));
-                try{
-                    //log.info("BOOK START");
-                    //log.info("Main cat: " + main_cat.keyword);
-                    //log.info("REMOVING");
-                    //for (Subject s : subjects)
-                    //    log.info(s.keyword);
-                    subjects.remove(main_cat);
-                    //log.info("REMOVED");
-                    //for (Subject s : subjects)
-                    //    log.info(s.keyword);
-                    //log.info("END");
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-                
-                List<Subject> subjectList = new ArrayList<Subject>(subjects);
-
-                Book book = new Book(
-                    item.getString("key"),
-                    title,
-                    main_cat,
-                    authors,
-                    subjectList,
-                    desc,
-                    firstSentence,
-                    subtitle,
-                    year,
-                    item.getString("cover"),
-                    EAge.values()[item.getInt("age_group")]
-                );
-                items.add(book);
-                counter += 1;
-                if (counter % 10000 == 0) {
-                    log.info("Counter: " + counter.toString());
-                }
-                //booksRepo.save(book);
-            }
-            booksRepo.saveAll(items);
-        }
-        catch(FileNotFoundException notFound) { 
-            System.out.println("ERROR notFound");
-            System.out.println(notFound.getMessage());
-        }
-        catch(IOException ioException) { 
-            System.out.println("ERROR ioException");
-            System.out.println(ioException.getMessage());
-        }
-        catch(JSONException jsonException) { 
-            System.out.println("ERROR jsonException");
-            System.out.println(jsonException.getMessage());
         }
     }
 	

@@ -6,3 +6,5 @@
 .idea/*
 librarian-db/data
 librarian-db/data/*
+librarian-db/sql
+librarian-db/sql/*

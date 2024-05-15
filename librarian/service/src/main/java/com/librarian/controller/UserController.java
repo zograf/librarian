@@ -67,7 +67,7 @@ public class UserController {
         ks = KieServices.Factory.get();
         kContainer = ks.getKieClasspathContainer(); 
         ksession = kContainer.newKieSession("librarian-session");
-        List<Book> books = bookRepository.findAll();
+        List<Book> books = bookRepository.findAllBooks();
         for (Book b : books) {
             ksession.insert(b);
         }

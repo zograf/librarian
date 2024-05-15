@@ -3,6 +3,8 @@ package com.librarian.dto;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.hibernate.Hibernate;
+
 import com.librarian.model.Book;
 import com.librarian.model.EAge;
 
@@ -27,7 +29,7 @@ public class BookDTO {
         this.title = book.title;
         this.category = new SubjectDTO(book.category);
         //this.authors = book.authors.stream().map(AuthorDTO::new).collect(Collectors.toList());
-        this.subjects = book.subjects.stream().map(SubjectDTO::new).collect(Collectors.toList());
+        this.subjects = book.getSubjects().stream().map(SubjectDTO::new).collect(Collectors.toList());
         this.description = book.description;
         this.firstSentence = book.firstSentence;
         this.firstPublishedYear = book.firstPublishedYear;

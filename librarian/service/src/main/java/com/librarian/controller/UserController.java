@@ -10,10 +10,9 @@ import org.drools.template.DataProvider;
 import org.drools.template.DataProviderCompiler;
 import org.drools.template.objects.ArrayDataProvider;
 import org.kie.api.KieServices;
-import org.kie.api.io.Resource;
-import org.kie.api.io.ResourceType;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
+import org.kie.api.runtime.rule.Agenda;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +27,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.librarian.dto.LoginDTO;
 import com.librarian.dto.RegisterDTO;
 import com.librarian.dto.TokenDTO;
+import com.librarian.helper.SessionBuilder;
 import com.librarian.model.Book;
 import com.librarian.model.User;
 import com.librarian.model.UserPreferences;
 import com.librarian.repository.BooksRepo;
 import com.librarian.service.UserService;
+import com.twilio.rest.proxy.v1.service.Session;
 
 @RestController
 @RequestMapping(value = "/api/user")
@@ -40,10 +41,8 @@ public class UserController {
 
     Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    KieServices ks;
-    KieContainer kContainer; 
-    KieSession ksession;
     UserPreferences u;
+    KieSession ksession;
 
     @Autowired
     private UserService userService;
@@ -70,22 +69,16 @@ public class UserController {
 
     @PostConstruct
     public void init() {
-        ks = KieServices.Factory.get();
-        kContainer = ks.getKieClasspathContainer(); 
-        ksession = kContainer.newKieSession("librarian-session");
+        DataProvider provider = new ArrayDataProvider(new String [][]{
+            new String[] {"22", "\"flag_adult\""},
+            new String[] {"12", "\"flag_ya\""},
+            new String[] {"2", "\"flag_juvenile\""}
+        });
 
-        //InputStream template = this.getClass().getResourceAsStream("/rules/templateBase/librarianTempl.drt");
-        //InputStream data = this.getClass().getResourceAsStream("template-data.xls");
-        //ExternalSpreadsheetCompiler converter = new ExternalSpreadsheetCompiler();
-        //String drl = converter.compile(data, template, 3, 2);
-        //DataProvider provider = new ArrayDataProvider(new String [][]{
-        //    new String[] {"22", "flag_adult"},
-        //    new String[] {"12", "flag_ya"},
-        //    new String[] {"2", "flag_juvenile"}
-        //});
-
-        //DataProviderCompiler compiler = new DataProviderCompiler();
-        //String drl = compiler.compile(provider, template);
+        SessionBuilder sessionBuilder = new SessionBuilder();
+        sessionBuilder.addRules("/rules/librarian.drl");
+        sessionBuilder.addTemplate("/templates/librarianTempl.drt", provider);
+        ksession = sessionBuilder.build();
 
         List<Book> books = bookRepository.findAll();
         for (Book b : books) {

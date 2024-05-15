@@ -2,19 +2,19 @@ template header
 age
 flag
 
-package librarianBase;
+package rules;
 import com.librarian.model.*;
 
 template "age rules"
 
-rule "Adult @{row.rowNumber}"
+rule "Age @{row.rowNumber}"
 salience 100
 no-loop
     when
         $u: UserPreferences(age > @{age})
-        not Flag(name == "flag_adult", up == $u)
-        not Flag(name == "flag_juvenile", up == $u)
-        not Flag(name == "flag_ya", up == $u)
+        //not Flag(name == "flag_adult", up == $u)
+        //not Flag(name == "flag_juvenile", up == $u)
+        //not Flag(name == "flag_ya", up == $u)
     then
         insert(new Flag(@{flag}, $u));
 end

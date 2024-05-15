@@ -1,11 +1,6 @@
-package librarianBase;
+package rules;
 
 import com.librarian.model.*;
-
-declare Flag
-    name : String
-    up : UserPreferences
-end
 
 // AGE RULES
 

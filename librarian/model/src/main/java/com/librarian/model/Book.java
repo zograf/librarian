@@ -22,10 +22,10 @@ public class Book {
     @ManyToOne
     public Subject category;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.MERGE) //(fetch = FetchType.EAGER)
     public Set<Author> authors;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.MERGE) //(fetch = FetchType.EAGER)
     public Set<Subject> subjects;
 
     @Column

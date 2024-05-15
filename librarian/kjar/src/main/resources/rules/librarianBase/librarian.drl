@@ -1,4 +1,4 @@
-package rules.librarianBase;
+package librarianBase;
 
 import com.librarian.model.*;
 

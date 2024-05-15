@@ -16,6 +16,6 @@ public class BooksService {
     private BooksRepo repo;
 
     public List<BookDTO> findByName(String phrase) {
-        return repo.findByTitleContains(phrase).stream().map(BookDTO::new).collect(Collectors.toList());
+        return repo.nadjiPoTitleLike(phrase).stream().map(BookDTO::new).collect(Collectors.toList());
     }
 }

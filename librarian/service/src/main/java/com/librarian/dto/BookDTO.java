@@ -27,7 +27,7 @@ public class BookDTO {
         this.title = book.title;
         this.category = new SubjectDTO(book.category);
         //this.authors = book.authors.stream().map(AuthorDTO::new).collect(Collectors.toList());
-        //this.subjects = book.subjects.stream().map(SubjectDTO::new).collect(Collectors.toList());
+        this.subjects = book.subjects.stream().map(SubjectDTO::new).collect(Collectors.toList());
         this.description = book.description;
         this.firstSentence = book.firstSentence;
         this.firstPublishedYear = book.firstPublishedYear;

@@ -11,7 +11,6 @@ export default function SearchBooks() {
     const [found, setFound] = useState([])
 
     const search = (e) => {
-        console.log(e);
         if (e.code == 'Enter' && phrase.length >= 3)
             axios.post(API + "/books/like", null, { params: { phrase : phrase }})
                 .then(resp => {

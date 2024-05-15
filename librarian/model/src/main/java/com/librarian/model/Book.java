@@ -1,9 +1,7 @@
 package com.librarian.model;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.*;
 
@@ -19,14 +17,17 @@ public class Book {
     @Column
     public String title;
 
+    //@ManyToOne(cascade = CascadeType.MERGE)
     @ManyToOne
     public Subject category;
 
-    @ManyToMany(cascade = CascadeType.MERGE) //(fetch = FetchType.EAGER)
-    public Set<Author> authors;
+    //@ManyToMany(cascade = CascadeType.MERGE)
+    @ManyToMany
+    public List<Author> authors;
 
-    @ManyToMany(cascade = CascadeType.MERGE) //(fetch = FetchType.EAGER)
-    public Set<Subject> subjects;
+    //@OneToMany(cascade = CascadeType.MERGE)
+    @ManyToMany
+    public List<Subject> subjects;
 
     @Column
     public String description;
@@ -61,8 +62,8 @@ public class Book {
         this.key = key;
         this.title = title;
         this.category = category;
-        this.authors = new HashSet<Author>(authors);
-        this.subjects = new HashSet<Subject>(subjects);
+        this.authors = authors;
+        this.subjects = subjects;
         this.description = description;
         this.firstSentence = firstSentence;
         this.subtitle = subtitle;
@@ -86,6 +87,14 @@ public class Book {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public List<Subject> getSubjects() {
+        return subjects;
+    }
+
+    public void setSubjects(List<Subject> subjects) {
+        this.subjects = subjects;
     }
 
     public String getDescription() {
@@ -152,6 +161,14 @@ public class Book {
         this.key = key;
     }
 
+    public List<Author> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(List<Author> authors) {
+        this.authors = authors;
+    }
+
     public Subject getCategory() {
         return category;
     }
@@ -166,22 +183,6 @@ public class Book {
 
     public void setCategoryId(Long categoryId) {
         this.categoryId = categoryId;
-    }
-
-    public Set<Author> getAuthors() {
-        return authors;
-    }
-
-    public void setAuthors(Set<Author> authors) {
-        this.authors = authors;
-    }
-
-    public Set<Subject> getSubjects() {
-        return subjects;
-    }
-
-    public void setSubjects(Set<Subject> subjects) {
-        this.subjects = subjects;
     }
     
 }

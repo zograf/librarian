@@ -1,0 +1,21 @@
+template header
+category
+
+package rules;
+import com.librarian.model.*;
+
+
+template "age rules"
+
+rule "Category filter @{row.rowNumber}"
+no-loop
+    when
+        $f: Flag(name == @{category}, $up: up)
+        $br: BookRank(userPreferences == $up)
+        $s : String() from $br.book.category.keyword
+        !isParent($s, @{category})
+    then
+        delete($b);
+end
+
+end template

@@ -11,7 +11,7 @@ rule "Filter books @{row.rowNumber}"
 salience 97
     when
         Flag(name == @{flag}, $up: up)
-        $b: Book(age == @{eage})
+        $b: Book(age <= @{eage})
     then
         BookRank $bookRank = new BookRank();
         $bookRank.setBook($b);

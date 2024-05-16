@@ -2,6 +2,7 @@ package com.librarian.controller;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -30,9 +31,12 @@ import com.librarian.dto.TokenDTO;
 import com.librarian.helper.SessionBuilder;
 import com.librarian.model.Book;
 import com.librarian.model.EAge;
+import com.librarian.model.Subject;
 import com.librarian.model.User;
 import com.librarian.model.UserPreferences;
 import com.librarian.repository.BooksRepo;
+import com.librarian.repository.SubjectsRepo;
+import com.librarian.repository.UserPreferencesRepo;
 import com.librarian.service.UserService;
 import com.twilio.rest.proxy.v1.service.Session;
 
@@ -49,7 +53,13 @@ public class UserController {
     private UserService userService;
 
     @Autowired
+    private UserPreferencesRepo userPreferencesRepository;
+
+    @Autowired
     private BooksRepo bookRepository;
+
+    @Autowired
+    private SubjectsRepo subjectsRepository;
 
     @PostMapping(value="register", consumes = "application/json")
     public ResponseEntity<String> registerUser(@RequestBody RegisterDTO dto) {
@@ -94,17 +104,29 @@ public class UserController {
         for (Book b : books) {
             ksession.insert(b);
         }
-        u = new UserPreferences();
-        u.setAge(5);
+
+        List<Subject> subjects = subjectsRepository.findAll();
+
+        for (Subject s : subjects) {
+            ksession.insert(s);
+        }
+
+        ksession.insert(new String("test"));
+        logger.info("Firing rules!");
+        ksession.fireAllRules();
     }
 
     @GetMapping(value = "test")
     public ResponseEntity<String> getSomething() {
-        logger.info("");
-        logger.info(Long.toString(ksession.getFactCount()));
-        ksession.insert(u);
-        int count = ksession.fireAllRules();
-        logger.info("Executed " + count + " rules");
+        Optional<UserPreferences> optional = userPreferencesRepository.findById(1L);
+        if (optional.isPresent()) {
+            u = optional.get();
+            logger.info("");
+            logger.info(Long.toString(ksession.getFactCount()));
+            ksession.insert(u);
+            int count = ksession.fireAllRules();
+            logger.info("Executed " + count + " rules");
+        }
         return ResponseEntity.ok("");
     }
 

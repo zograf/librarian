@@ -1,3 +1,57 @@
 package rules;
 
 import com.librarian.model.*;
+import java.util.List;
+
+// category, fiction
+// fiction, horror
+// horror, zombie
+query isParent(String parent, String keyword)
+    eval(keyword.equals(parent))
+    or
+    (Subject(parent, keyword; ) and eval(!parent.equals("category")))
+    or
+    (Subject(x, keyword; ) and isParent(parent, x; ) and eval(!x.equals("category")))
+end
+
+rule "Test"
+    when
+        String(this=="test")
+        isParent("cyanide", "fiction"; )
+    then
+        System.out.println("Is parent");
+end
+
+rule "Find parent with the most occurrences"
+    when
+        $up : UserPreferences( $list : additionalSubjects )
+        $groupedSubjects : List() from collect(Subject() from $list)
+        $maxParent : String() from getMaxParent($groupedSubjects)
+    then
+        insert(new Flag($maxParent, $up));
+        System.out.println("Parent with the most occurrences: " + $maxParent);
+end
+
+function String getMaxParent(List groupedSubjects) {
+    String maxParent = null;
+    int maxOccurrences = 0;
+    for (Object parent : groupedSubjects) {
+        String parentString = ((Subject) parent).getParent();
+        int occurrences = countOccurrences(groupedSubjects, parentString);
+        if (occurrences > maxOccurrences) {
+            maxOccurrences = occurrences;
+            maxParent = parentString;
+        }
+    }
+    return maxParent;
+}
+
+function int countOccurrences(List list, String value) {
+    int count = 0;
+    for (Object obj : list) {
+        if (value.equals(((Subject) obj).getParent())) {
+            count++;
+        }
+    }
+    return count;
+}

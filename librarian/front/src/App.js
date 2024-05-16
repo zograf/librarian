@@ -6,6 +6,7 @@ import LibraryPage from './pages/home/Library';
 import UserRootLayout from './pages/root/UserRootLayout';
 import Preferences from './pages/home/preferences/Preferences';
 import Recommend from './pages/home/Recommend';
+import SearchBooks from './pages/home/books/SearchBooks';
 
 export default function App() {
     return(
@@ -20,6 +21,7 @@ export default function App() {
                         <Route exact path='/library' element={<LibraryPage/>} />
                         <Route exact path='/preferences' element={<Preferences/>} />
                         <Route exact path='/recommend' element={<Recommend/>} />
+                        <Route exact path='/books/search' element={<SearchBooks/>} />
                     </Routes>
                 </UserRootLayout>
             </Router>

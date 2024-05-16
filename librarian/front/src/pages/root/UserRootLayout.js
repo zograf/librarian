@@ -9,7 +9,7 @@ export default function UserRootLayout(props) {
                     <p className="hero-title"><b>Librari</b>an</p>
                     <div className="flex justify-center gap-l">
                         <button className={`text-button ${window.location.href.includes('/library') ? 'text-button-selected' : ''}`} onClick={() => { window.location.href = '/library' }}>My Library</button>
-                        <button className={`text-button ${window.location.href.includes('/trending') ? 'text-button-selected' : ''}`} >Trending</button>
+                        <button className={`text-button ${window.location.href.includes('/books/search') ? 'text-button-selected' : ''}`} onClick={() => { window.location.href = '/books/search' }}>Search</button>
                         <button className={`text-button ${window.location.href.includes('/preferences') ? 'text-button-selected' : ''}`} onClick={() => { window.location.href = '/preferences' }}>Preferences</button>
                         <button className={`text-button ${window.location.href.includes('/recommend') ? 'text-button-selected' : ''}`} onClick={() => { window.location.href = '/recommend' }}>Recommend</button>
                         {/* <p>{window.location.href.includes('/lib') ? "Da" : "Ne"}</p> */}

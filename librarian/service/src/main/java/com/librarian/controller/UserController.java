@@ -80,7 +80,8 @@ public class UserController {
         sessionBuilder.addTemplate("/templates/librarianTempl.drt", provider);
         ksession = sessionBuilder.build();
 
-        List<Book> books = bookRepository.findAll();
+        List<Book> books = bookRepository.findAllBooks();
+
         for (Book b : books) {
             ksession.insert(b);
         }

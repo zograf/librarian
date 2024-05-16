@@ -29,6 +29,7 @@ import com.librarian.dto.RegisterDTO;
 import com.librarian.dto.TokenDTO;
 import com.librarian.helper.SessionBuilder;
 import com.librarian.model.Book;
+import com.librarian.model.EAge;
 import com.librarian.model.User;
 import com.librarian.model.UserPreferences;
 import com.librarian.repository.BooksRepo;
@@ -69,15 +70,23 @@ public class UserController {
     
     @PostConstruct
     public void init() {
-        DataProvider provider = new ArrayDataProvider(new String [][]{
-            new String[] {"22", "\"flag_adult\""},
-            new String[] {"12", "\"flag_ya\""},
-            new String[] {"2", "\"flag_juvenile\""}
+        DataProvider ageTemplProvider = new ArrayDataProvider(new String [][]{
+            new String[] {"22", "\"flag_adult\"", "100"},
+            new String[] {"12", "\"flag_ya\"", "99"},
+            new String[] {"2", "\"flag_juvenile\"", "98"}
+        });
+
+        DataProvider filterAgeTemplProvider = new ArrayDataProvider(new String [][]{
+            new String[] {"\"flag_adult\"", "EAge.ADULT"},
+            new String[] {"\"flag_ya\"", "EAge.YOUNG_ADULT"},
+            new String[] {"\"flag_juvenile\"", "EAge.JUVENILE"}
         });
 
         SessionBuilder sessionBuilder = new SessionBuilder();
         sessionBuilder.addRules("/rules/librarian.drl");
-        sessionBuilder.addTemplate("/templates/librarianTempl.drt", provider);
+        sessionBuilder.addRules("/rules/cleanup.drl");
+        sessionBuilder.addTemplate("/templates/ageTempl.drt", ageTemplProvider);
+        sessionBuilder.addTemplate("/templates/filterAgeTempl.drt", filterAgeTemplProvider);
         ksession = sessionBuilder.build();
 
         List<Book> books = bookRepository.findAllBooks();

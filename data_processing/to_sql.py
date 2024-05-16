@@ -108,16 +108,22 @@ def main():
     with open("./sql/book_subjects.csv", "w", encoding="utf-8") as f:
         for book_id in book_id_map:
             book = book_id_map[book_id]
+            subjects_set = set()
             for s in book['subjects']:
                 subject_id = subject_map[s]
+                if subject_id in subjects_set: continue
+                subjects_set.add(subject_id)
                 f.write(str(book_id) + "," + str(subject_id) + "\n")
 
     with open("./sql/book_authors.csv", "w", encoding="utf-8") as f:
         for book_id in book_id_map:
             book = book_id_map[book_id]
+            authors_set = set()
             for a in book['authors']:
                 if a in author_map:
                     author_id = author_map[a]
+                    if author_id in authors_set: continue
+                    authors_set.add(author_id)
                     f.write(str(book_id) + "," + str(author_id) + "\n")
         
 

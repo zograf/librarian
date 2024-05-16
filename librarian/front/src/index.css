@@ -37,7 +37,7 @@ body {
       --input-radius: 24px;
 
       --standard-padding: 48px;
-      --font-fam: 'Roboto'
+      --font-fam: 'DM Sans'
   
   }
   
@@ -76,6 +76,7 @@ body {
   /* ------------------------------------------------------------------------------------------------------ Texts */
   p {
       font-weight: 500;
+      letter-spacing: -0.01rem;
   }
   .label {
       font-size: 0.95em;
@@ -83,7 +84,7 @@ body {
   }
   .card-title {
       font-weight: 300;
-      font-size: 1.3rem;
+      font-size: 1.1rem;
   }
   .card-label {
       font-weight: 400;
@@ -104,7 +105,7 @@ body {
       font-weight: 600;
   }
   .card-body {
-      font-size: 1.05rem;
+      font-size: 1rem;
       font-weight: 400;
   }
   .index {
@@ -122,6 +123,7 @@ body {
       font-weight: 100;
       margin-bottom: 12px;
       margin-left: 4px;
+      letter-spacing: unset;
   }
   .bold {
       font-weight: 600;
@@ -200,6 +202,9 @@ body {
   .standard-padding-xs {
     padding: calc(var(--standard-padding) / 4) calc(var(--standard-padding) / 3) calc(var(--standard-padding) / 4) calc(var(--standard-padding) / 3);
   }
+  .standard-padding-xxs {
+    padding: calc(var(--standard-padding) / 6) calc(var(--standard-padding) / 5) calc(var(--standard-padding) / 6) calc(var(--standard-padding) / 5);
+  }
   
   /* ------------------------------------------------------------------------------------------------------ Containers */
   .page {
@@ -265,7 +270,7 @@ body {
       background-color: rgb(var(--background));
   }
   .shadow {
-      box-shadow: rgba(17, 17, 26, 0.1) 0px 0px 16px;
+      box-shadow: rgba(17, 17, 26, 0.13) 0px 0px 16px;
   }
   .dashed-card {
       min-width: 260px;

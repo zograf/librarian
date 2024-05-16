@@ -1,6 +1,6 @@
 import json
 
-def load_subjects(file='./subjects.txt'):
+def load_subjects(file='./filtered_subjects.txt'):
     books = []
     with open(file, 'r') as f:
         for line in f.readlines():
@@ -19,7 +19,7 @@ def main():
         if subject["keyword"] in nonfiction_list:
             subject["parent"] = "nonfiction"
 
-    subjects.append({'parent': 'nonfiction', 'keyword': 'nonfiction'})
+    subjects.append({'parent': 'nonfiction', 'keyword': 'nonfiction', 'relevance': 9999})
 
     for subject in subjects:
         if subject["keyword"] == subject["parent"]:

@@ -11,9 +11,9 @@ import com.librarian.model.Book;
 public interface BooksRepo extends JpaRepository<Book, Long> {
     List<Book> findByKey(String key);
 
-    @Query("SELECT DISTINCT book FROM Book book JOIN FETCH book.subjects WHERE book.title LIKE %:phrase%")
+    @Query("SELECT DISTINCT book FROM Book book JOIN FETCH book.subjects JOIN FETCH book.authors WHERE LOWER(book.title) LIKE %:phrase%")
     List<Book> findByTitleContains(@Param("phrase") String phrase);
 
-    @Query("SELECT DISTINCT book FROM Book book JOIN FETCH book.subjects")
+    @Query("SELECT DISTINCT book FROM Book book JOIN FETCH book.subjects JOIN FETCH book.authors")
     List<Book> findAllBooks();
 }

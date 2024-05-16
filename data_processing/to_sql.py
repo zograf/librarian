@@ -2,7 +2,7 @@ import json
 
 BOOK_PATH = "./filtered_books_7.txt"
 AUTHOR_PATH = "./authors_filtered.txt"
-SUBJECT_PATH = "./filtered_subjects.txt"
+SUBJECT_PATH = "./subjects_mod.txt"
 RATING_PATH = "./ratings.txt"
 
 BOOK_ID = 1

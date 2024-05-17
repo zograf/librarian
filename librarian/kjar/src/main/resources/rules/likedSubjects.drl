@@ -1,0 +1,38 @@
+package rules;
+
+import com.librarian.model.*;
+import java.util.List;
+import java.util.Set;
+
+rule "Add points for liked subjects"
+salience 90
+no-loop
+    when
+        $up: UserPreferences($list: likedSubjects)
+        $br: BookRank(userPreferences == $up, progress==2, $bookList: book.subjects)
+    then
+        Integer add = calculateLikedSubjects($bookList, $list);
+        Integer rating = $br.getRating();
+        modify($br) { setProgress(3), setRating(rating + add) }
+end
+
+function Integer calculateLikedSubjects(Set bookSubjects, Set likedSubjects) {
+    Integer ret = 0;
+    for (Object bookSubject : bookSubjects) {
+        Subject bs = (Subject) bookSubject;
+        for (Object likedSubject : likedSubjects) {
+            Subject ls = (Subject) likedSubject;
+            if (bs.getKeyword().equals(ls.getKeyword()) && 
+                bs.getParent().equals(ls.getParent())) {
+                    ret += 10;
+            }
+        }
+        //if (likedSubjects.contains(bs)) {
+        //    ret += 10;
+        //}
+    }
+    //if (ret != 0) {
+    //    System.out.println(ret);
+    //}
+    return ret;
+}

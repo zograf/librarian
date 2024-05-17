@@ -1,6 +1,7 @@
 package com.librarian.controller;
 
 import java.io.InputStream;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -117,6 +118,7 @@ public class UserController {
         sessionBuilder.addRules("/rules/librarian.drl");
         sessionBuilder.addRules("/rules/cleanup.drl");
         sessionBuilder.addRules("/rules/target_year.drl");
+        sessionBuilder.addRules("/rules/likedSubjects.drl");
         sessionBuilder.addTemplate("/templates/ageTempl.drt", ageTemplProvider);
         sessionBuilder.addTemplate("/templates/filterAgeTempl.drt", filterAgeTemplProvider);
         sessionBuilder.addTemplate("/templates/categoryFilterTempl.drt", categoryFilterTemplProvider);
@@ -124,14 +126,14 @@ public class UserController {
 
         List<Book> books = bookRepository.findAllBooks();
 
-        //for (int i = 0; i < 10000; i++) {
-        //    ksession.insert(books.get(i));
-        //}
-        for (Book b : books) {
-            ksession.insert(b);
+        for (int i = 0; i < 50000; i++) {
+            ksession.insert(books.get(i));
         }
+        //for (Book b : books) {
+        //    ksession.insert(b);
+        //}
 
-        System.out.println(books.get(0).category.keyword);
+        //System.out.println(books.get(0).category.keyword);
 
         List<Subject> subjects = subjectsRepository.findAll();
 
@@ -147,6 +149,9 @@ public class UserController {
             u = optional.get();
             logger.info("");
             logger.info(Long.toString(ksession.getFactCount()));
+            u.setLikedSubjects(new HashSet<>());
+            for (Subject s : u.getAdditionalSubjects())
+                u.getLikedSubjects().add(s);
             ksession.insert(u);
             int count = ksession.fireAllRules();
             logger.info("Executed " + count + " rules");

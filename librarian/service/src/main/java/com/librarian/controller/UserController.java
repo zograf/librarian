@@ -119,6 +119,7 @@ public class UserController {
         sessionBuilder.addRules("/rules/cleanup.drl");
         sessionBuilder.addRules("/rules/target_year.drl");
         sessionBuilder.addRules("/rules/likedSubjects.drl");
+        sessionBuilder.addRules("/rules/likedAuthors.drl");
         sessionBuilder.addTemplate("/templates/ageTempl.drt", ageTemplProvider);
         sessionBuilder.addTemplate("/templates/filterAgeTempl.drt", filterAgeTemplProvider);
         sessionBuilder.addTemplate("/templates/categoryFilterTempl.drt", categoryFilterTemplProvider);

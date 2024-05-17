@@ -22,8 +22,7 @@ function Integer calculateLikedSubjects(Set bookSubjects, Set likedSubjects) {
         Subject bs = (Subject) bookSubject;
         for (Object likedSubject : likedSubjects) {
             Subject ls = (Subject) likedSubject;
-            if (bs.getKeyword().equals(ls.getKeyword()) && 
-                bs.getParent().equals(ls.getParent())) {
+            if (bs.getId().equals(ls.getId())) {
                     ret += 10;
             }
         }

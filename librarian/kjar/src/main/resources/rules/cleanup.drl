@@ -1,0 +1,42 @@
+package rules;
+
+import com.librarian.model.*;
+
+rule "Remove book ranks"
+salience 2
+    when
+        Flag($up: up)
+        $br: BookRank(userPreferences == $up)
+    then
+        delete($br);
+end
+
+rule "Remove adult flag"
+salience 1
+no-loop
+    when
+        $f: Flag(name == "flag_adult", $up: up)
+    then
+        delete($up);
+        delete($f);
+end
+
+rule "Remove young adult flag"
+salience 1
+no-loop
+    when
+        $f: Flag(name == "flag_ya", $up: up)
+    then
+        delete($up);
+        delete($f);
+end
+
+rule "Remove juvenile flag"
+salience 1
+no-loop
+    when
+        $f: Flag(name == "flag_juvenile", $up: up)
+    then
+        delete($up);
+        delete($f);
+end

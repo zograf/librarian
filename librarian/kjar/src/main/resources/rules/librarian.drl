@@ -1,103 +1,52 @@
 package rules;
 
 import com.librarian.model.*;
+import java.util.List;
 
-// AGE RULES
-
-//rule "Adult"
-//salience 100
-//no-loop
-//    when
-//        $u: UserPreferences(age > 22)
-//        not Flag(name == "flag_adult", up == $u)
-//        not Flag(name == "flag_juvenile", up == $u)
-//        not Flag(name == "flag_ya", up == $u)
-//    then
-//        insert(new Flag("flag_adult", $u));
-//end
-//
-//rule "Young adult"
-//salience 100
-//no-loop
-//    when
-//        $u: UserPreferences(age > 12)
-//        not Flag(name == "flag_ya", up == $u)
-//    then
-//        insert(new Flag("flag_ya", $u));
-//end
-//
-//rule "Juvenile"
-//salience 100
-//no-loop
-//    when
-//        $u: UserPreferences(age > 2)
-//        not Flag(name == "flag_juvenile", up == $u)
-//    then
-//        insert(new Flag("flag_juvenile", $u));
-//end
-
-rule "Filter juvenile books"
-salience 99
-    when
-        Flag(name == "flag_juvenile", $up: up)
-        not Flag(name == "flag_adult", up == $up)
-        not Flag(name == "flag_ya", up == $up)
-        $b: Book(age == EAge.JUVENILE)
-    then
-        BookRank $bookRank = new BookRank();
-        $bookRank.setBook($b);
-        $bookRank.setRating(0);
-        $bookRank.setUserPreferences($up);
-        insert($bookRank);
+// category, fiction
+// fiction, horror
+// horror, zombie
+query isParent(String parent, String keyword)
+    exists(
+        eval(keyword.equals(parent))
+        ||
+        (Subject(parent, keyword; ) and eval(!parent.equals("category")))
+        ||
+        (Subject(x, keyword; ) and isParent(parent, x; ))
+    )
 end
 
-rule "Filter young adult books"
-salience 99
+rule "Find parent with the most occurrences"
+salience 96
     when
-        Flag(name == "flag_ya", $up: up)
-        Flag(name == "flag_juvenile", up == $up)
-        not Flag(name == "flag_adult", up == $up)
-        $b: Book(age == EAge.YOUNG_ADULT)
+        $up : UserPreferences( $list : additionalSubjects )
+        $groupedSubjects : List() from collect(Subject() from $list)
+        $maxParent : String() from getMaxParent($groupedSubjects)
     then
-        BookRank $bookRank = new BookRank();
-        $bookRank.setBook($b);
-        $bookRank.setRating(0);
-        $bookRank.setUserPreferences($up);
-        insert($bookRank);
+        insert(new Flag($maxParent, $up));
+        System.out.println("Parent with the most occurrences: " + $maxParent);
 end
 
-rule "Filter adult books"
-salience 99
-    when
-        Flag(name == "flag_adult", $up: up)
-        Flag(name == "flag_ya", up == $up)
-        Flag(name == "flag_juvenile", up == $up)
-        $b: Book()
-    then
-        BookRank $bookRank = new BookRank();
-        $bookRank.setBook($b);
-        $bookRank.setRating(0);
-        $bookRank.setUserPreferences($up);
-        insert($bookRank);
-end
+function String getMaxParent(List groupedSubjects) {
+    String maxParent = null;
+    int maxOccurrences = 0;
+    for (Object parent : groupedSubjects) {
+        String parentString = ((Subject) parent).getParent();
+        int occurrences = countOccurrences(groupedSubjects, parentString);
+        if (occurrences > maxOccurrences) {
+            maxOccurrences = occurrences;
+            maxParent = parentString;
+        }
+    }
+    return maxParent;
+}
 
-// CLEAN UP
-
-rule "Remove book ranks"
-salience 2
-    when
-        Flag($up: up)
-        $br: BookRank(userPreferences == $up)
-    then
-        delete($br);
-end
-
-rule "Remove juvenile flag"
-salience 1
-no-loop
-    when
-        $f: Flag(name == "flag_juvenile", $up: up)
-    then
-        delete($up);
-        delete($f);
-end
+function int countOccurrences(List list, String value) {
+    int count = 0;
+    for (Object obj : list) {
+        if (value.equals(((Subject) obj).getParent())) {
+            count++;
+        }
+    }
+    return count;
+}

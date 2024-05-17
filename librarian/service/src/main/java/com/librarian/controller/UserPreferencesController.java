@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 
 
+
 @RestController
 @RequestMapping(value = "/api/user/preferences")
 public class UserPreferencesController {
@@ -65,5 +66,15 @@ public class UserPreferencesController {
     @DeleteMapping("/authors/{authorId}")
     public ResponseEntity<UserPreferencesDTO> deleteLikedAuthor(@AuthenticationPrincipal UserDetails user, @PathVariable Long authorId) throws HttpResponseException{
         return new ResponseEntity<UserPreferencesDTO>(service.deleteLikedAuthor(user.getUsername(), authorId), HttpStatus.OK);
+    }
+
+    @PutMapping("/library/{bookId}")
+    public ResponseEntity<UserPreferencesDTO> addBookToLibrary(@AuthenticationPrincipal UserDetails user, @PathVariable Long bookId) throws HttpResponseException{
+        return new ResponseEntity<UserPreferencesDTO>(service.addBookToLibrary(user.getUsername(), bookId), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/library/{bookId}")
+    public ResponseEntity<UserPreferencesDTO> removeBookFromLibrary(@AuthenticationPrincipal UserDetails user, @PathVariable Long bookId) throws HttpResponseException{
+        return new ResponseEntity<UserPreferencesDTO>(service.removeBookFromLibrary(user.getUsername(), bookId), HttpStatus.OK);
     }
 }

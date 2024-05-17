@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { DropDownInput } from "../../components/drop_down/DropDown";
+import { DropDownInput, DropDownSelect } from "../../components/drop_down/DropDown";
 import axios from "axios";
 import { API } from "../../enviroment";
 
@@ -54,8 +54,8 @@ function RegisterForm() {
                 <span className="material-symbols-outlined icon input-icon">elderly</span>
                 <input placeholder="Age" type="number" min={5} value={age} onChange={handleAge}/>
             </div>
-            <DropDownInput placeholder={"Gender"} icon={"wc"} options={genders} callback={handleGender}/>
-            <div className="input-wrapper regular-border v-spacer-xs">
+            <DropDownSelect placeholder={"Gender"} icon={"wc"} options={genders} callback={handleGender} enabled={true}/>
+            <div className="input-wrapper regular-border v-spacer-xs vi-spacer-xs">
                 <span className="material-symbols-outlined icon input-icon">mail</span>
                 <input placeholder="Email" type="email" value={email} onChange={handleEmail} />
             </div>

@@ -10,12 +10,15 @@ import org.springframework.stereotype.Service;
 
 import com.librarian.dto.UserPreferencesDTO;
 import com.librarian.model.Author;
+import com.librarian.model.Book;
 import com.librarian.model.ETargetYear;
 import com.librarian.model.Subject;
 import com.librarian.model.User;
 import com.librarian.model.UserPreferences;
 import com.librarian.repository.AuthorsRepo;
+import com.librarian.repository.BooksRepo;
 import com.librarian.repository.IUserRepository;
+import com.librarian.repository.ReadBookRepo;
 import com.librarian.repository.SubjectsRepo;
 import com.librarian.repository.UserPreferencesRepo;
 
@@ -30,13 +33,17 @@ public class UserPreferencesService {
     private  AuthorsRepo authorsRepo;
     @Autowired 
     private  IUserRepository userRepo;
+    @Autowired
+    private ReadBookRepo readBookRepo;
+    @Autowired
+    private BooksRepo booksRepo;
 
     Logger logger = LoggerFactory.getLogger(UserPreferencesService.class);
 
     private UserPreferences _get(String username) {
         User user = userRepo.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
         UserPreferences prefs = user.getPreferences();
-        prefs.likedAuthors.size();
+        prefs.getLibrary();
         return user.getPreferences();
     }
 
@@ -87,6 +94,19 @@ public class UserPreferencesService {
     public UserPreferencesDTO deleteLikedAuthor(String username, Long authorId) throws HttpResponseException {
         UserPreferences preferences = _get(username);
         preferences.getLikedAuthors().removeIf((item) -> item.getId().equals(authorId));
+        return new UserPreferencesDTO(repo.save(preferences));
+    }
+
+    public UserPreferencesDTO addBookToLibrary(String username, Long bookId) throws HttpResponseException {
+        UserPreferences preferences = _get(username);
+        Book book = booksRepo.findById(bookId).orElseThrow(() -> new HttpResponseException(HttpStatus.SC_NOT_FOUND, "Book not found"));
+        preferences.getLibrary().add(book);
+        return new UserPreferencesDTO(repo.save(preferences));
+    }
+
+    public UserPreferencesDTO removeBookFromLibrary(String username, Long bookId) throws HttpResponseException {
+        UserPreferences preferences = _get(username);
+        preferences.getLibrary().removeIf((item) -> item.getId().equals(bookId));
         return new UserPreferencesDTO(repo.save(preferences));
     }
 }

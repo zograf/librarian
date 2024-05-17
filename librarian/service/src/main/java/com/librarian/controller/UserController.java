@@ -32,10 +32,12 @@ import com.librarian.dto.TokenDTO;
 import com.librarian.helper.SessionBuilder;
 import com.librarian.model.Book;
 import com.librarian.model.EAge;
+import com.librarian.model.Rating;
 import com.librarian.model.Subject;
 import com.librarian.model.User;
 import com.librarian.model.UserPreferences;
 import com.librarian.repository.BooksRepo;
+import com.librarian.repository.RatingsRepo;
 import com.librarian.repository.SubjectsRepo;
 import com.librarian.repository.UserPreferencesRepo;
 import com.librarian.service.UserService;
@@ -61,6 +63,9 @@ public class UserController {
 
     @Autowired
     private SubjectsRepo subjectsRepository;
+
+    @Autowired
+    private RatingsRepo ratingRepository;
 
     @PostMapping(value="register", consumes = "application/json")
     public ResponseEntity<String> registerUser(@RequestBody RegisterDTO dto) {
@@ -138,9 +143,14 @@ public class UserController {
         //System.out.println(books.get(0).category.keyword);
 
         List<Subject> subjects = subjectsRepository.findAll();
+        List<Rating> ratings = ratingRepository.findAll();
 
         for (Subject s : subjects) {
             ksession.insert(s);
+        }
+
+        for (Rating r : ratings) {
+            ksession.insert(r);
         }
     }
 

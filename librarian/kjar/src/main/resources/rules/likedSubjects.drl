@@ -9,11 +9,11 @@ salience 90
 no-loop
     when
         $up: UserPreferences($list: likedSubjects)
-        $br: BookRank(userPreferences == $up, progress==2, $bookList: book.subjects)
+        $br: BookRank(userPreferences == $up, $bookList: book.subjects)
     then
         Integer add = calculateLikedSubjects($bookList, $list);
         Integer rating = $br.getRating();
-        modify($br) { setProgress(3), setRating(rating + add) }
+        modify($br) { setRating(rating + add) }
 end
 
 function Integer calculateLikedSubjects(Set bookSubjects, Set likedSubjects) {

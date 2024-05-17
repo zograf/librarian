@@ -17,6 +17,7 @@ salience 97
         $bookRank.setBook($b);
         $bookRank.setRating(0);
         $bookRank.setUserPreferences($up);
+        $bookRank.setProgress(0);
         insert($bookRank);
 end
 

@@ -92,28 +92,51 @@ public class UserController {
             new String[] {"\"flag_juvenile\"", "EAge.JUVENILE"}
         });
 
+        DataProvider categoryFilterTemplProvider = new ArrayDataProvider(new String [][]{
+            new String[] {"\"fiction\""},
+            new String[] {"\"nonfiction\""},
+            new String[] {"\"poetry\""},
+            new String[] {"\"psychology\""},
+            new String[] {"\"biography\""},
+            new String[] {"\"philosophy\""},
+            new String[] {"\"science\""},
+            new String[] {"\"mathematics\""},
+            new String[] {"\"politics\""},
+            new String[] {"\"literature\""},
+            new String[] {"\"history\""},
+            new String[] {"\"magic\""},
+            new String[] {"\"mystery\""},
+            new String[] {"\"juvenile\""},
+            new String[] {"\"horror\""},
+            new String[] {"\"romance\""},
+            new String[] {"\"young\""},
+            new String[] {"\"thriller\""},
+        });
+
         SessionBuilder sessionBuilder = new SessionBuilder();
         sessionBuilder.addRules("/rules/librarian.drl");
         sessionBuilder.addRules("/rules/cleanup.drl");
         sessionBuilder.addTemplate("/templates/ageTempl.drt", ageTemplProvider);
         sessionBuilder.addTemplate("/templates/filterAgeTempl.drt", filterAgeTemplProvider);
+        sessionBuilder.addTemplate("/templates/categoryFilterTempl.drt", categoryFilterTemplProvider);
         ksession = sessionBuilder.build();
 
         List<Book> books = bookRepository.findAllBooks();
 
+        //for (int i = 0; i < 10000; i++) {
+        //    ksession.insert(books.get(i));
+        //}
         for (Book b : books) {
             ksession.insert(b);
         }
+
+        System.out.println(books.get(0).category.keyword);
 
         List<Subject> subjects = subjectsRepository.findAll();
 
         for (Subject s : subjects) {
             ksession.insert(s);
         }
-
-        ksession.insert(new String("test"));
-        logger.info("Firing rules!");
-        ksession.fireAllRules();
     }
 
     @GetMapping(value = "test")

@@ -7,22 +7,17 @@ import java.util.List;
 // fiction, horror
 // horror, zombie
 query isParent(String parent, String keyword)
-    eval(keyword.equals(parent))
-    or
-    (Subject(parent, keyword; ) and eval(!parent.equals("category")))
-    or
-    (Subject(x, keyword; ) and isParent(parent, x; ) and eval(!x.equals("category")))
-end
-
-rule "Test"
-    when
-        String(this=="test")
-        isParent("cyanide", "fiction"; )
-    then
-        System.out.println("Is parent");
+    exists(
+        eval(keyword.equals(parent))
+        ||
+        (Subject(parent, keyword; ) and eval(!parent.equals("category")))
+        ||
+        (Subject(x, keyword; ) and isParent(parent, x; ))
+    )
 end
 
 rule "Find parent with the most occurrences"
+salience 96
     when
         $up : UserPreferences( $list : additionalSubjects )
         $groupedSubjects : List() from collect(Subject() from $list)

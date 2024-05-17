@@ -24,7 +24,7 @@ public class SessionBuilder {
     Logger logger = LoggerFactory.getLogger(SessionBuilder.class);
 
     private KieHelper kieHelper;
-    public static final boolean loggingEnabled = false;
+    public static final boolean loggingEnabled = true;
     
     public SessionBuilder() {
         this.kieHelper = new KieHelper();

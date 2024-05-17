@@ -25,14 +25,7 @@ public class BooksService {
     @Autowired
     private BooksRepo bookRepository;
 
-    //@Transactional(propagation=Propagation.REQUIRED, readOnly=true, noRollbackFor=Exception.class) - Ovo je mega sporo i ima slican problem kao join fetch
     public List<BookDTO> findByName(String phrase) {
-        //List<Book> books = bookRepository.findByTitleContains(phrase);
-        //for (Book b : books) {
-        //    logger.info(Integer.toString(b.getSubjects().size()));
-        //}
-        //logger.info(Integer.toString(books.size()));
-        return bookRepository.findByTitleContains(phrase).stream().map(BookDTO::new).collect(Collectors.toList());
-        //return new ArrayList<>();
+        return bookRepository.findByTitleContains(phrase.toLowerCase()).stream().map(BookDTO::new).collect(Collectors.toList());
     }
 }

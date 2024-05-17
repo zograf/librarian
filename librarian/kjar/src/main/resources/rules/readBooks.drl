@@ -1,0 +1,27 @@
+package rules;
+
+import com.librarian.model.*;
+import java.util.List;
+import java.util.Set;
+
+rule "Delete already read books"
+no-loop
+salience 96
+    when
+        $up: UserPreferences($list: readBooks)
+        $br: BookRank(userPreferences == $up, $id: book.id)
+        eval(hasReadBook($list, $id))
+    then
+        //System.out.println("IZBACIO KNJIGUUU");
+        delete($br);
+end
+
+function Boolean hasReadBook(Set readBooks, Long id) {
+    for (Object book: readBooks) {
+        Book b = (Book) book;
+        if (b.getId().equals(id)) {
+            return true;
+        }
+    }
+    return false;
+}

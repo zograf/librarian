@@ -27,8 +27,8 @@ function Integer calculateLikedAuthors(Set authorList, Set likedAuthors) {
             }
         }
     }
-    if (ret != 0) {
-        System.out.println(ret);
-    }
+    //if (ret != 0) {
+    //    System.out.println(ret);
+    //}
     return ret;
 }

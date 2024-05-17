@@ -120,6 +120,7 @@ public class UserController {
         sessionBuilder.addRules("/rules/target_year.drl");
         sessionBuilder.addRules("/rules/likedSubjects.drl");
         sessionBuilder.addRules("/rules/likedAuthors.drl");
+        sessionBuilder.addRules("/rules/readBooks.drl");
         sessionBuilder.addTemplate("/templates/ageTempl.drt", ageTemplProvider);
         sessionBuilder.addTemplate("/templates/filterAgeTempl.drt", filterAgeTemplProvider);
         sessionBuilder.addTemplate("/templates/categoryFilterTempl.drt", categoryFilterTemplProvider);
@@ -151,6 +152,12 @@ public class UserController {
             logger.info("");
             logger.info(Long.toString(ksession.getFactCount()));
             u.setLikedSubjects(new HashSet<>());
+            u.setReadBooks(new HashSet<>());
+            u.getReadBooks().add(bookRepository.findById(1L).get());
+            u.getReadBooks().add(bookRepository.findById(2L).get());
+            u.getReadBooks().add(bookRepository.findById(3L).get());
+            u.getReadBooks().add(bookRepository.findById(4L).get());
+            u.getReadBooks().add(bookRepository.findById(5L).get());
             for (Subject s : u.getAdditionalSubjects())
                 u.getLikedSubjects().add(s);
             ksession.insert(u);

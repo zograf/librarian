@@ -5,6 +5,12 @@ public class BookRank {
     public Integer rating;
     public UserPreferences userPreferences;
 
+
+    // -1 -> For deleting
+    // 0 -> Created
+    // 1 -> Passed the main cat filter
+    public Integer progress;
+
     public BookRank() {
 
     }
@@ -31,5 +37,13 @@ public class BookRank {
 
     public void setUserPreferences(UserPreferences userPreferences) {
         this.userPreferences = userPreferences;
+    }
+
+    public Integer getProgress() {
+        return progress;
+    }
+
+    public void setProgress(Integer progress) {
+        this.progress = progress;
     }
 }

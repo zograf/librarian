@@ -24,6 +24,7 @@ public class SessionBuilder {
     Logger logger = LoggerFactory.getLogger(SessionBuilder.class);
 
     private KieHelper kieHelper;
+    public static final boolean loggingEnabled = false;
     
     public SessionBuilder() {
         this.kieHelper = new KieHelper();
@@ -32,15 +33,13 @@ public class SessionBuilder {
     public void addTemplate(String path, DataProvider data) {
         InputStream template = this.getClass().getResourceAsStream(path);
 
-        DataProvider provider = new ArrayDataProvider(new String [][]{
-            new String[] {"22", "\"flag_adult\""},
-            new String[] {"12", "\"flag_ya\""},
-            new String[] {"2", "\"flag_juvenile\""}
-        });
-
         DataProviderCompiler compiler = new DataProviderCompiler();
-        String compiled = compiler.compile(provider, template);
-        //logger.info(compiled);
+        String compiled = compiler.compile(data, template);
+        
+        if (loggingEnabled) {
+            logger.info(compiled);
+        }
+
         kieHelper.addContent(compiled, ResourceType.DRL);
     }
 
@@ -54,7 +53,10 @@ public class SessionBuilder {
             ex.printStackTrace();
         }
 
-        //logger.info(text);
+        if (loggingEnabled) {
+            logger.info(text);
+        }
+
         kieHelper.addContent(text, ResourceType.DRL);
     }
 

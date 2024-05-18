@@ -2,6 +2,7 @@ package com.librarian.controller;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -29,9 +30,13 @@ import com.librarian.dto.RegisterDTO;
 import com.librarian.dto.TokenDTO;
 import com.librarian.helper.SessionBuilder;
 import com.librarian.model.Book;
+import com.librarian.model.EAge;
+import com.librarian.model.Subject;
 import com.librarian.model.User;
 import com.librarian.model.UserPreferences;
 import com.librarian.repository.BooksRepo;
+import com.librarian.repository.SubjectsRepo;
+import com.librarian.repository.UserPreferencesRepo;
 import com.librarian.service.UserService;
 import com.twilio.rest.proxy.v1.service.Session;
 
@@ -48,7 +53,13 @@ public class UserController {
     private UserService userService;
 
     @Autowired
+    private UserPreferencesRepo userPreferencesRepository;
+
+    @Autowired
     private BooksRepo bookRepository;
+
+    @Autowired
+    private SubjectsRepo subjectsRepository;
 
     @PostMapping(value="register", consumes = "application/json")
     public ResponseEntity<String> registerUser(@RequestBody RegisterDTO dto) {
@@ -69,33 +80,77 @@ public class UserController {
     
     @PostConstruct
     public void init() {
-        DataProvider provider = new ArrayDataProvider(new String [][]{
-            new String[] {"22", "\"flag_adult\""},
-            new String[] {"12", "\"flag_ya\""},
-            new String[] {"2", "\"flag_juvenile\""}
+        DataProvider ageTemplProvider = new ArrayDataProvider(new String [][]{
+            new String[] {"22", "\"flag_adult\"", "100"},
+            new String[] {"12", "\"flag_ya\"", "99"},
+            new String[] {"2", "\"flag_juvenile\"", "98"}
+        });
+
+        DataProvider filterAgeTemplProvider = new ArrayDataProvider(new String [][]{
+            new String[] {"\"flag_adult\"", "EAge.ADULT"},
+            new String[] {"\"flag_ya\"", "EAge.YOUNG_ADULT"},
+            new String[] {"\"flag_juvenile\"", "EAge.JUVENILE"}
+        });
+
+        DataProvider categoryFilterTemplProvider = new ArrayDataProvider(new String [][]{
+            new String[] {"\"fiction\""},
+            new String[] {"\"nonfiction\""},
+            new String[] {"\"poetry\""},
+            new String[] {"\"psychology\""},
+            new String[] {"\"biography\""},
+            new String[] {"\"philosophy\""},
+            new String[] {"\"science\""},
+            new String[] {"\"mathematics\""},
+            new String[] {"\"politics\""},
+            new String[] {"\"literature\""},
+            new String[] {"\"history\""},
+            new String[] {"\"magic\""},
+            new String[] {"\"mystery\""},
+            new String[] {"\"juvenile\""},
+            new String[] {"\"horror\""},
+            new String[] {"\"romance\""},
+            new String[] {"\"young\""},
+            new String[] {"\"thriller\""},
         });
 
         SessionBuilder sessionBuilder = new SessionBuilder();
         sessionBuilder.addRules("/rules/librarian.drl");
-        sessionBuilder.addTemplate("/templates/librarianTempl.drt", provider);
+        sessionBuilder.addRules("/rules/cleanup.drl");
+        sessionBuilder.addRules("/rules/target_year.drl");
+        sessionBuilder.addTemplate("/templates/ageTempl.drt", ageTemplProvider);
+        sessionBuilder.addTemplate("/templates/filterAgeTempl.drt", filterAgeTemplProvider);
+        sessionBuilder.addTemplate("/templates/categoryFilterTempl.drt", categoryFilterTemplProvider);
         ksession = sessionBuilder.build();
 
         List<Book> books = bookRepository.findAllBooks();
 
+        //for (int i = 0; i < 10000; i++) {
+        //    ksession.insert(books.get(i));
+        //}
         for (Book b : books) {
             ksession.insert(b);
         }
-        u = new UserPreferences();
-        u.setAge(5);
+
+        System.out.println(books.get(0).category.keyword);
+
+        List<Subject> subjects = subjectsRepository.findAll();
+
+        for (Subject s : subjects) {
+            ksession.insert(s);
+        }
     }
 
     @GetMapping(value = "test")
     public ResponseEntity<String> getSomething() {
-        logger.info("");
-        logger.info(Long.toString(ksession.getFactCount()));
-        ksession.insert(u);
-        int count = ksession.fireAllRules();
-        logger.info("Executed " + count + " rules");
+        Optional<UserPreferences> optional = userPreferencesRepository.findById(1L);
+        if (optional.isPresent()) {
+            u = optional.get();
+            logger.info("");
+            logger.info(Long.toString(ksession.getFactCount()));
+            ksession.insert(u);
+            int count = ksession.fireAllRules();
+            logger.info("Executed " + count + " rules");
+        }
         return ResponseEntity.ok("");
     }
 

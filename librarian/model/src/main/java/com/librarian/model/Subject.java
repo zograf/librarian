@@ -2,6 +2,8 @@ package com.librarian.model;
 
 import javax.persistence.*;
 
+import org.kie.api.definition.type.Position;
+
 @Entity
 public class Subject {
     @Id
@@ -9,9 +11,11 @@ public class Subject {
     public Long id;
 
     @Column
+    @Position(0)
     public String parent;
 
     @Column
+    @Position(1)
     public String keyword;
 
     @Column

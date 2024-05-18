@@ -1,25 +1,27 @@
+import axios from "axios"
+import { useEffect, useState } from "react"
+import { API } from "../../enviroment"
+import BookCardCompact from "../../components/BookCardCompact"
+
 export default function LibraryPage() {
-    const userId = localStorage.getItem("id")
+    let path = '/user/preferences/'
     const token = localStorage.getItem("token")
-    const email = localStorage.getItem("username")
+    const [preferences, setPreferences] = useState(undefined)
+
+    useEffect(() => {
+        axios.get(API + path,  { headers: {"Authorization" : `Bearer ${token}`} })
+        .then(res => { console.log(res.data); setPreferences(res.data) })
+        .catch(e => console.log(e))
+    }, [])
+
+    // Details
+    // const [viewDetails, setViewDetails] = useEffect(false)
 
     return(
-        <div className="w-100 standard-padding gap-s" style={{display:'grid', gridTemplateColumns:'1fr 1fr 1fr 1fr 1fr 1fr'}}>
-            <p className="card" style={{width:'100%', height:'400px', textAlign:'center'}}></p>
-            <p className="card" style={{width:'100%', height:'400px', textAlign:'center'}}></p>
-            <p className="card" style={{width:'100%', height:'400px', textAlign:'center'}}></p>
-            <p className="card" style={{width:'100%', height:'400px', textAlign:'center'}}></p>
-            <p className="card" style={{width:'100%', height:'400px', textAlign:'center'}}></p>
-            <p className="card" style={{width:'100%', height:'400px', textAlign:'center'}}></p>
-            <p className="card" style={{width:'100%', height:'400px', textAlign:'center'}}></p>
-            <p className="card" style={{width:'100%', height:'400px', textAlign:'center'}}></p>
-            <p className="card" style={{width:'100%', height:'400px', textAlign:'center'}}></p>
-            <p className="card" style={{width:'100%', height:'400px', textAlign:'center'}}></p>
-            <p className="card" style={{width:'100%', height:'400px', textAlign:'center'}}></p>
-            <p className="card" style={{width:'100%', height:'400px', textAlign:'center'}}></p>
-            <p className="card" style={{width:'100%', height:'400px', textAlign:'center'}}></p>
-            <p className="card" style={{width:'100%', height:'400px', textAlign:'center'}}></p>
-            <p className="card" style={{width:'100%', height:'400px', textAlign:'center'}}></p>
+        <div>
+            <div className="w-100 standard-padding gap-s" style={{display:'grid', gridTemplateColumns:'1fr 1fr 1fr 1fr 1fr'}}>
+                {preferences?.library.map(book => { return(<BookCardCompact book={book} isLiked={true} inLibrary={true}/>) })}
+            </div>
         </div>
     )
 }

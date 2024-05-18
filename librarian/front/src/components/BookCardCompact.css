@@ -8,12 +8,23 @@
     height: 70px;
     width: 100%;
     /* backdrop-filter: blur(24px); */
-    background-color: rgba(var(--background), 70%);
     transition: all 0.15s ease-in-out;
     scale: 1.01;
+    padding: 0;
+    overflow: hidden;
+}
+.taller-book-content {
+    height: 125px;
+}
+.warrning-chip {
+    margin: 8px;
+    z-index: 1;
+}
+.book-content-inner {
+    background-color: rgba(var(--background), 70%);
     padding: 10px 16px;
 }
-.book-content-wrapper::-webkit-scrollbar {
+.book-content-inner::-webkit-scrollbar {
     width: 5px;
 }
 .book-title {
@@ -80,9 +91,12 @@
 .book-card:hover .book-content-wrapper {
     bottom: 0;
     height: calc(100% - 58px);
-    background-color: rgba(var(--background), 90%);
+}
+.book-card:hover .book-content-inner {
     box-shadow: black 10px 10px 50px;
+    background-color: rgba(var(--background), 95%);
     overflow-y: scroll;
+    min-height: 100%;
 }
 .book-card:hover .book-title {
     overflow: visible;

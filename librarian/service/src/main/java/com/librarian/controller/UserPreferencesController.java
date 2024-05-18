@@ -1,6 +1,8 @@
 package com.librarian.controller;
 
 import org.apache.http.client.HttpResponseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 @RestController
 @RequestMapping(value = "/api/user/preferences")
 public class UserPreferencesController {
+
+    Logger logger = LoggerFactory.getLogger(UserPreferencesController.class);
 
     @Autowired
     private UserPreferencesService service;
@@ -75,6 +79,7 @@ public class UserPreferencesController {
 
     @DeleteMapping("/library/{bookId}")
     public ResponseEntity<UserPreferencesDTO> removeBookFromLibrary(@AuthenticationPrincipal UserDetails user, @PathVariable Long bookId) throws HttpResponseException{
+        logger.info("Removing book with id: " + Long.toString(bookId) + " for user: " + user.getUsername());
         return new ResponseEntity<UserPreferencesDTO>(service.removeBookFromLibrary(user.getUsername(), bookId), HttpStatus.OK);
     }
 }

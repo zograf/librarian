@@ -915,6 +915,17 @@ textarea {
 	font-weight: 500;
 	padding: 0 12px;
 }
+.warrning-chip {
+    background-color: rgb(var(--error));
+	color: rgba(var(--on-background), 95%);
+	border-radius: var(--input-radius);
+	min-height: 40px;
+	letter-spacing: 0.01em;
+	font-size: 0.9em;
+	user-select: none;
+	font-weight: 500;
+	padding: 0 12px;
+}
 
 /* ------------------------------------------------------------------------------------------------------ Scrollable */
 .scrollable {

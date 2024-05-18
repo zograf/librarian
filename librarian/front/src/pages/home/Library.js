@@ -2,6 +2,8 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import { API } from "../../enviroment"
 import BookCardCompact from "../../components/BookCardCompact"
+import { PopUpFrame, usePopup } from "../../components/pop-up/PopUpFrame"
+import LibraryBookPupup from "../../components/LibraryBookPupup"
 
 export default function LibraryPage() {
     let path = '/user/preferences/'
@@ -14,14 +16,25 @@ export default function LibraryPage() {
         .catch(e => console.log(e))
     }, [])
 
-    // Details
-    // const [viewDetails, setViewDetails] = useEffect(false)
+    const detailsPopUp = usePopup()
+    const [book, setBook] = useState(undefined)
+    const handleBack = (e) => {
+        console.log(e);
+        if(e.code == "KeyG") detailsPopUp.showPopup()
+    }
 
     return(
         <div>
             <div className="w-100 standard-padding gap-s" style={{display:'grid', gridTemplateColumns:'1fr 1fr 1fr 1fr 1fr'}}>
-                {preferences?.library.map(book => { return(<BookCardCompact book={book} isLiked={true} inLibrary={true}/>) })}
+                {preferences?.library.map(book => { return(
+                    <BookCardCompact book={book} isLiked={true} inLibrary={true} onClick={() => {
+                        setBook(book)
+                        detailsPopUp.showPopup()
+                    }}/>
+                ) })}
             </div>
+            <LibraryBookPupup token={token} popup={detailsPopUp} book={book}/>
+            
         </div>
     )
 }

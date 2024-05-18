@@ -3,13 +3,14 @@ import "./BookCardCompact.css"
 import { API } from "../enviroment";
 import { useEffect, useState } from "react";
 
-export default function BookCardCompact({book, isLiked, inLibrary = false}) {
+export default function BookCardCompact({book, isLiked, inLibrary = false, onClick}) {
 
     const token = localStorage.getItem("token")
     const [liked, setLiked] = useState(isLiked)
     useEffect(() => setLiked(isLiked), [isLiked])
 
-    const addToLib = () => {
+    const addToLib = (e) => {
+        e.preventDefault()
         if(liked) {
             axios.delete(API + "/user/preferences/library/" + book.id, { headers: {"Authorization" : `Bearer ${token}`} })
             .then(_ => setLiked(false) )
@@ -34,7 +35,9 @@ export default function BookCardCompact({book, isLiked, inLibrary = false}) {
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",
                 position: "relative"
-            }}>
+            }}
+            onClick={onClick}
+            >
             <p className="book-category shadow">{book.category.keyword}</p>
             <button className="solid-icon-button shadow save-button" onClick={addToLib}>
                 <span className="material-symbols-outlined icon">{liked ? 'label_off' : 'new_label'}</span>

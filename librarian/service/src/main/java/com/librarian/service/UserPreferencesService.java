@@ -1,5 +1,7 @@
 package com.librarian.service;
 
+import java.util.List;
+
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpResponseException;
 import org.hibernate.Hibernate;
@@ -53,8 +55,7 @@ public class UserPreferencesService {
     }
     private UserPreferences _get(Long id) {
         try {
-            UserPreferences prefs = userPreferencesRepo.findAllById(id).get(0);
-            logger.debug("Found items of size: " + prefs.getLibrary().size() + ":", prefs.getLibrary());
+            UserPreferences prefs = userPreferencesRepo.findAllByIdCustom(id).get(0);
             return prefs;
         }
         catch(IndexOutOfBoundsException ex) {

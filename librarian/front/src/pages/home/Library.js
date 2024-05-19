@@ -20,17 +20,32 @@ export default function LibraryPage() {
     const [book, setBook] = useState(undefined)
 
     return(
-        <div>
-            <div className="w-100 standard-padding gap-s" style={{display:'grid', gridTemplateColumns:'1fr 1fr 1fr 1fr 1fr'}}>
+        <div className="standard-padding">
+            {preferences?.library?.length != 0 && <p className="section-title">Want to Read</p>}
+            {preferences?.library?.length != 0 &&  <div className="w-100 gap-s v-spacer-xl" style={{display:'grid', gridTemplateColumns:'1fr 1fr 1fr 1fr 1fr'}}>
                 {preferences?.library.map(book => { return(
                     <BookCardCompact book={book} isLiked={true} inLibrary={true} onClick={() => {
                         setBook(book)
+                        console.log(book)
                         detailsPopUp.showPopup()
                     }}/>
-                ) })}
-            </div>
-            <LibraryBookPupup token={token} popup={detailsPopUp} book={book} inLibrary={true}/>
-            
+                ) }
+            )}
+            </div>}
+
+            {preferences?.readBooks?.length != 0 && <p className="section-title">Read</p>}
+            {preferences?.readBooks?.length != 0 &&  <div className="w-100 gap-s v-spacer-xl" style={{display:'grid', gridTemplateColumns:'1fr 1fr 1fr 1fr 1fr'}}>
+                {preferences?.readBooks.map(book => { return(
+                    <BookCardCompact book={book} isLiked={true} isRead={true} onClick={() => {
+                        setBook(book)
+                        console.log(book)
+                        detailsPopUp.showPopup()
+                    }}/>
+                ) }
+            )}
+            </div>}
+
+            <LibraryBookPupup token={token} popup={detailsPopUp} book={book} inLibrary={!(book?.liked != null)}/>
         </div>
     )
 }

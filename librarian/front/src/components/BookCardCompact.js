@@ -3,7 +3,7 @@ import "./BookCardCompact.css"
 import { API } from "../enviroment";
 import { useEffect, useState } from "react";
 
-export default function BookCardCompact({book, isLiked, inLibrary = false, onClick}) {
+export default function BookCardCompact({book, isLiked, inLibrary = false, onClick, isRead}) {
 
     const token = localStorage.getItem("token")
     const [liked, setLiked] = useState(isLiked)
@@ -38,11 +38,11 @@ export default function BookCardCompact({book, isLiked, inLibrary = false, onCli
                 position: "relative"
             }}
             onClick={onClick}
-            >
+        >
             <p className="book-category shadow">{book.category.keyword}</p>
-            <button className="solid-icon-button shadow save-button" onClick={addToLib}>
+            {!isRead && <button className="solid-icon-button shadow save-button" onClick={addToLib}>
                 <span className="material-symbols-outlined icon">{liked ? 'label_off' : 'new_label'}</span>
-            </button>
+            </button>}
             <div className= {`flex space-between column standard-padding-xxs book-content-wrapper ${inLibrary && !liked? 'taller-book-content' : ''}`}>
                 {inLibrary && !liked && 
                     <div className="warrning-chip flex center gap-xs">

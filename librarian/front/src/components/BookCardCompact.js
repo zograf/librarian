@@ -52,7 +52,7 @@ export default function BookCardCompact({book, isLiked, inLibrary = false, onCli
                 <div className="book-content-inner">
                     <p className="book-title">{book.title}</p>
                     <div className="data-grid v-spacer-m">
-                        <p className="key-item">By</p>
+                        <p className="key-item" style={{paddingRight:'0.25em'}}>By</p>
                         <p className="value-item">{book.authors[0].name}</p>
                     </div>
                     <div className="flex wrap gap-xxs">

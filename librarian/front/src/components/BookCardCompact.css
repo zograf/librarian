@@ -37,9 +37,6 @@
     -webkit-box-orient: vertical;
     transition: all 0.15s ease-in-out;
 }
-.key-item {
-    padding-right: 0.25em;
-}
 .book-category {
     background-color: rgb(var(--primary-dark));
     color: rgb(var(--on-primary-dark));

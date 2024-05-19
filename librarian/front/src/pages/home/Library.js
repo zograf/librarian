@@ -18,10 +18,6 @@ export default function LibraryPage() {
 
     const detailsPopUp = usePopup()
     const [book, setBook] = useState(undefined)
-    const handleBack = (e) => {
-        console.log(e);
-        if(e.code == "KeyG") detailsPopUp.showPopup()
-    }
 
     return(
         <div>
@@ -33,7 +29,7 @@ export default function LibraryPage() {
                     }}/>
                 ) })}
             </div>
-            <LibraryBookPupup token={token} popup={detailsPopUp} book={book}/>
+            <LibraryBookPupup token={token} popup={detailsPopUp} book={book} inLibrary={true}/>
             
         </div>
     )

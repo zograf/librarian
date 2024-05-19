@@ -115,7 +115,7 @@ p {
 
 .card-title {
 	font-weight: 300;
-	font-size: 1.1rem;
+	font-size: 1.15rem;
 }
 
 .card-label {
@@ -836,6 +836,24 @@ textarea {
 	from {
 		opacity: 0;
 		translate: 0 200px;
+	}
+
+	to {
+		opacity: 1;
+		translate: 0 0;
+	}
+}
+
+.showing-top-slide {
+	opacity: 1;
+	translate: 0 0;
+	animation: slide-down 0.2s ease-in-out;
+}
+
+@keyframes slide-down {
+	from {
+		opacity: 0;
+		translate: 0 -100px;
 	}
 
 	to {

@@ -7,6 +7,7 @@ import org.hibernate.Hibernate;
 
 import com.librarian.model.Book;
 import com.librarian.model.EAge;
+import com.librarian.model.ReadBook;
 
 public class BookDTO {
     public Long id; 
@@ -20,9 +21,12 @@ public class BookDTO {
     public Integer firstPublishedYear;
     public String cover;
     public EAge age;
+    public Boolean liked;
     // ratings missing
 
-    public BookDTO() { }
+    public BookDTO() { 
+        this.liked = null;
+    }
 
     public BookDTO(Book book) {
         this.id = book.id;
@@ -35,6 +39,21 @@ public class BookDTO {
         this.firstPublishedYear = book.firstPublishedYear;
         this.cover = book.cover;
         this.age = book.age;
+        this.liked = null;
+    }
+
+    public BookDTO(ReadBook readBook) {
+        this.id = readBook.book.id;
+        this.title = readBook.book.title;
+        this.category = new SubjectDTO(readBook.book.category);
+        this.authors = readBook.book.authors.stream().map(AuthorDTO::new).collect(Collectors.toList());
+        this.subjects = readBook.book.getSubjects().stream().map(SubjectDTO::new).collect(Collectors.toList());
+        this.description = readBook.book.description;
+        this.firstSentence = readBook.book.firstSentence;
+        this.firstPublishedYear = readBook.book.firstPublishedYear;
+        this.cover = readBook.book.cover;
+        this.age = readBook.book.age;
+        this.liked = readBook.didLike;
     }
 
     public Long getId() {

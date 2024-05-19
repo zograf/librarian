@@ -14,6 +14,6 @@ public interface UserPreferencesRepo extends JpaRepository<UserPreferences, Long
 
     Optional<UserPreferences> findById(Long id);
 
-    @Query("SELECT DISTINCT prefs FROM UserPreferences prefs JOIN FETCH prefs.library book JOIN FETCH book.subjects JOIN FETCH book.authors WHERE prefs.id = :id")
+    @Query("SELECT DISTINCT prefs FROM UserPreferences prefs JOIN FETCH prefs.library book JOIN FETCH book.subjects JOIN FETCH book.authors JOIN FETCH prefs.readBooks read JOIN FETCH read.book read_book JOIN FETCH read_book.subjects JOIN FETCH read_book.authors WHERE prefs.id = :id")
     List<UserPreferences> findAllById(@Param("id") Long id);
 }

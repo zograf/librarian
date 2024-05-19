@@ -9,10 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.librarian.dto.MarkAsReadDTO;
+import com.librarian.dto.SubjectDTO;
 import com.librarian.dto.UserPreferencesDTO;
 import com.librarian.model.Author;
 import com.librarian.model.Book;
 import com.librarian.model.ETargetYear;
+import com.librarian.model.ReadBook;
 import com.librarian.model.Subject;
 import com.librarian.model.User;
 import com.librarian.model.UserPreferences;
@@ -126,5 +129,18 @@ public class UserPreferencesService {
         return _save(preferences);
     }
 
-    
+    public UserPreferencesDTO markReadBook(String username, MarkAsReadDTO readBook) throws HttpResponseException {
+        UserPreferences preferences = _get(username);
+        preferences.getLibrary().removeIf((item) -> item.getId().equals(readBook.getId()));
+        Book book = booksRepo.findById(readBook.getId()).orElseThrow(() -> new HttpResponseException(HttpStatus.SC_NOT_FOUND, "Book not found"));
+        ReadBook read = new ReadBook(book, readBook.isLiked());
+        preferences.getReadBooks().add(readBookRepo.save(read));
+        for (SubjectDTO target : readBook.getSubjects()) {
+            Subject subject = subjectsRepo.findById(target.getId()).orElseThrow(() -> new HttpResponseException(HttpStatus.SC_NOT_FOUND, "Subject " + target.getKeyword() + " not found"));
+            if (readBook.isLiked()) preferences.getLikedSubjects().add(subject);
+            else preferences.getDislikedSubjects().add(subject);
+        }
+        return _save(preferences);
+    }
+
 }

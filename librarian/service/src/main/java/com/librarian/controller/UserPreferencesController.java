@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.librarian.dto.MarkAsReadDTO;
 import com.librarian.dto.UserPreferencesDTO;
 import com.librarian.model.ETargetYear;
 import com.librarian.service.UserPreferencesService;
@@ -20,6 +21,9 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 
@@ -43,43 +47,48 @@ public class UserPreferencesController {
     }
 
     @PutMapping("/subjects/additional/{subjectId}")
-    public ResponseEntity<UserPreferencesDTO> addAdditional(@AuthenticationPrincipal UserDetails user, @PathVariable Long subjectId) throws HttpResponseException{
+    public ResponseEntity<UserPreferencesDTO> addAdditional(@AuthenticationPrincipal UserDetails user, @PathVariable Long subjectId) throws HttpResponseException {
         return new ResponseEntity<UserPreferencesDTO>(service.addAdditionalSubject(user.getUsername(), subjectId), HttpStatus.OK);
     }
 
     @DeleteMapping("/subjects/additional/{subjectId}")
-    public ResponseEntity<UserPreferencesDTO> deleteAdditional(@AuthenticationPrincipal UserDetails user, @PathVariable Long subjectId) throws HttpResponseException{
+    public ResponseEntity<UserPreferencesDTO> deleteAdditional(@AuthenticationPrincipal UserDetails user, @PathVariable Long subjectId) throws HttpResponseException {
         return new ResponseEntity<UserPreferencesDTO>(service.deleteAdditionalSubject(user.getUsername(), subjectId), HttpStatus.OK);
     }
 
     @PutMapping("/subjects/liked/{subjectId}")
-    public ResponseEntity<UserPreferencesDTO> addLiked(@AuthenticationPrincipal UserDetails user, @PathVariable Long subjectId) throws HttpResponseException{
+    public ResponseEntity<UserPreferencesDTO> addLiked(@AuthenticationPrincipal UserDetails user, @PathVariable Long subjectId) throws HttpResponseException {
         return new ResponseEntity<UserPreferencesDTO>(service.addLikedSubject(user.getUsername(), subjectId), HttpStatus.OK);
     }
 
     @DeleteMapping("/subjects/liked/{subjectId}")
-    public ResponseEntity<UserPreferencesDTO> deleteLiked(@AuthenticationPrincipal UserDetails user, @PathVariable Long subjectId) throws HttpResponseException{
+    public ResponseEntity<UserPreferencesDTO> deleteLiked(@AuthenticationPrincipal UserDetails user, @PathVariable Long subjectId) throws HttpResponseException {
         return new ResponseEntity<UserPreferencesDTO>(service.deleteLikedSubject(user.getUsername(), subjectId), HttpStatus.OK);
     }
     
     @PutMapping("/authors/{authorId}")
-    public ResponseEntity<UserPreferencesDTO> addLikedAuthor(@AuthenticationPrincipal UserDetails user, @PathVariable Long authorId) throws HttpResponseException{
+    public ResponseEntity<UserPreferencesDTO> addLikedAuthor(@AuthenticationPrincipal UserDetails user, @PathVariable Long authorId) throws HttpResponseException {
         return new ResponseEntity<UserPreferencesDTO>(service.addLikedAuthor(user.getUsername(), authorId), HttpStatus.OK);
     }
 
     @DeleteMapping("/authors/{authorId}")
-    public ResponseEntity<UserPreferencesDTO> deleteLikedAuthor(@AuthenticationPrincipal UserDetails user, @PathVariable Long authorId) throws HttpResponseException{
+    public ResponseEntity<UserPreferencesDTO> deleteLikedAuthor(@AuthenticationPrincipal UserDetails user, @PathVariable Long authorId) throws HttpResponseException {
         return new ResponseEntity<UserPreferencesDTO>(service.deleteLikedAuthor(user.getUsername(), authorId), HttpStatus.OK);
     }
 
     @PutMapping("/library/{bookId}")
-    public ResponseEntity<UserPreferencesDTO> addBookToLibrary(@AuthenticationPrincipal UserDetails user, @PathVariable Long bookId) throws HttpResponseException{
+    public ResponseEntity<UserPreferencesDTO> addBookToLibrary(@AuthenticationPrincipal UserDetails user, @PathVariable Long bookId) throws HttpResponseException {
         return new ResponseEntity<UserPreferencesDTO>(service.addBookToLibrary(user.getUsername(), bookId), HttpStatus.OK);
     }
 
     @DeleteMapping("/library/{bookId}")
-    public ResponseEntity<UserPreferencesDTO> removeBookFromLibrary(@AuthenticationPrincipal UserDetails user, @PathVariable Long bookId) throws HttpResponseException{
-        logger.info("Removing book with id: " + Long.toString(bookId) + " for user: " + user.getUsername());
+    public ResponseEntity<UserPreferencesDTO> removeBookFromLibrary(@AuthenticationPrincipal UserDetails user, @PathVariable Long bookId) throws HttpResponseException {
         return new ResponseEntity<UserPreferencesDTO>(service.removeBookFromLibrary(user.getUsername(), bookId), HttpStatus.OK);
     }
+
+    @PostMapping("/book/read")
+    public ResponseEntity<UserPreferencesDTO> markBookAsRead(@AuthenticationPrincipal UserDetails user, @RequestBody MarkAsReadDTO dto) throws HttpResponseException {
+        return new ResponseEntity<UserPreferencesDTO>(service.markReadBook(user.getUsername(), dto), HttpStatus.OK);
+    }
+    
 }

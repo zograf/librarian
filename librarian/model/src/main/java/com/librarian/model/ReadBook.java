@@ -25,6 +25,11 @@ public class ReadBook {
     public ReadBook() {
     }
 
+    public ReadBook(Book book, Boolean didLike) {
+        this.book = book;
+        this.didLike = didLike;
+    }
+
     public Book getBook() {
         return book;
     }

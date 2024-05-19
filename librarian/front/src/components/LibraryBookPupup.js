@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react"
 import { PopUpFrame, usePopup } from "./pop-up/PopUpFrame"
 import "./LibraryBookPopup.css"
+import axios from "axios"
+import { API } from "../enviroment"
 
 export default function LibraryBookPupup({book, token, popup, inLibrary}) {
 
@@ -32,6 +34,15 @@ export default function LibraryBookPupup({book, token, popup, inLibrary}) {
             "liked" : likedReadBook,
             "subjects" : selected
         });
+        axios.post(API + "/user/preferences/book/read", {
+            "id" : book.id,
+            "liked" : likedReadBook,
+            "subjects" : selected
+        }, { headers: {"Authorization" : `Bearer ${token}`} })
+        .then(resp => {
+            console.log(resp);
+            popup.hidePopup()
+        })
     }
 
     return(

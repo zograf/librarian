@@ -125,4 +125,6 @@ public class UserPreferencesService {
         preferences.getLibrary().removeIf((item) -> item.getId().equals(bookId));
         return _save(preferences);
     }
+
+    
 }

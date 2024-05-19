@@ -589,7 +589,7 @@ button:active {
 	border: rgb(var(--primary-dark)) 2px solid;
 	color: rgb(var(--on-background));
 	border-radius: var(--input-radius);
-	height: 44px;
+	height: 40px;
 	aspect-ratio: 1;
 	user-select: none;
 	cursor: pointer;
@@ -599,8 +599,7 @@ button:active {
 }
 
 .outline-icon-button:hover {
-	background-color: rgba(var(--primary-light),
-			0.15);
+	background-color: rgba(var(--primary-light), 0.15);
 }
 
 .smaller-icon-button {
@@ -882,6 +881,7 @@ textarea {
 	box-sizing: border-box;
 	box-shadow: rgba(17, 17, 26, 0.1) 0px 0px 16px;
 	padding: 3px;
+    height: 52px;
 	/* width: 175px; */
 	z-index: 0;
 	height: 50px;
@@ -904,8 +904,8 @@ textarea {
 	align-items: center;
 	justify-content: center;
 	text-transform: uppercase;
-	border-radius: var(--inner-card-radius);
-	height: 44px;
+	border-radius: var(--card-radius);
+	height: 42px;
 	border: none;
 	color: rgb(var(--on-background));
 	transition: all .15s ease-in-out;

@@ -10,7 +10,8 @@ export default function BookCardCompact({book, isLiked, inLibrary = false, onCli
     useEffect(() => setLiked(isLiked), [isLiked])
 
     const addToLib = (e) => {
-        e.preventDefault()
+        console.log(e);
+        e.stopPropagation()
         if(liked) {
             axios.delete(API + "/user/preferences/library/" + book.id, { headers: {"Authorization" : `Bearer ${token}`} })
             .then(_ => setLiked(false) )

@@ -57,7 +57,7 @@ export default function LibraryBookPupup({book, token, popup, inLibrary}) {
                                 <div className="data-grid v-spacer-m" style={{gap:"8px"}}>
                                     <p className="key-item">By:</p>
                                     <p className="value-item">{book?.authors[0].name}</p>
-                                    <p className="key-item">Category:</p>
+                                    <p className="key-item">Category: &nbsp;</p>
                                     <p className="value-item" style={{textTransform:'capitalize'}}>{book?.category.keyword}</p>
                                     {book?.firstPublishedYear != -1 && <p className="key-item">Published Year:</p>}
                                     {book?.firstPublishedYear != -1 && <p className="value-item">{book?.firstPublishedYear}</p>}
@@ -65,10 +65,10 @@ export default function LibraryBookPupup({book, token, popup, inLibrary}) {
                                     {book?.description != '' && <p className="value-item">{book?.description}</p>}
                                     {book?.firstSentence != '' && <p className="key-item">First Sentence:</p>}
                                     {book?.firstSentence != '' && <p className="value-item">{book?.firstSentence}</p>}
-                                    <p className="key-item vi-spacer-m">Keywords:</p>
-                                    <div className="flex wrap gap-xxs vi-spacer-m">
+                                    {!read && <p className="key-item vi-spacer-m">Keywords:</p>}
+                                    {!read && <div className="flex wrap gap-xxs vi-spacer-m showing">
                                         {book?.subjects.map(subject => {return(<p className="subject-chip">{subject.keyword}</p>)})}
-                                    </div>
+                                    </div>}
                                 </div>
                             </div>
                     
@@ -105,10 +105,10 @@ export default function LibraryBookPupup({book, token, popup, inLibrary}) {
                                     </div>
                                 </div>
                                 <div className="flex justify-end gap-xs">
-                                    <button className="solid-icon-button" onClick={() => setRead(false)}>
+                                    <button className="outline-icon-button icon-button" onClick={() => setRead(false)}>
                                         <span className="material-symbols-outlined icon">chevron_left</span>
                                     </button>
-                                    <button className="solid-button" onClick={submit}>Submit Preferences</button>
+                                    <button className="solid-accent-button" onClick={submit}>Submit Preferences</button>
                                 </div>
                             </div>}
 

@@ -1,0 +1,16 @@
+package rules;
+
+import com.librarian.model.*;
+import java.util.List;
+import java.util.Set;
+
+rule "Add points for ratings"
+salience 88
+no-loop
+    when
+        $br: BookRank(progress==2, $id: book.id)
+        $ra: Rating(book.id == $id, $r: rating)
+    then
+        Integer rating = $br.getRating();
+        modify($br) { setRating(rating + $r - 3) }
+end

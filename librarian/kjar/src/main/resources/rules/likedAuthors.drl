@@ -1,0 +1,34 @@
+package rules;
+
+import com.librarian.model.*;
+import java.util.List;
+import java.util.Set;
+
+rule "Add points for liked authors"
+salience 89
+no-loop
+    when
+        $up: UserPreferences($list: likedAuthors)
+        $br: BookRank(userPreferences == $up, $authorList: book.authors)
+    then
+        Integer add = calculateLikedAuthors($authorList, $list);
+        Integer rating = $br.getRating();
+        modify($br) { setRating(rating + add) }
+end
+
+function Integer calculateLikedAuthors(Set authorList, Set likedAuthors) {
+    Integer ret = 0;
+    for (Object bookAuthor : authorList) {
+        Author ba = (Author) bookAuthor;
+        for (Object likedAuthor : likedAuthors) {
+            Author la = (Author) likedAuthor;
+            if (ba.getId().equals(la.getId())) {
+                    ret += 20;
+            }
+        }
+    }
+    //if (ret != 0) {
+    //    System.out.println(ret);
+    //}
+    return ret;
+}

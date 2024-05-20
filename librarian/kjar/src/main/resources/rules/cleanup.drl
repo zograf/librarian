@@ -1,6 +1,46 @@
 package rules;
 
 import com.librarian.model.*;
+import java.util.*;
+
+rule "Test"
+salience 10
+    when
+        $br: BookRank(rating > 30)
+    then
+        System.out.println($br.getBook().getTitle());
+end
+
+//rule "Print top 5 books"
+//no-loop
+//salience 3
+//    when
+//        not String(this=="DONE")
+//        $maxRating : Number(intValue : intValue) from accumulate(
+//            BookRank($rating : rating, progress >= 2),
+//            max($rating)
+//        )
+//        $bestBooks : List() from accumulate(
+//            BookRank(rating == $maxRating, $bookRank : this),
+//            collectList($bookRank)
+//        )
+//    then
+//        printBooks($bestBooks);
+//        insert(new String("DONE"));
+//end
+//
+//function printBooks(List bestBooks) {
+//    for (Object bookRank: bestBooks) {
+//        BookRank br = (BookRank) bookRank;
+//        Book book = br.getBook();
+//        System.out.println("KEY: " + book.getKey());
+//        System.out.println("TITLE: " + book.getTitle());
+//        //System.out.println("AUTHOR: " + book.getAuthors()[0].getName());
+//    }
+//}
+
+// GO TO ANOTHER
+// AGENDA GROUP PLS
 
 rule "Remove book ranks"
 salience 2

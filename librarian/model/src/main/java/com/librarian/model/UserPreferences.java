@@ -13,7 +13,7 @@ public class UserPreferences {
     @OneToMany(fetch = FetchType.EAGER)
     public Set<ReadBook> readBooks;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.EAGER)
     public Set<Book> library;
 
     @OneToMany(fetch = FetchType.EAGER)

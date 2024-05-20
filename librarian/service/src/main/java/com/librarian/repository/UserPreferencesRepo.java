@@ -12,8 +12,8 @@ import com.librarian.model.UserPreferences;
 @Repository
 public interface UserPreferencesRepo extends JpaRepository<UserPreferences, Long> {
 
-    Optional<UserPreferences> findById(Long id);
+    Optional<UserPreferences> findById(@Param("id") Long id);
 
-    @Query("SELECT DISTINCT prefs FROM UserPreferences prefs JOIN FETCH prefs.library book JOIN FETCH book.subjects JOIN FETCH book.authors JOIN FETCH prefs.readBooks read JOIN FETCH read.book read_book JOIN FETCH read_book.subjects JOIN FETCH read_book.authors WHERE prefs.id = :id")
+    @Query("SELECT prefs FROM UserPreferences prefs JOIN FETCH prefs.library book JOIN FETCH book.subjects JOIN FETCH book.authors JOIN FETCH prefs.readBooks read JOIN FETCH read.book read_book JOIN FETCH read_book.subjects JOIN FETCH read_book.authors WHERE prefs.id = :id")
     List<UserPreferences> findAllByIdCustom(@Param("id") Long id);
 }

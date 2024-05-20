@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpResponseException;
-import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,29 +47,38 @@ public class UserPreferencesService {
 
     Logger logger = LoggerFactory.getLogger(UserPreferencesService.class);
 
-    private UserPreferences _get(String username) {
-        logger.info("Fetching the user with username: " + username);
+    private UserPreferences _get(String username) throws HttpResponseException {
+        logger.info("Service -> Fetching the user with username: " + username);
         User user = userRepo.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
+        logger.info("Found user with id: " + Long.toString(user.getId()) + ", with prefs id: " + Long.toString(user.getPreferences().getId()));
         return _get(user.getPreferences().getId());
     }
-    private UserPreferences _get(Long id) {
+    
+    private UserPreferences _get(Long id) throws HttpResponseException {
+        logger.info("Service -> Fetching Preferences for id: " + Long.toString(id));
         try {
-            UserPreferences prefs = userPreferencesRepo.findAllByIdCustom(id).get(0);
+            List<UserPreferences> found = userPreferencesRepo.findAllByIdCustom(id);
+            logger.info("Service -> Got a list of possible prefs of length: " + Integer.toString(found.size())); 
+            UserPreferences prefs = found.get(0);
+            // UserPreferences prefs = userPreferencesRepo.findById(id).orElseThrow(() -> new HttpResponseException(HttpStatus.SC_NOT_FOUND, "User Preferences Not Found for id: " + id));
             return prefs;
         }
         catch(IndexOutOfBoundsException ex) {
+            logger.error("Error getting", ex);
             throw new UsernameNotFoundException("User Preferences Not Found for id: " + id);
         }
     }
-    private UserPreferencesDTO _save(UserPreferences preferences) {
+
+    private UserPreferencesDTO _save(UserPreferences preferences) throws HttpResponseException {
         return new UserPreferencesDTO(_get(repo.save(preferences).getId()));
     }
 
-    public UserPreferencesDTO get(String username) {
+    public UserPreferencesDTO get(String username) throws HttpResponseException {
+        logger.info("Service -> get | " + username);
         return new UserPreferencesDTO(_get(username));
     }
 
-    public UserPreferencesDTO updateMainInformation(String username, Integer age, ETargetYear targetYear) {
+    public UserPreferencesDTO updateMainInformation(String username, Integer age, ETargetYear targetYear) throws HttpResponseException{
         UserPreferences preferences = _get(username);
         preferences.setAge(age);
         preferences.setTargetYear(targetYear);

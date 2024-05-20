@@ -36,6 +36,7 @@ function LoginForm() {
         axios.post(API + "/user/login", payload)
             .then(resp => {
                 console.log(resp);
+
                 localStorage.setItem("token", resp.data.accessToken)
                 localStorage.setItem("username", resp.data.email)
                 localStorage.setItem("id", resp.data.userId)

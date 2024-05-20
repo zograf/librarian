@@ -24,9 +24,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
-
-
 @RestController
 @RequestMapping(value = "/api/user/preferences")
 public class UserPreferencesController {
@@ -37,12 +34,13 @@ public class UserPreferencesController {
     private UserPreferencesService service;
 
     @GetMapping("/")
-    public ResponseEntity<UserPreferencesDTO> getPreferences(@AuthenticationPrincipal UserDetails user) {
+    public ResponseEntity<UserPreferencesDTO> getPreferences(@AuthenticationPrincipal UserDetails user) throws HttpResponseException {
+        logger.info("Entry -> Getting prefs for user: " + user.getUsername());
         return new ResponseEntity<UserPreferencesDTO>(service.get(user.getUsername()), HttpStatus.OK);
     }
 
     @PutMapping("/main")
-    public ResponseEntity<UserPreferencesDTO> putMethodName(@AuthenticationPrincipal UserDetails user, @RequestParam Integer age, @RequestParam ETargetYear targetYear) {
+    public ResponseEntity<UserPreferencesDTO> putMethodName(@AuthenticationPrincipal UserDetails user, @RequestParam Integer age, @RequestParam ETargetYear targetYear) throws HttpResponseException {
         return new ResponseEntity<UserPreferencesDTO>(service.updateMainInformation(user.getUsername(), age, targetYear), HttpStatus.OK);
     }
 

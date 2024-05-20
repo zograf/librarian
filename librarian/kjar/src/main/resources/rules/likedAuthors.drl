@@ -24,7 +24,7 @@ function Integer calculateLikedAuthors(Set authorList, Set likedAuthors) {
         for (Object likedAuthor : likedAuthors) {
             Author la = (Author) likedAuthor;
             if (ba.getId().equals(la.getId())) {
-                    ret += 20;
+                    ret += 5;
             }
         }
     }

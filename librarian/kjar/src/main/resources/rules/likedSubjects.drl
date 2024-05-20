@@ -12,7 +12,7 @@ no-loop
         $rp: RecommendingPreferences($list: up.likedSubjects, $up: up)
         $br: BookRank(userPreferences == $up, $bookList: book.subjects)
     then
-        Integer add = calculatePoints($bookList, $list, 10);
+        Integer add = calculatePoints($bookList, $list, 5);
         Integer rating = $br.getRating();
         modify($br) { setRating(rating + add) }
 end

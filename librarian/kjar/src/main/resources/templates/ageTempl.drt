@@ -9,6 +9,7 @@ import com.librarian.model.*;
 template "age rules"
 
 rule "Age @{row.rowNumber}"
+agenda-group "main"
 salience @{sal}
 no-loop
     when

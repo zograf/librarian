@@ -163,7 +163,14 @@ public class UserController {
             logger.info("");
             logger.info(Long.toString(ksession.getFactCount()));
             ksession.insert(new RecommendingPreferences(u));
+            ksession.getAgenda().getAgendaGroup("main").setFocus();
             int count = ksession.fireAllRules();
+            logger.info("Executed " + count + " rules");
+            ksession.getAgenda().getAgendaGroup("recommended").setFocus();
+            count = ksession.fireAllRules();
+            logger.info("Executed " + count + " rules");
+            ksession.getAgenda().getAgendaGroup("cleanup").setFocus();
+            count = ksession.fireAllRules();
             logger.info("Executed " + count + " rules");
         }
         return ResponseEntity.ok("");

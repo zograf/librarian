@@ -8,6 +8,7 @@ import com.librarian.model.*;
 template "filter age rules"
 
 rule "Filter books @{row.rowNumber}"
+agenda-group "main"
 salience 97
     when
         Flag(name == @{flag}, $up: rp.up)

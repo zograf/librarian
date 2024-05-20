@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 rule "Delete already read books"
+agenda-group "main"
 no-loop
 salience 96
     when

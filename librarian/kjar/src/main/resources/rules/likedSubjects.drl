@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 rule "Add points for liked subjects"
+agenda-group "main"
 salience 90
 no-loop
     when
@@ -17,6 +18,7 @@ no-loop
 end
 
 rule "Add points for additional subjects"
+agenda-group "main"
 salience 90
 no-loop
     when
@@ -29,6 +31,7 @@ no-loop
 end
 
 rule "Remove points for disliked subjects"
+agenda-group "main"
 salience 90
 no-loop
     when

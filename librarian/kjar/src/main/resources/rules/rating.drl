@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 rule "Add points for ratings"
+agenda-group "main"
 salience 88
 no-loop
     when

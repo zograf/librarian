@@ -8,6 +8,7 @@ import com.librarian.model.*;
 template "age rules"
 
 rule "Main category delete filter @{row.rowNumber}"
+agenda-group "main"
 salience 95
 no-loop
     when

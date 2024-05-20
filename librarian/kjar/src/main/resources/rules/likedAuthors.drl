@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 rule "Add points for liked authors"
+agenda-group "main"
 salience 89
 no-loop
     when

@@ -17,6 +17,7 @@ query isParent(String parent, String keyword)
 end
 
 rule "Find parent with the most occurrences"
+agenda-group "main"
 salience 96
     when
         $rp : RecommendingPreferences($list : up.additionalSubjects)

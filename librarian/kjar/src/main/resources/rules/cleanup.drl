@@ -45,7 +45,7 @@ end
 rule "Remove book ranks"
 salience 2
     when
-        Flag($up: up)
+        Flag($up: rp.up)
         $br: BookRank(userPreferences == $up)
     then
         delete($br);
@@ -55,9 +55,9 @@ rule "Remove adult flag"
 salience 1
 no-loop
     when
-        $f: Flag(name == "flag_adult", $up: up)
+        $f: Flag(name == "flag_adult", $rp: rp)
     then
-        delete($up);
+        delete($rp);
         delete($f);
 end
 
@@ -65,9 +65,9 @@ rule "Remove young adult flag"
 salience 1
 no-loop
     when
-        $f: Flag(name == "flag_ya", $up: up)
+        $f: Flag(name == "flag_ya", $rp: rp)
     then
-        delete($up);
+        delete($rp);
         delete($f);
 end
 
@@ -75,8 +75,8 @@ rule "Remove juvenile flag"
 salience 1
 no-loop
     when
-        $f: Flag(name == "flag_juvenile", $up: up)
+        $f: Flag(name == "flag_juvenile", $rp: rp)
     then
-        delete($up);
+        delete($rp);
         delete($f);
 end

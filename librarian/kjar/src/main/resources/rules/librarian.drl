@@ -19,11 +19,11 @@ end
 rule "Find parent with the most occurrences"
 salience 96
     when
-        $up : UserPreferences( $list : additionalSubjects )
+        $rp : RecommendingPreferences($list : up.additionalSubjects)
         $groupedSubjects : List() from collect(Subject() from $list)
         $maxParent : String() from getMaxParent($groupedSubjects)
     then
-        insert(new Flag($maxParent, $up));
+        insert(new Flag($maxParent, $rp));
         System.out.println("Parent with the most occurrences: " + $maxParent);
 end
 

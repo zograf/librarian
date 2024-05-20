@@ -8,7 +8,7 @@ rule "Add points for liked subjects"
 salience 90
 no-loop
     when
-        $up: UserPreferences($list: likedSubjects)
+        $rp: RecommendingPreferences($list: up.likedSubjects, $up: up)
         $br: BookRank(userPreferences == $up, $bookList: book.subjects)
     then
         Integer add = calculateLikedSubjects($bookList, $list);

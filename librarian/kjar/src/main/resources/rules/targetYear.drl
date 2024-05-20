@@ -7,7 +7,7 @@ rule "Target year rule"
 no-loop
 salience 90
     when
-        $up: UserPreferences($ty: targetYear)
+        $rp: RecommendingPreferences($ty: up.targetYear, $up: up)
         $br: BookRank(userPreferences== $up, progress==1, $bty: book.firstPublishedYear)
         eval(isTargetYear($ty, $bty))
     then
@@ -19,7 +19,7 @@ rule "Target year -1 rule"
 no-loop
 salience 90
     when
-        $up: UserPreferences($ty: targetYear)
+        $rp: RecommendingPreferences($ty: up.targetYear, $up: up)
         $br: BookRank(userPreferences == $up, progress==1, book.firstPublishedYear == -1)
     then
         Integer rank = $br.getRating();

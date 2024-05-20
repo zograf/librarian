@@ -33,6 +33,7 @@ import com.librarian.helper.SessionBuilder;
 import com.librarian.model.Book;
 import com.librarian.model.EAge;
 import com.librarian.model.Rating;
+import com.librarian.model.RecommendingPreferences;
 import com.librarian.model.Subject;
 import com.librarian.model.User;
 import com.librarian.model.UserPreferences;
@@ -122,7 +123,7 @@ public class UserController {
         SessionBuilder sessionBuilder = new SessionBuilder();
         sessionBuilder.addRules("/rules/librarian.drl");
         sessionBuilder.addRules("/rules/cleanup.drl");
-        sessionBuilder.addRules("/rules/target_year.drl");
+        sessionBuilder.addRules("/rules/targetYear.drl");
         sessionBuilder.addRules("/rules/likedSubjects.drl");
         sessionBuilder.addRules("/rules/likedAuthors.drl");
         sessionBuilder.addRules("/rules/readBooks.drl");
@@ -156,21 +157,12 @@ public class UserController {
 
     @GetMapping(value = "test")
     public ResponseEntity<String> getSomething() {
-        Optional<UserPreferences> optional = userPreferencesRepository.findById(1L);
-        if (optional.isPresent()) {
-            u = optional.get();
+        List<UserPreferences> optional = userPreferencesRepository.findAllByIdCustom(1L);
+        if (optional.size() != 0) {
+            u = optional.get(0);
             logger.info("");
             logger.info(Long.toString(ksession.getFactCount()));
-            u.setLikedSubjects(new HashSet<>());
-            u.setReadBooks(new HashSet<>());
-            u.getReadBooks().add(bookRepository.findById(1L).get());
-            u.getReadBooks().add(bookRepository.findById(2L).get());
-            u.getReadBooks().add(bookRepository.findById(3L).get());
-            u.getReadBooks().add(bookRepository.findById(4L).get());
-            u.getReadBooks().add(bookRepository.findById(5L).get());
-            for (Subject s : u.getAdditionalSubjects())
-                u.getLikedSubjects().add(s);
-            ksession.insert(u);
+            ksession.insert(new RecommendingPreferences(u));
             int count = ksession.fireAllRules();
             logger.info("Executed " + count + " rules");
         }

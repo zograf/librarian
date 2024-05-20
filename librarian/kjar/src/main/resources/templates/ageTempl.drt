@@ -12,10 +12,10 @@ rule "Age @{row.rowNumber}"
 salience @{sal}
 no-loop
     when
-        $u: UserPreferences(age > @{age})
-        not Flag(name == "flag_adult", up == $u)
-        not Flag(name == "flag_juvenile", up == $u)
-        not Flag(name == "flag_ya", up == $u)
+        $u: RecommendingPreferences(up.age > @{age})
+        not Flag(name == "flag_adult", rp == $u)
+        not Flag(name == "flag_juvenile", rp == $u)
+        not Flag(name == "flag_ya", rp == $u)
     then
         insert(new Flag(@{flag}, $u));
 end

@@ -7,24 +7,12 @@ import com.librarian.model.*;
 
 template "age rules"
 
-rule "Progress 1 filter @{row.rowNumber}"
-salience 95
-no-loop
-    when
-        $f: Flag(name == @{category}, $up: rp.up)
-        $br: BookRank(userPreferences == $up, progress==0, (book.category.keyword == @{category} || book.category.parent == @{category}))
-    then
-        modify($br){
-            setProgress(1);
-        }
-end
-
 rule "Main category delete filter @{row.rowNumber}"
 salience 95
 no-loop
     when
         $f: Flag(name == @{category}, $up: rp.up)
-        $br: BookRank(userPreferences == $up, progress==0, (book.category.keyword != @{category} && book.category.parent != @{category}))
+        $br: BookRank(userPreferences == $up, (book.category.keyword != @{category} && book.category.parent != @{category}))
     then
         delete($br);
 end

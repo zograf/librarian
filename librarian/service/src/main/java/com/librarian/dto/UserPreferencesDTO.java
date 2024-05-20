@@ -15,9 +15,10 @@ public class UserPreferencesDTO {
     Logger logger = LoggerFactory.getLogger(UserPreferencesDTO.class);
 
     public Long id;
-    // readBooks
-    // library
+    public List<BookDTO> library;
+    public List<BookDTO> readBooks;
     public List<SubjectDTO> likedSubjects;
+    public List<SubjectDTO> dislikedSubjects;
     public List<SubjectDTO> additionalSubjects;
     public List<AuthorDTO> likedAuthors;
     public Integer age;
@@ -26,7 +27,10 @@ public class UserPreferencesDTO {
 
     public UserPreferencesDTO(UserPreferences preferences) {
         this.id = preferences.id;
-        this.likedSubjects = preferences.likedSubjects.stream().map(SubjectDTO::new).collect(Collectors.toList());
+        this.library = preferences.getLibrary().stream().map(BookDTO::new).collect(Collectors.toList());
+        this.readBooks = preferences.getReadBooks().stream().map(BookDTO::new).collect(Collectors.toList());
+        this.likedSubjects = preferences.getLikedSubjects().stream().map(SubjectDTO::new).collect(Collectors.toList());
+        this.dislikedSubjects = preferences.getDislikedSubjects().stream().map(SubjectDTO::new).collect(Collectors.toList());
         this.additionalSubjects = preferences.getAdditionalSubjects().stream().map(SubjectDTO::new).collect(Collectors.toList());
         this.likedAuthors = preferences.getLikedAuthors().stream().map(AuthorDTO::new).collect(Collectors.toList());
         this.age = preferences.age;

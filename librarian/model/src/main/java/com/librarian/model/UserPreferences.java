@@ -10,14 +10,17 @@ public class UserPreferences {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    public Set<Book> readBooks;
+    @OneToMany
+    public Set<ReadBook> readBooks;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany
     public Set<Book> library;
 
     @OneToMany(fetch = FetchType.EAGER)
     public Set<Subject> likedSubjects;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    public Set<Subject> dislikedSubjects;
 
     @OneToMany(fetch = FetchType.EAGER)
     public Set<Subject> additionalSubjects;
@@ -42,11 +45,11 @@ public class UserPreferences {
         this.id = id;
     }
 
-    public Set<Book> getReadBooks() {
+    public Set<ReadBook> getReadBooks() {
         return readBooks;
     }
 
-    public void setReadBooks(Set<Book> readBooks) {
+    public void setReadBooks(Set<ReadBook> readBooks) {
         this.readBooks = readBooks;
     }
 
@@ -104,5 +107,13 @@ public class UserPreferences {
 
     public void setGender(EGender gender) {
         this.gender = gender;
+    }
+
+    public Set<Subject> getDislikedSubjects() {
+        return dislikedSubjects;
+    }
+
+    public void setDislikedSubjects(Set<Subject> dislikedSubjects) {
+        this.dislikedSubjects = dislikedSubjects;
     }
 }

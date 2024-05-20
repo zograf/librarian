@@ -67,11 +67,11 @@ export default function AdditionalSubjects({subjects}) {
             {items.length > 0 && <div className="showing">
                 <div className="flex center wrap gap-xs">{
                     items.map((keyword) => {return (
-                        <button className="flex center showing" style={{paddingRight:'0px'}} disabled={true}>
+                        <div className="solid-chip flex center showing" style={{paddingRight:'0px'}}>
                             <p>{keyword.keyword}</p>
                             {!editMode && <p className="h-spacer-s"></p>}
                             {editMode && <button className="icon-button showing"><span className="material-symbols-outlined icon" onClick={() => { remove(keyword) }}>cancel</span></button>}
-                        </button>
+                        </div>
                 )})
                 }</div>
             </div>}

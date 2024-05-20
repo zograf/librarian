@@ -65,11 +65,11 @@ export default function LikedAuthors({authors}) {
             {items.length > 0 && <div className="showing">
                 <div className="flex center wrap gap-xs">{
                     items.map((item) => {return (
-                        <button className="flex center showing" style={{paddingRight:'0px'}} disabled={true}>
+                        <div className="solid-chip flex center showing" style={{paddingRight:'0px'}}>
                             <p>{item.name}</p>
                             {!editMode && <p className="h-spacer-s"></p>}
                             {editMode && <button className="icon-button"><span className="material-symbols-outlined icon" onClick={() => { remove(item) }}>cancel</span></button>}
-                        </button>
+                        </div>
                 )})
                 }</div>
             </div>}

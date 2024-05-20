@@ -1,5 +1,6 @@
 package com.librarian.repository;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -16,4 +17,7 @@ public interface BooksRepo extends JpaRepository<Book, Long> {
 
     @Query("SELECT DISTINCT book FROM Book book JOIN FETCH book.subjects JOIN FETCH book.authors")
     List<Book> findAllBooks();
+
+    @Query("SELECT book FROM Book book JOIN FETCH book.subjects JOIN FETCH book.authors WHERE book.id=:id")
+    Optional<Book> findById(Long id);
 }

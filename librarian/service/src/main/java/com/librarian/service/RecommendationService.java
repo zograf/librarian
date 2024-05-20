@@ -10,6 +10,7 @@ import javax.annotation.PostConstruct;
 import org.drools.template.DataProvider;
 import org.drools.template.objects.ArrayDataProvider;
 import org.kie.api.runtime.KieSession;
+import org.kie.api.runtime.rule.FactHandle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import com.librarian.model.Author;
 import com.librarian.model.Book;
 import com.librarian.model.BookRank;
 import com.librarian.model.Rating;
+import com.librarian.model.RecommendingBook;
 import com.librarian.model.RecommendingPreferences;
 import com.librarian.model.Subject;
 import com.librarian.model.UserPreferences;
@@ -86,6 +88,7 @@ public class RecommendationService {
         sessionBuilder.addRules("/rules/likedSubjects.drl");
         sessionBuilder.addRules("/rules/likedAuthors.drl");
         sessionBuilder.addRules("/rules/readBooks.drl");
+        sessionBuilder.addRules("/rules/singleBook.drl");
         sessionBuilder.addTemplate("/templates/ageTempl.drt", ageTemplProvider);
         sessionBuilder.addTemplate("/templates/filterAgeTempl.drt", filterAgeTemplProvider);
         sessionBuilder.addTemplate("/templates/categoryFilterTempl.drt", categoryFilterTemplProvider);
@@ -93,8 +96,8 @@ public class RecommendationService {
 
         List<Book> books = bookRepository.findAllBooks();
 
-        //for (int i = 0; i < 50000; i++) {
-            //ksession.insert(books.get(i));
+        //for (int i = 0; i < 1000; i++) {
+        //  ksession.insert(books.get(i));
         //}
 
         for (Book b : books){
@@ -115,8 +118,30 @@ public class RecommendationService {
         }
     }
 
-    public List<Book> getRecommendedBooks(UserPreferences u, Integer n) {
-        List<Book> books = new ArrayList<>();
+    public List<Book> getRecommendedBooksForBook(Book b, Integer n) {
+        logger.info("");
+        ksession.insert(new RecommendingBook(b));
+        ksession.getAgenda().getAgendaGroup("singleBook").setFocus();
+        int count = ksession.fireAllRules();
+        logger.info("Executed " + count + " rules");
+
+        List<Book> books = getBooksFromSession(n);
+
+        //ksession.getAgenda().getAgendaGroup("recommended").setFocus();
+        //count = ksession.fireAllRules();
+        //logger.info("Executed " + count + " rules");
+
+        for (FactHandle handle : ksession.getFactHandles()) {
+            ksession.delete(handle);
+        }
+
+        //ksession.getAgenda().getAgendaGroup("cleanup").setFocus();
+        //count = ksession.fireAllRules();
+        //logger.info("Executed " + count + " rules");
+        return books;
+    }
+
+    public List<Book> getRecommendedBooksForPreferences(UserPreferences u, Integer n) {
         logger.info("");
         logger.info(Long.toString(ksession.getFactCount()));
         ksession.insert(new RecommendingPreferences(u));
@@ -124,6 +149,20 @@ public class RecommendationService {
         int count = ksession.fireAllRules();
         logger.info("Executed " + count + " rules");
 
+        List<Book> books = getBooksFromSession(n);
+
+        //ksession.getAgenda().getAgendaGroup("recommended").setFocus();
+        //count = ksession.fireAllRules();
+        //logger.info("Executed " + count + " rules");
+
+        ksession.getAgenda().getAgendaGroup("cleanup").setFocus();
+        count = ksession.fireAllRules();
+        logger.info("Executed " + count + " rules");
+        return books;
+    }
+
+    private List<Book> getBooksFromSession(Integer n) {
+        List<Book> books = new ArrayList<>();
         List<BookRank> ranks = new ArrayList<>();
         Collection<?> objects = ksession.getObjects(o -> o instanceof BookRank);
         for (Object obj : objects) {
@@ -133,27 +172,22 @@ public class RecommendationService {
 
         ranks.sort(Comparator.comparingInt(BookRank::getRating).reversed());
 
-        for (int i = 0; i < n; i++) {
-            Book b = ranks.get(i).getBook();
-            books.add(b);
+        if(ranks.size() != 0) {
+            for (int i = 0; i < n; i++) {
+                Book bb = ranks.get(i).getBook();
+                books.add(bb);
+            }
+
+            Integer top = ranks.get(0).getRating();
+            Integer i = 0;
+            for (BookRank br: ranks) {
+                if (br.getRating() != top) break;
+                Book bb = ranks.get(i).getBook();
+                ArrayList<Author> a = new ArrayList<>(bb.getAuthors());
+                logger.info("BOOK " + Integer.toString(i+1) + ": " + bb.getTitle() + " WRITTEN BY: " + a.get(0).getName());
+            }
         }
 
-        Integer top = ranks.get(0).getRating();
-        Integer i = 0;
-        for (BookRank br: ranks) {
-            if (br.getRating() != top) break;
-            Book b = ranks.get(i).getBook();
-            ArrayList<Author> a = new ArrayList<>(b.getAuthors());
-            logger.info("BOOK " + Integer.toString(i+1) + ": " + b.getTitle() + " WRITTEN BY: " + a.get(0).getName());
-        }
-
-        //ksession.getAgenda().getAgendaGroup("recommended").setFocus();
-        //count = ksession.fireAllRules();
-        //logger.info("Executed " + count + " rules");
-
-        ksession.getAgenda().getAgendaGroup("cleanup").setFocus();
-        count = ksession.fireAllRules();
-        logger.info("Executed " + count + " rules");
         return books;
     }
 

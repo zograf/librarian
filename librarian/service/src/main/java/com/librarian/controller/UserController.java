@@ -2,6 +2,7 @@ package com.librarian.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,6 +26,7 @@ import com.librarian.dto.TokenDTO;
 import com.librarian.model.Book;
 import com.librarian.model.User;
 import com.librarian.model.UserPreferences;
+import com.librarian.repository.BooksRepo;
 import com.librarian.repository.UserPreferencesRepo;
 import com.librarian.service.RecommendationService;
 import com.librarian.service.UserService;
@@ -40,6 +42,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private BooksRepo booksRepository;
 
     @Autowired
     private UserPreferencesRepo userPreferencesRepository;
@@ -69,8 +74,19 @@ public class UserController {
         List<UserPreferences> optional = userPreferencesRepository.findAllByIdCustom(1L);
         if (optional.size() != 0) {
             u = optional.get(0);
-            List<Book> books = recommendationService.getRecommendedBooks(u, 5);
+            List<Book> books = recommendationService.getRecommendedBooksForPreferences(u, 5);
             return books.stream().map(BookDTO::new).collect(Collectors.toList());
+        }
+        return new ArrayList<BookDTO>();
+    }
+
+    @GetMapping(value = "testtest")
+    public List<BookDTO> getSomethingTest() {
+        Optional<Book> book = booksRepository.findById(7123L);
+        if (book.isPresent()) {
+            Book b = book.get();
+            List<Book> ret = recommendationService.getRecommendedBooksForBook(b, 5);
+            return ret.stream().map(BookDTO::new).collect(Collectors.toList());
         }
         return new ArrayList<BookDTO>();
     }

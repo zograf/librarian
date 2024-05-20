@@ -85,3 +85,23 @@ no-loop
         delete($rp);
         delete($f);
 end
+
+rule "Remove recommending user preference"
+agenda-group "cleanup"
+salience 1
+no-loop
+    when
+        $rp: RecommendingPreferences()
+    then
+        delete($rp);
+end
+
+rule "Remove recommending book"
+agenda-group "cleanup"
+salience 1
+no-loop
+    when
+        $rb: RecommendingBook()
+    then
+        delete($rb);
+end

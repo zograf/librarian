@@ -11,19 +11,43 @@ no-loop
         $rp: RecommendingPreferences($list: up.likedSubjects, $up: up)
         $br: BookRank(userPreferences == $up, $bookList: book.subjects)
     then
-        Integer add = calculateLikedSubjects($bookList, $list);
+        Integer add = calculatePoints($bookList, $list, 10);
         Integer rating = $br.getRating();
         modify($br) { setRating(rating + add) }
 end
 
-function Integer calculateLikedSubjects(Set bookSubjects, Set likedSubjects) {
+rule "Add points for additional subjects"
+salience 90
+no-loop
+    when
+        $rp: RecommendingPreferences($list: up.additionalSubjects, $up: up)
+        $br: BookRank(userPreferences == $up, $bookList: book.subjects)
+    then
+        Integer add = calculatePoints($bookList, $list, 5);
+        Integer rating = $br.getRating();
+        modify($br) { setRating(rating + add) }
+end
+
+rule "Remove points for disliked subjects"
+salience 90
+no-loop
+    when
+        $rp: RecommendingPreferences($list: up.dislikedSubjects, $up: up)
+        $br: BookRank(userPreferences == $up, $bookList: book.subjects)
+    then
+        Integer add = calculatePoints($bookList, $list, -20);
+        Integer rating = $br.getRating();
+        modify($br) { setRating(rating + add) }
+end
+
+function Integer calculatePoints(Set bookSubjects, Set likedSubjects, Integer add) {
     Integer ret = 0;
     for (Object bookSubject : bookSubjects) {
         Subject bs = (Subject) bookSubject;
         for (Object likedSubject : likedSubjects) {
             Subject ls = (Subject) likedSubject;
             if (bs.getId().equals(ls.getId())) {
-                    ret += 10;
+                    ret += add;
             }
         }
         //if (likedSubjects.contains(bs)) {

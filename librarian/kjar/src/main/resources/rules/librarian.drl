@@ -3,27 +3,16 @@ package rules;
 import com.librarian.model.*;
 import java.util.List;
 
-// category, fiction
-// fiction, horror
-// horror, zombie
-query isParent(String parent, String keyword)
-    exists(
-        eval(keyword.equals(parent))
-        ||
-        (Subject(parent, keyword; ) and eval(!parent.equals("category")))
-        ||
-        (Subject(x, keyword; ) and isParent(parent, x; ))
-    )
-end
 
 rule "Find parent with the most occurrences"
+agenda-group "main"
 salience 96
     when
-        $up : UserPreferences( $list : additionalSubjects )
+        $rp : RecommendingPreferences($list : up.additionalSubjects)
         $groupedSubjects : List() from collect(Subject() from $list)
         $maxParent : String() from getMaxParent($groupedSubjects)
     then
-        insert(new Flag($maxParent, $up));
+        insert(new Flag($maxParent, $rp));
         System.out.println("Parent with the most occurrences: " + $maxParent);
 end
 

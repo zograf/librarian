@@ -4,6 +4,7 @@ import com.librarian.model.*;
 import java.util.*;
 
 rule "Test"
+agenda-group "recommended"
 salience 10
     when
         $br: BookRank(rating > 30)
@@ -11,24 +12,24 @@ salience 10
         System.out.println($br.getBook().getTitle());
 end
 
-//rule "Print top 5 books"
+//rule "Print top books"
+////agenda-group "recommended"
 //no-loop
 //salience 3
 //    when
-//        not String(this=="DONE")
 //        $maxRating : Number(intValue : intValue) from accumulate(
-//            BookRank($rating : rating, progress >= 2),
+//            BookRank($rating : rating),
 //            max($rating)
 //        )
-//        $bestBooks : List() from accumulate(
-//            BookRank(rating == $maxRating, $bookRank : this),
-//            collectList($bookRank)
-//        )
+//        //$bestBooks : List() from accumulate(
+//        //    BookRank(rating == $maxRating, $bookRank : this),
+//        //    collectList($bookRank)
+//        //)
 //    then
-//        printBooks($bestBooks);
-//        insert(new String("DONE"));
+//        System.out.println($maxRating);
+//        //printBooks($bestBooks);
 //end
-//
+
 //function printBooks(List bestBooks) {
 //    for (Object bookRank: bestBooks) {
 //        BookRank br = (BookRank) bookRank;
@@ -43,40 +44,64 @@ end
 // AGENDA GROUP PLS
 
 rule "Remove book ranks"
+agenda-group "cleanup"
 salience 2
     when
-        Flag($up: up)
+        Flag($up: rp.up)
         $br: BookRank(userPreferences == $up)
     then
         delete($br);
 end
 
 rule "Remove adult flag"
+agenda-group "cleanup"
 salience 1
 no-loop
     when
-        $f: Flag(name == "flag_adult", $up: up)
+        $f: Flag(name == "flag_adult", $rp: rp)
     then
-        delete($up);
+        delete($rp);
         delete($f);
 end
 
 rule "Remove young adult flag"
+agenda-group "cleanup"
 salience 1
 no-loop
     when
-        $f: Flag(name == "flag_ya", $up: up)
+        $f: Flag(name == "flag_ya", $rp: rp)
     then
-        delete($up);
+        delete($rp);
         delete($f);
 end
 
 rule "Remove juvenile flag"
+agenda-group "cleanup"
 salience 1
 no-loop
     when
-        $f: Flag(name == "flag_juvenile", $up: up)
+        $f: Flag(name == "flag_juvenile", $rp: rp)
     then
-        delete($up);
+        delete($rp);
         delete($f);
+end
+
+rule "Remove recommending user preference"
+agenda-group "cleanup"
+salience 1
+no-loop
+    when
+        $rp: RecommendingPreferences()
+    then
+        delete($rp);
+end
+
+rule "Remove recommending book"
+agenda-group "cleanup"
+salience 1
+no-loop
+    when
+        $rb: RecommendingBook()
+    then
+        delete($rb);
 end

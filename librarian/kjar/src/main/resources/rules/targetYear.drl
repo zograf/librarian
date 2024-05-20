@@ -4,26 +4,28 @@ import com.librarian.model.*;
 import java.util.List;
 
 rule "Target year rule"
+agenda-group "main"
 no-loop
 salience 90
     when
-        $up: UserPreferences($ty: targetYear)
-        $br: BookRank(userPreferences== $up, progress==1, $bty: book.firstPublishedYear)
+        $rp: RecommendingPreferences($ty: up.targetYear, $up: up)
+        $br: BookRank(userPreferences== $up, $bty: book.firstPublishedYear)
         eval(isTargetYear($ty, $bty))
     then
         Integer rank = $br.getRating();
-        modify($br){ setRating(rank + 10), setProgress(2) }
+        modify($br){ setRating(rank + 10) }
 end
 
 rule "Target year -1 rule"
+agenda-group "main"
 no-loop
 salience 90
     when
-        $up: UserPreferences($ty: targetYear)
-        $br: BookRank(userPreferences == $up, progress==1, book.firstPublishedYear == -1)
+        $rp: RecommendingPreferences($ty: up.targetYear, $up: up)
+        $br: BookRank(userPreferences == $up, book.firstPublishedYear == -1)
     then
         Integer rank = $br.getRating();
-        modify($br){ setRating(rank + 3), setProgress(2) }
+        modify($br){ setRating(rank + 3) }
 end
 
 function Boolean isTargetYear(ETargetYear ety, Integer bty) {

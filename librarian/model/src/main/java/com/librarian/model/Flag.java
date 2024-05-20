@@ -2,15 +2,15 @@ package com.librarian.model;
 
 public class Flag {
     public String name;
-    public UserPreferences up; 
+    public RecommendingPreferences rp; 
 
     public Flag() {
 
     }
 
-    public Flag(String name, UserPreferences up) {
+    public Flag(String name, RecommendingPreferences rp) {
         this.name = name;
-        this.up = up;
+        this.rp = rp;
     }
 
     public String getName() {
@@ -21,11 +21,11 @@ public class Flag {
         this.name = name;
     }
 
-    public UserPreferences getUp() {
-        return up;
+    public RecommendingPreferences getRp() {
+        return rp;
     }
 
-    public void setUp(UserPreferences up) {
-        this.up = up;
+    public void setRp(RecommendingPreferences rp) {
+        this.rp = rp;
     }
 }

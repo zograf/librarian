@@ -5,10 +5,11 @@ import java.util.List;
 import java.util.Set;
 
 rule "Add points for liked authors"
+agenda-group "main"
 salience 89
 no-loop
     when
-        $up: UserPreferences($list: likedAuthors)
+        $rp: RecommendingPreferences($list: up.likedAuthors, $up: up)
         $br: BookRank(userPreferences == $up, $authorList: book.authors)
     then
         Integer add = calculateLikedAuthors($authorList, $list);
@@ -23,7 +24,7 @@ function Integer calculateLikedAuthors(Set authorList, Set likedAuthors) {
         for (Object likedAuthor : likedAuthors) {
             Author la = (Author) likedAuthor;
             if (ba.getId().equals(la.getId())) {
-                    ret += 20;
+                    ret += 5;
             }
         }
     }

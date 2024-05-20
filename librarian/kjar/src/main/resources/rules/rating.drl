@@ -5,10 +5,11 @@ import java.util.List;
 import java.util.Set;
 
 rule "Add points for ratings"
+agenda-group "main"
 salience 88
 no-loop
     when
-        $br: BookRank(progress==2, $id: book.id)
+        $br: BookRank($id: book.id)
         $ra: Rating(book.id == $id, $r: rating)
     then
         Integer rating = $br.getRating();

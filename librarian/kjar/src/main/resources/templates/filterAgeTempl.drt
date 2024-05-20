@@ -8,16 +8,16 @@ import com.librarian.model.*;
 template "filter age rules"
 
 rule "Filter books @{row.rowNumber}"
+agenda-group "main"
 salience 97
     when
-        Flag(name == @{flag}, $up: up)
+        Flag(name == @{flag}, $up: rp.up)
         $b: Book(age <= @{eage})
     then
         BookRank $bookRank = new BookRank();
         $bookRank.setBook($b);
         $bookRank.setRating(0);
         $bookRank.setUserPreferences($up);
-        $bookRank.setProgress(0);
         insert($bookRank);
 end
 

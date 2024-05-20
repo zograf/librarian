@@ -10,10 +10,10 @@ public class UserPreferences {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany
     public Set<ReadBook> readBooks;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany
     public Set<Book> library;
 
     @OneToMany(fetch = FetchType.EAGER)

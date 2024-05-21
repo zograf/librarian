@@ -16,6 +16,8 @@ export default function LibraryPage() {
         .catch(e => console.log(e))
     }, [])
 
+    const handlePrefChanged = (prefs) => setPreferences(prefs)
+
     const detailsPopUp = usePopup()
     const [book, setBook] = useState(undefined)
 
@@ -51,7 +53,7 @@ export default function LibraryPage() {
             )}
             </div>}
 
-            <LibraryBookPupup token={token} popup={detailsPopUp} book={book} isLibraryView={true} isInLibrary={true} isRead={book?.liked != null}/>
+            <LibraryBookPupup token={token} popup={detailsPopUp} book={book} isLibraryView={true} isInLibrary={true} isRead={book?.liked != null} onPrefUpdateCallback={handlePrefChanged}/>
         </div>
     )
 }

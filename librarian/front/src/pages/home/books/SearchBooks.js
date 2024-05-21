@@ -21,6 +21,8 @@ export default function SearchBooks() {
         .catch(e => console.log(e))
     }, [])
 
+    const handlePrefChanged = (prefs) => setPreferences(prefs)
+
     const search = (e) => {
         if (e.code == 'Enter' && phrase.length >= 3 && !isSearching) {
             setIsSearching(true)
@@ -58,13 +60,14 @@ export default function SearchBooks() {
                     book={book} 
                     isLibraryView={false}
                     isInLibrary={preferences.library.find((item) => item.id == book.id) != undefined}
+                    onPrefUpdateCallback={handlePrefChanged}
                     onClick={() => {
                         setBook(book)
                         detailsPopUp.showPopup()
                     }}
                 />)})}
             </div>}
-            <LibraryBookPupup token={token} popup={detailsPopUp} book={book} isLibraryView={false} isInLibrary={preferences?.library?.find((item) => item.id == book?.id) != undefined}/>
+            <LibraryBookPupup token={token} popup={detailsPopUp} book={book} isLibraryView={false} isInLibrary={preferences?.library?.find((item) => item.id == book?.id) != undefined} onPrefUpdateCallback={handlePrefChanged}/>
         </div>
     )
 }

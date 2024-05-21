@@ -24,6 +24,8 @@ export default function Recommend() {
             .catch(e => console.log(e))
     }, [])
 
+    const handlePrefChanged = (prefs) => setPreferences(prefs)
+
     useEffect(() => {
         let options = []
         if (preferences !== undefined) {
@@ -98,6 +100,7 @@ export default function Recommend() {
                     book={book}
                     isLibraryView={false}
                     isInLibrary={preferences?.library.find((item) => item.id == book.id) != undefined}
+                    onPrefUpdateCallback={handlePrefChanged}
                     onClick={() => {
                         setBook(book)
                         detailsPopUp.showPopup()
@@ -105,7 +108,7 @@ export default function Recommend() {
                 />)})}
             </div>}
 
-            <LibraryBookPupup token={token} popup={detailsPopUp} book={book} isLibraryView={false} isInLibrary={preferences?.library?.find((item) => item.id == book?.id) != undefined}/>
+            <LibraryBookPupup token={token} popup={detailsPopUp} book={book} isLibraryView={false} isInLibrary={preferences?.library?.find((item) => item.id == book?.id) != undefined} onPrefUpdateCallback={handlePrefChanged}/>
         </div>
     )
 }

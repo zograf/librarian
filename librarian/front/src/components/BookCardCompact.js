@@ -3,7 +3,7 @@ import "./BookCardCompact.css"
 import { API } from "../enviroment";
 import { useEffect, useState } from "react";
 
-export default function BookCardCompact({book, isInLibrary, isLibraryView, onClick, isRead, isLiked = false}) {
+export default function BookCardCompact({book, isInLibrary, isLibraryView, onClick, isRead, isLiked = false, onPrefUpdateCallback = () => { }}) {
 
     const token = localStorage.getItem("token")
     const [inLibrary, setInLibrary] = useState(isInLibrary)
@@ -14,12 +14,18 @@ export default function BookCardCompact({book, isInLibrary, isLibraryView, onCli
         e.stopPropagation()
         if(inLibrary) {
             axios.delete(API + "/user/preferences/library/" + book.id, { headers: {"Authorization" : `Bearer ${token}`} })
-            .then(_ => setInLibrary(false) )
+            .then(res => {
+                setInLibrary(false) 
+                onPrefUpdateCallback(res.data) 
+            })
             .catch(e => alert(e))
         }
         else {
             axios.put(API + "/user/preferences/library/" + book.id, null, { headers: {"Authorization" : `Bearer ${token}`} })
-                .then(_ => setInLibrary(true))
+                .then(res => {
+                    setInLibrary(true) 
+                    onPrefUpdateCallback(res.data)
+                })
                 .catch(e => alert(e))
         }
     }

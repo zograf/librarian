@@ -56,7 +56,8 @@ export default function SearchBooks() {
             {found.length != 0 && !isSearching && <div className="w-100 standard-padding showing gap-s" style={{display:'grid', gridTemplateColumns:'1fr 1fr 1fr 1fr 1fr'}}>
                 {found.map(book => { return(<BookCardCompact 
                     book={book} 
-                    inLibrary={preferences.library.find((item) => item.id == book.id) != undefined}
+                    isLibraryView={false}
+                    isInLibrary={preferences.library.find((item) => item.id == book.id) != undefined}
                     onClick={() => {
                         setBook(book)
                         detailsPopUp.showPopup()

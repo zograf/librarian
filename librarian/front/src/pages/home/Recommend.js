@@ -96,7 +96,8 @@ export default function Recommend() {
             {found.length != 0 && !isWaiting && <div className="w-100 showing standard-padding gap-s" style={{display:'grid', gridTemplateColumns:'1fr 1fr 1fr 1fr 1fr'}}>
                 {found.map(book => { return(<BookCardCompact 
                     book={book}
-                    inLibrary={false}
+                    isLibraryView={false}
+                    isInLibrary={false}
                     onClick={() => {
                         setBook(book)
                         detailsPopUp.showPopup()

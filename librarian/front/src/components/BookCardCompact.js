@@ -3,23 +3,23 @@ import "./BookCardCompact.css"
 import { API } from "../enviroment";
 import { useEffect, useState } from "react";
 
-export default function BookCardCompact({book, isLiked, inLibrary = false, onClick, isRead}) {
+export default function BookCardCompact({book, isInLibrary, isLibraryView, onClick, isRead, isLiked = false}) {
 
     const token = localStorage.getItem("token")
-    const [liked, setLiked] = useState(isLiked)
-    useEffect(() => setLiked(isLiked), [isLiked])
+    const [inLibrary, setInLibrary] = useState(isInLibrary)
+    useEffect(() => setInLibrary(isInLibrary), [isInLibrary])
 
     const addToLib = (e) => {
         console.log(e);
         e.stopPropagation()
-        if(liked) {
+        if(inLibrary) {
             axios.delete(API + "/user/preferences/library/" + book.id, { headers: {"Authorization" : `Bearer ${token}`} })
-            .then(_ => setLiked(false) )
+            .then(_ => setInLibrary(false) )
             .catch(e => alert(e))
         }
         else {
             axios.put(API + "/user/preferences/library/" + book.id, null, { headers: {"Authorization" : `Bearer ${token}`} })
-                .then(_ => setLiked(true))
+                .then(_ => setInLibrary(true))
                 .catch(e => alert(e))
         }
     }
@@ -41,16 +41,16 @@ export default function BookCardCompact({book, isLiked, inLibrary = false, onCli
         >
             <p className="book-category shadow">{book.category.keyword}</p>
 
-            {/* {isRead && <div className="floating-icon-circle shadow flex center justify-center">
-                <span className="material-symbols-outlined icon">{liked ? 'thumb_up' : 'thumb_down'}</span>
-            </div>} */}
+            {isLibraryView && isRead && <div className={`floating-icon-circle shadow flex center justify-center ${isLiked ? 'liked-icon' : 'disliked-icon'}`}>
+                <span className="material-symbols-outlined icon" style={{scale:'1.05'}}>{isLiked ? 'thumb_up' : 'thumb_down'}</span>
+            </div>}
 
             {!isRead && <button className="solid-icon-button shadow save-button" onClick={addToLib}>
-                <span className="material-symbols-outlined icon">{liked ? 'label_off' : 'new_label'}</span>
+                <span className="material-symbols-outlined icon">{inLibrary ? 'label_off' : 'new_label'}</span>
             </button>}
 
-            <div className= {`flex space-between column standard-padding-xxs book-content-wrapper ${inLibrary && !liked? 'taller-book-content' : ''}`}>
-                {inLibrary && !liked && 
+            <div className= {`flex space-between column standard-padding-xxs book-content-wrapper ${isLibraryView && !inLibrary? 'taller-book-content' : ''}`}>
+                {isLibraryView && !inLibrary && 
                     <div className="warrning-chip flex center gap-xs">
                         <span className="material-symbols-outlined icon">warning</span>
                         <p>Book removal pending</p>

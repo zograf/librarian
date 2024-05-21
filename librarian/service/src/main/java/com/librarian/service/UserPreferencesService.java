@@ -47,7 +47,7 @@ public class UserPreferencesService {
 
     Logger logger = LoggerFactory.getLogger(UserPreferencesService.class);
 
-    private UserPreferences _get(String username) throws HttpResponseException {
+    public UserPreferences _get(String username) throws HttpResponseException {
         logger.info("Service -> Fetching the user with username: " + username);
         User user = userRepo.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
         logger.info("Found user with id: " + Long.toString(user.getId()) + ", with prefs id: " + Long.toString(user.getPreferences().getId()));

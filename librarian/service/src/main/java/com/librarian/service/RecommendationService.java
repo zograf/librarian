@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.http.client.HttpResponseException;
 import org.drools.template.DataProvider;
 import org.drools.template.objects.ArrayDataProvider;
 import org.kie.api.runtime.KieSession;
@@ -16,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.librarian.dto.BookDTO;
 import com.librarian.helper.SessionBuilder;
 import com.librarian.model.Author;
 import com.librarian.model.Book;
@@ -45,6 +48,9 @@ public class RecommendationService {
 
     @Autowired
     private RatingsRepo ratingRepository;
+
+    @Autowired
+    private UserPreferencesService preferencesService;
 
     @PostConstruct
     public void init() {
@@ -191,4 +197,8 @@ public class RecommendationService {
         return books;
     }
 
+    public List<BookDTO> recommend(String username) throws HttpResponseException {
+        UserPreferences preferences = preferencesService._get(username);
+        return getRecommendedBooksForPreferences(preferences, 8).stream().map(BookDTO::new).collect(Collectors.toList());
+    }
 }

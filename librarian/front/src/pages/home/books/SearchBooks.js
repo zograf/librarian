@@ -4,6 +4,7 @@ import { API } from "../../../enviroment"
 import BookCardCompact from "../../../components/BookCardCompact"
 import { usePopup } from "../../../components/pop-up/PopUpFrame"
 import LibraryBookPupup from "../../../components/LibraryBookPupup"
+import LoadingSpinner from "../../../components/loading-spinner/LoadingSpinner"
 
 export default function SearchBooks() {
     const token = localStorage.getItem("token")
@@ -12,6 +13,7 @@ export default function SearchBooks() {
     const handlePhrase = (e) => setPhrase(e.target.value)
     const [preferences, setPreferences] = useState(undefined)
     const [found, setFound] = useState([])
+    const [isSearching, setIsSearching] = useState(false)
 
     useEffect(() => {
         axios.get(API + '/user/preferences/',  { headers: {"Authorization" : `Bearer ${token}`} })
@@ -20,12 +22,15 @@ export default function SearchBooks() {
     }, [])
 
     const search = (e) => {
-        if (e.code == 'Enter' && phrase.length >= 3)
+        if (e.code == 'Enter' && phrase.length >= 3 && !isSearching) {
+            setIsSearching(true)
             axios.post(API + "/books/like", null, { params: { phrase : phrase }})
                 .then(resp => {
                     console.log(resp);
+                    setIsSearching(false)
                     setFound(resp.data)
                 })
+        }
     }
 
     const detailsPopUp = usePopup()
@@ -34,17 +39,21 @@ export default function SearchBooks() {
     return(
         <div className="w-100 standard-padding">
             
-            <div className="input-wrapper regular-border v-spacer-xs" style={{margin:'0 24px'}}>
+            <div className={`input-wrapper regular-border v-spacer-xs ${isSearching ? 'disabled-input' : ''}`} style={{margin:'0 24px'}}>
                 <span className="material-symbols-outlined icon input-icon">search</span>
                 <input placeholder="Search By Title" value={phrase} onChange={handlePhrase} onKeyUp={search}/>
             </div>
 
-            {found.length == 0 && <div className="dashed-card flex column center" style={{margin:'12px 24px'}}>
+            {found.length == 0 && !isSearching && <div className="dashed-card flex column center" style={{margin:'12px 24px'}}>
                 <p className="section-title">Nothing To Show</p>
                 <p className="tutorial-text neutral">Search for books by their title.</p>
             </div>}
+
+            {isSearching && <div className="dashed-card flex justify-center vi-spacer-m" style={{margin:'12px 24px'}}>
+                <LoadingSpinner label="Please wait while we get your results!"/>    
+            </div>}
             
-            <div className="w-100 standard-padding gap-s" style={{display:'grid', gridTemplateColumns:'1fr 1fr 1fr 1fr 1fr'}}>
+            {found.length != 0 && !isSearching && <div className="w-100 standard-padding showing gap-s" style={{display:'grid', gridTemplateColumns:'1fr 1fr 1fr 1fr 1fr'}}>
                 {found.map(book => { return(<BookCardCompact 
                     book={book} 
                     isLiked={preferences.library.find((item) => item.id == book.id) != undefined}
@@ -53,7 +62,7 @@ export default function SearchBooks() {
                         detailsPopUp.showPopup()
                     }}
                 />)})}
-            </div>
+            </div>}
             <LibraryBookPupup token={token} popup={detailsPopUp} book={book}/>
         </div>
     )

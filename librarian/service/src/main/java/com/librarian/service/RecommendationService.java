@@ -201,4 +201,8 @@ public class RecommendationService {
         UserPreferences preferences = preferencesService._get(username);
         return getRecommendedBooksForPreferences(preferences, 8).stream().map(BookDTO::new).collect(Collectors.toList());
     }
+    public List<BookDTO> recommend(Long bookId) throws HttpResponseException {
+        Book book = bookRepository.findById(bookId).orElseThrow(() -> new HttpResponseException(404, "Book with id " + Long.toString(bookId) + " not found."));
+        return getRecommendedBooksForBook(book, 8).stream().map(BookDTO::new).collect(Collectors.toList());
+    }
 }

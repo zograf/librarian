@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
 
 
 
@@ -27,5 +29,11 @@ public class RecommendationController {
     public List<BookDTO> postMethodName(@AuthenticationPrincipal UserDetails user) throws HttpResponseException {
         return service.recommend(user.getUsername());
     }
+
+    @GetMapping("/by/book/{bookId}")
+    public List<BookDTO> getMethodName(@AuthenticationPrincipal UserDetails user, @PathVariable Long bookId) throws HttpResponseException {
+        return service.recommend(bookId);
+    }
+    
     
 }

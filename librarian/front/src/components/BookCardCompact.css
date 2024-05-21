@@ -104,3 +104,12 @@
 .book-card:hover .data-grid {
     opacity: 1;
 }
+.floating-icon-circle {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    width: 48px;
+    border-radius: 100%;
+    aspect-ratio: 1;
+    background-color: rgb(var(--surface));
+}

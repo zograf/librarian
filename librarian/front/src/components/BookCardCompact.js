@@ -40,9 +40,15 @@ export default function BookCardCompact({book, isLiked, inLibrary = false, onCli
             onClick={onClick}
         >
             <p className="book-category shadow">{book.category.keyword}</p>
+
+            {/* {isRead && <div className="floating-icon-circle shadow flex center justify-center">
+                <span className="material-symbols-outlined icon">{liked ? 'thumb_up' : 'thumb_down'}</span>
+            </div>} */}
+
             {!isRead && <button className="solid-icon-button shadow save-button" onClick={addToLib}>
                 <span className="material-symbols-outlined icon">{liked ? 'label_off' : 'new_label'}</span>
             </button>}
+
             <div className= {`flex space-between column standard-padding-xxs book-content-wrapper ${inLibrary && !liked? 'taller-book-content' : ''}`}>
                 {inLibrary && !liked && 
                     <div className="warrning-chip flex center gap-xs">

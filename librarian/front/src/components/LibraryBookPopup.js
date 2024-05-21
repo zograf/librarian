@@ -4,7 +4,7 @@ import "./LibraryBookPopup.css"
 import axios from "axios"
 import { API } from "../enviroment"
 
-export default function LibraryBookPupup({book, token, popup, inLibrary}) {
+export default function LibraryBookPupup({book, token, popup, isLibraryView, isInLibrary, isRead = false}) {
 
     const [likedReadBook, setLikedReadBook] = useState(true)
     const [selected, setSelected] = useState([])
@@ -83,14 +83,14 @@ export default function LibraryBookPupup({book, token, popup, inLibrary}) {
                                 </div>
                             </div>
                     
-                            {inLibrary && !read && <div className="showing-top-slide">
+                            {isLibraryView && !isRead && !read && <div className="showing-top-slide">
                                 <button className="solid-accent-button w-100 flex center justify-center gap-xs" onClick={() => setRead(true) }>
                                     <span className="material-symbols-outlined icon">book_2</span>
                                     Mark As Read
                                 </button>
                             </div>}
 
-                            {inLibrary && read && <div className="showing-bottom-slide" style={{position:'absolute', bottom:'0'}}>
+                            {isLibraryView && !isRead && read && <div className="showing-bottom-slide" style={{position:'absolute', bottom:'0'}}>
                                 <div className="card v-spacer-s">
                                     <div className="radio-inputs regular_border v-spacer-xl"> 
                                         <label className="radio">

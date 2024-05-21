@@ -1,7 +1,7 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
 import BookCardCompact from "../../components/BookCardCompact"
-import LibraryBookPupup from "../../components/LibraryBookPupup"
+import LibraryBookPupup from "../../components/LibraryBookPopup"
 import { API } from "../../enviroment"
 import { usePopup } from "../../components/pop-up/PopUpFrame"
 import { DropDownSelect } from "../../components/drop-down/DropDown"
@@ -97,7 +97,7 @@ export default function Recommend() {
                 {found.map(book => { return(<BookCardCompact 
                     book={book}
                     isLibraryView={false}
-                    isInLibrary={false}
+                    isInLibrary={preferences?.library.find((item) => item.id == book.id) != undefined}
                     onClick={() => {
                         setBook(book)
                         detailsPopUp.showPopup()
@@ -105,7 +105,7 @@ export default function Recommend() {
                 />)})}
             </div>}
 
-            <LibraryBookPupup token={token} popup={detailsPopUp} book={book}/>
+            <LibraryBookPupup token={token} popup={detailsPopUp} book={book} isLibraryView={false} isInLibrary={preferences?.library?.find((item) => item.id == book?.id) != undefined}/>
         </div>
     )
 }

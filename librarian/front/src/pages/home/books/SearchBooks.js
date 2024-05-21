@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import { API } from "../../../enviroment"
 import BookCardCompact from "../../../components/BookCardCompact"
 import { usePopup } from "../../../components/pop-up/PopUpFrame"
-import LibraryBookPupup from "../../../components/LibraryBookPupup"
+import LibraryBookPupup from "../../../components/LibraryBookPopup"
 import LoadingSpinner from "../../../components/loading-spinner/LoadingSpinner"
 
 export default function SearchBooks() {
@@ -64,7 +64,7 @@ export default function SearchBooks() {
                     }}
                 />)})}
             </div>}
-            <LibraryBookPupup token={token} popup={detailsPopUp} book={book}/>
+            <LibraryBookPupup token={token} popup={detailsPopUp} book={book} isLibraryView={false} isInLibrary={preferences?.library?.find((item) => item.id == book?.id) != undefined}/>
         </div>
     )
 }

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import { API } from "../../enviroment"
 import BookCardCompact from "../../components/BookCardCompact"
 import { PopUpFrame, usePopup } from "../../components/pop-up/PopUpFrame"
-import LibraryBookPupup from "../../components/LibraryBookPupup"
+import LibraryBookPupup from "../../components/LibraryBookPopup"
 
 export default function LibraryPage() {
     let path = '/user/preferences/'
@@ -51,7 +51,7 @@ export default function LibraryPage() {
             )}
             </div>}
 
-            <LibraryBookPupup token={token} popup={detailsPopUp} book={book} inLibrary={!(book?.liked != null)}/>
+            <LibraryBookPupup token={token} popup={detailsPopUp} book={book} isLibraryView={true} isInLibrary={true} isRead={book?.liked != null}/>
         </div>
     )
 }

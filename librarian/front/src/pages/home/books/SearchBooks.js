@@ -33,13 +33,17 @@ export default function SearchBooks() {
 
     return(
         <div className="w-100 standard-padding">
-            <div className="">
-                <p className="section-title">Search Books By Name</p>
-                <div className="input-wrapper regular-border v-spacer-xs" style={{paddingRight:'4px'}}>
-                    <span className="material-symbols-outlined icon input-icon">search</span>
-                    <input placeholder="Search" value={phrase} onChange={handlePhrase} onKeyUp={search}/>
-                </div>
+            
+            <div className="input-wrapper regular-border v-spacer-xs" style={{margin:'0 24px'}}>
+                <span className="material-symbols-outlined icon input-icon">search</span>
+                <input placeholder="Search By Title" value={phrase} onChange={handlePhrase} onKeyUp={search}/>
             </div>
+
+            {found.length == 0 && <div className="dashed-card flex column center" style={{margin:'12px 24px'}}>
+                <p className="section-title">Nothing To Show</p>
+                <p className="tutorial-text">Search for books by their title.</p>
+            </div>}
+            
             <div className="w-100 standard-padding gap-s" style={{display:'grid', gridTemplateColumns:'1fr 1fr 1fr 1fr 1fr'}}>
                 {found.map(book => { return(<BookCardCompact 
                     book={book} 

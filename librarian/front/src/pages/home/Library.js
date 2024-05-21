@@ -21,6 +21,12 @@ export default function LibraryPage() {
 
     return(
         <div className="standard-padding">
+            
+            {preferences?.library?.length == 0 && preferences?.readBooks?.length == 0 && <div className="dashed-card flex column center">
+                <p className="section-title">Nothing in library</p>
+                <p className="tutorial-text">Search for books or try our recommend feature!</p>
+            </div>}
+
             {preferences?.library?.length != 0 && <p className="section-title">Want to Read</p>}
             {preferences?.library?.length != 0 &&  <div className="w-100 gap-s v-spacer-xl" style={{display:'grid', gridTemplateColumns:'1fr 1fr 1fr 1fr 1fr'}}>
                 {preferences?.library.map(book => { return(

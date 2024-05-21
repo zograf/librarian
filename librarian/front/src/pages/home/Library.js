@@ -20,7 +20,7 @@ export default function LibraryPage() {
     const [book, setBook] = useState(undefined)
 
     return(
-        <div className="standard-padding">
+        <div className="standard-padding-narrow">
             
             {preferences?.library?.length == 0 && preferences?.readBooks?.length == 0 && <div className="dashed-card flex column center">
                 <p className="section-title">Nothing in library</p>

@@ -1,16 +1,11 @@
 package com.librarian.service;
 
 import java.security.SecureRandom;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -48,8 +43,9 @@ public class UserService {
     @Autowired
     private JwtUtils jwtUtils;
 
-    @Autowired
-    private ApplicationEventPublisher eventPublisher;
+    // Not used
+    // @Autowired
+    // private ApplicationEventPublisher eventPublisher;
 
     public TokenDTO login(LoginDTO loginDto) {
         logger.info("Attempting login...");
@@ -119,18 +115,19 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    private TokenDTO generateToken(User user) {
-        String jwt = jwtUtils.generateJwtToken(user);
+    // Not used
+    // private TokenDTO generateToken(User user) {
+    //     String jwt = jwtUtils.generateJwtToken(user);
 
-        TokenDTO tokenDTO = new TokenDTO();
-        tokenDTO.setAccessToken(jwt);
-        tokenDTO.setRefreshToken(""); // Not used at the moment
-        tokenDTO.setUserId(user.getId());
-        tokenDTO.setUserRole(user.getRole());
-        tokenDTO.setEmail(user.getEmail());
+    //     TokenDTO tokenDTO = new TokenDTO();
+    //     tokenDTO.setAccessToken(jwt);
+    //     tokenDTO.setRefreshToken(""); // Not used at the moment
+    //     tokenDTO.setUserId(user.getId());
+    //     tokenDTO.setUserRole(user.getRole());
+    //     tokenDTO.setEmail(user.getEmail());
 
-        return tokenDTO;
-    }
+    //     return tokenDTO;
+    // }
 
     public String encodePassword(String password) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10, new SecureRandom(){

@@ -41,7 +41,7 @@ export default function SearchBooks() {
 
             {found.length == 0 && <div className="dashed-card flex column center" style={{margin:'12px 24px'}}>
                 <p className="section-title">Nothing To Show</p>
-                <p className="tutorial-text">Search for books by their title.</p>
+                <p className="tutorial-text neutral">Search for books by their title.</p>
             </div>}
             
             <div className="w-100 standard-padding gap-s" style={{display:'grid', gridTemplateColumns:'1fr 1fr 1fr 1fr 1fr'}}>

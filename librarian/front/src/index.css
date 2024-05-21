@@ -354,6 +354,10 @@ p {
 	padding: var(--standard-padding);
 }
 
+.standard-padding-narrow {
+	padding: var(--standard-padding) calc(var(--standard-padding) + 24px) var(--standard-padding) calc(var(--standard-padding) + 24px);
+}
+
 .standard-padding-s {
 	padding: calc(var(--standard-padding) / 2);
 }

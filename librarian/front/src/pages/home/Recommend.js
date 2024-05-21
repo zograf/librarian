@@ -5,6 +5,7 @@ import LibraryBookPupup from "../../components/LibraryBookPupup"
 import { API } from "../../enviroment"
 import { usePopup } from "../../components/pop-up/PopUpFrame"
 import { DropDownSelect } from "../../components/drop-down/DropDown"
+import LoadingSpinner from "../../components/loading-spinner/LoadingSpinner"
 
 export default function Recommend() {    
 
@@ -15,6 +16,7 @@ export default function Recommend() {
     const [byPreferences, setByPreferences] = useState(true)
     const [byBookId, setByBookId] = useState(undefined)
     const [found, setFound] = useState([])
+    const [isWaiting, setIsWaiting] = useState(false)
 
     useEffect(() => {
         axios.get(API + '/user/preferences/',  { headers: {"Authorization" : `Bearer ${token}`} })
@@ -42,16 +44,20 @@ export default function Recommend() {
 
     const handleRecommend = () => {
         if (byPreferences) {
+            setIsWaiting(true)
             axios.get(API + "/recommend/by/preferences",  { headers: {"Authorization" : `Bearer ${token}`} })
                 .then(res => {
-                    console.log(res)
+                    console.log(res.data)
+                    setIsWaiting(false)
                     setFound(res.data)
                 })
         }
         else if (!byPreferences && byBookId != undefined) {
+            setIsWaiting(true)
             axios.get(API + "/recommend/by/book/" + byBookId,  { headers: {"Authorization" : `Bearer ${token}`} })
             .then(res => {
-                console.log(res)
+                console.log(res.data)
+                setIsWaiting(false)
                 setFound(res.data)
             })
         }
@@ -63,7 +69,7 @@ export default function Recommend() {
     return(
         <div className="w-100 standard-padding">
             
-            <div className="flex center gap-xs">
+            <div className="flex center gap-xs" style={{margin:'0 24px'}}>
                 <div className="radio-inputs regular_border"> 
                     <label className="radio">
                         <input type="radio" checked={byPreferences} onClick={() => setByPreferences(true)}/>
@@ -75,16 +81,19 @@ export default function Recommend() {
                     </label>
                 </div>
                 {!byPreferences && <DropDownSelect placeholder={"Book"} icon={"book"} options={bySimilarityOptions} callback={handleSimilarBookPicked} enabled={true}/>}
-                <button className="outline-button" style={{height:'49px', translate:'0 -1px', padding:'0 16px'}} onClick={handleRecommend}>Recommend me Some Books</button>
-
+                <button className={`outline-button ${isWaiting ? 'disabled-outline-button' : ''}`} style={{height:'49px', translate:'0 -1px', padding:'0 16px'}} onClick={handleRecommend} enabled={!isWaiting}>Recommend me Some Books</button>
             </div>
 
-            {found.length == 0 && <div className="dashed-card flex column center vi-spacer-m">
+            {found.length == 0 && !isWaiting && <div className="dashed-card flex column center vi-spacer-m" style={{margin:'12px 24px'}}>
                 <p className="section-title">Nothing To Show</p>
-                <p className="tutorial-text">Select the recommendation algorithm and hit recommend!.</p>
+                <p className="tutorial-text neutral">Select the recommendation algorithm and hit recommend!.</p>
             </div>}
 
-            <div className="w-100 standard-padding gap-s" style={{display:'grid', gridTemplateColumns:'1fr 1fr 1fr 1fr 1fr'}}>
+            {isWaiting && <div className="dashed-card flex justify-center vi-spacer-m">
+                <LoadingSpinner label="Please wait while we get your recommendation!"/>    
+            </div>}
+
+            {found.length != 0 && !isWaiting && <div className="w-100 showing standard-padding gap-s" style={{display:'grid', gridTemplateColumns:'1fr 1fr 1fr 1fr 1fr'}}>
                 {found.map(book => { return(<BookCardCompact 
                     book={book}
                     isLiked={false}
@@ -93,7 +102,7 @@ export default function Recommend() {
                         detailsPopUp.showPopup()
                     }}
                 />)})}
-            </div>
+            </div>}
 
             <LibraryBookPupup token={token} popup={detailsPopUp} book={book}/>
         </div>

@@ -18,7 +18,7 @@ export default function Preferences() {
     }, [])
 
     return(
-        <div className="w-100 standard-padding">
+        <div className="w-100 standard-padding-narrow">
             <MainInformation age={preferences?.age} targetYear={preferences?.targetYear}/>
             <AdditionalSubjects subjects={preferences?.additionalSubjects ?? []} />
             <LikedAuthors authors={preferences?.likedAuthors ?? []} />

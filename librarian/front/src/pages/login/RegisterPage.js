@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { DropDownInput, DropDownSelect } from "../../components/drop_down/DropDown";
+import { DropDownInput, DropDownSelect } from "../../components/drop-down/DropDown";
 import axios from "axios";
 import { API } from "../../enviroment";
 

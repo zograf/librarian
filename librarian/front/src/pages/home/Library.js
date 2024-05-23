@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import { API } from "../../enviroment"
 import BookCardCompact from "../../components/BookCardCompact"
 import { PopUpFrame, usePopup } from "../../components/pop-up/PopUpFrame"
-import LibraryBookPupup from "../../components/LibraryBookPupup"
+import LibraryBookPupup from "../../components/LibraryBookPopup"
 
 export default function LibraryPage() {
     let path = '/user/preferences/'
@@ -16,15 +16,23 @@ export default function LibraryPage() {
         .catch(e => console.log(e))
     }, [])
 
+    const handlePrefChanged = (prefs) => setPreferences(prefs)
+
     const detailsPopUp = usePopup()
     const [book, setBook] = useState(undefined)
 
     return(
         <div className="standard-padding">
+            
+            {preferences?.library?.length == 0 && preferences?.readBooks?.length == 0 && <div className="dashed-card flex column center">
+                <p className="section-title">Nothing in library</p>
+                <p className="tutorial-text">Search for books or try our recommend feature!</p>
+            </div>}
+
             {preferences?.library?.length != 0 && <p className="section-title">Want to Read</p>}
             {preferences?.library?.length != 0 &&  <div className="w-100 gap-s v-spacer-xl" style={{display:'grid', gridTemplateColumns:'1fr 1fr 1fr 1fr 1fr'}}>
                 {preferences?.library.map(book => { return(
-                    <BookCardCompact book={book} isLiked={true} inLibrary={true} onClick={() => {
+                    <BookCardCompact book={book} isInLibrary={true} isLibraryView={true} onClick={() => {
                         setBook(book)
                         console.log(book)
                         detailsPopUp.showPopup()
@@ -36,7 +44,7 @@ export default function LibraryPage() {
             {preferences?.readBooks?.length != 0 && <p className="section-title">Read</p>}
             {preferences?.readBooks?.length != 0 &&  <div className="w-100 gap-s v-spacer-xl" style={{display:'grid', gridTemplateColumns:'1fr 1fr 1fr 1fr 1fr'}}>
                 {preferences?.readBooks.map(book => { return(
-                    <BookCardCompact book={book} isLiked={true} isRead={true} onClick={() => {
+                    <BookCardCompact book={book} isInLibrary={true} isLibraryView={true} isRead={true} isLiked={book?.liked} onClick={() => {
                         setBook(book)
                         console.log(book)
                         detailsPopUp.showPopup()
@@ -45,7 +53,7 @@ export default function LibraryPage() {
             )}
             </div>}
 
-            <LibraryBookPupup token={token} popup={detailsPopUp} book={book} inLibrary={!(book?.liked != null)}/>
+            <LibraryBookPupup token={token} popup={detailsPopUp} book={book} isLibraryView={true} isInLibrary={true} isRead={book?.liked != null} onPrefUpdateCallback={handlePrefChanged}/>
         </div>
     )
 }

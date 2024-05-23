@@ -2,10 +2,8 @@ package com.librarian.service;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.time.ZoneId;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -21,7 +19,7 @@ public class DataService {
 
     private final JdbcTemplate jdbcTemplate;
 
-    @Autowired
+    //@Autowired
     public DataService(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }

@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.http.client.HttpResponseException;
 import org.drools.template.DataProvider;
 import org.drools.template.objects.ArrayDataProvider;
 import org.kie.api.runtime.KieSession;
@@ -16,8 +18,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.librarian.dto.BookDTO;
 import com.librarian.helper.SessionBuilder;
-import com.librarian.model.Author;
 import com.librarian.model.Book;
 import com.librarian.model.BookRank;
 import com.librarian.model.Rating;
@@ -45,6 +47,9 @@ public class RecommendationService {
 
     @Autowired
     private RatingsRepo ratingRepository;
+
+    @Autowired
+    private UserPreferencesService preferencesService;
 
     @PostConstruct
     public void init() {
@@ -177,18 +182,27 @@ public class RecommendationService {
                 Book bb = ranks.get(i).getBook();
                 books.add(bb);
             }
+            
+            // Integer top = ranks.get(0).getRating();
+            // Integer i = 0;
+            // for (BookRank br: ranks) {
+            //     if (br.getRating() != top) break;
+            //     Book bb = ranks.get(i).getBook();
+            //     ArrayList<Author> a = new ArrayList<>(bb.getAuthors());
+            //     logger.info("BOOK " + Integer.toString(i+1) + ": " + bb.getTitle() + " WRITTEN BY: " + a.get(0).getName());
+            // }
 
-            Integer top = ranks.get(0).getRating();
-            Integer i = 0;
-            for (BookRank br: ranks) {
-                if (br.getRating() != top) break;
-                Book bb = ranks.get(i).getBook();
-                ArrayList<Author> a = new ArrayList<>(bb.getAuthors());
-                logger.info("BOOK " + Integer.toString(i+1) + ": " + bb.getTitle() + " WRITTEN BY: " + a.get(0).getName());
-            }
         }
 
         return books;
     }
 
+    public List<BookDTO> recommend(String username) throws HttpResponseException {
+        UserPreferences preferences = preferencesService._get(username);
+        return getRecommendedBooksForPreferences(preferences, 5).stream().map(BookDTO::new).collect(Collectors.toList());
+    }
+    public List<BookDTO> recommend(Long bookId) throws HttpResponseException {
+        Book book = bookRepository.findById(bookId).orElseThrow(() -> new HttpResponseException(404, "Book with id " + Long.toString(bookId) + " not found."));
+        return getRecommendedBooksForBook(book, 5).stream().map(BookDTO::new).collect(Collectors.toList());
+    }
 }

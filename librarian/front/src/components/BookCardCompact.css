@@ -104,3 +104,20 @@
 .book-card:hover .data-grid {
     opacity: 1;
 }
+.floating-icon-circle {
+    position: absolute;
+    top: 4px;
+    left: 3px;
+    width: 48px;
+    border-radius: 100%;
+    aspect-ratio: 1;
+    background-color: rgb(var(--surface));
+}
+.liked-icon {
+    background-color: rgb(65, 75, 60);
+    color: rgb(150, 250, 50);
+}
+.disliked-icon {
+    background-color: rgb(75, 60, 60);
+    color: rgb(250, 50, 50);
+}

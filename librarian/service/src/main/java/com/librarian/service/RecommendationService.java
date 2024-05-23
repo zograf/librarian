@@ -136,9 +136,9 @@ public class RecommendationService {
         //count = ksession.fireAllRules();
         //logger.info("Executed " + count + " rules");
 
-        for (FactHandle handle : ksession.getFactHandles()) {
-            ksession.delete(handle);
-        }
+        // for (FactHandle handle : ksession.getFactHandles()) {
+        //     ksession.delete(handle);
+        // }
 
         //ksession.getAgenda().getAgendaGroup("cleanup").setFocus();
         //count = ksession.fireAllRules();

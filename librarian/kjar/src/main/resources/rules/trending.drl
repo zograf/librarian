@@ -1,0 +1,70 @@
+package rules;
+
+import com.librarian.model.*;
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+
+
+rule "Collect Read Books"
+agenda-group "trending"
+salience 100
+no-loop
+    when
+        $userPrefs: List(size > 0) from collect(UserPreferences())
+    then
+        Map<Long, Integer> bookCount = new HashMap<Long, Integer>();
+        for (Object obj : $userPrefs) {
+            UserPreferences up = (UserPreferences) obj;
+            for (ReadBook rb : up.getReadBooks()) {
+                if (bookCount.containsKey(rb.book.id)) {
+                    bookCount.put(rb.book.id, bookCount.get(rb.book.id) + 1);
+                }
+                else {
+                    bookCount.put(rb.book.id, 1);
+                }
+            }
+        }
+
+        for(Map.Entry<Long, Integer> entry : bookCount.entrySet()) {
+            insert(new PotentialTrendingBook(entry.getKey(), entry.getValue()));
+        }
+end
+
+
+rule "Check if trending"
+agenda-group "trending"
+salience 100
+no-loop
+    when
+        $ptb: PotentialTrendingBook($id : id, likedBy >= 2)
+        not TrendingBook(id == $id)
+    then
+        modify($ptb) { setTrending(true); }
+        System.out.println("Book became trending: " + $ptb.id + ", with count: " + $ptb.likedBy);
+end
+
+
+rule "Remove non trending"
+agenda-group "trending"
+salience 99
+no-loop
+    when
+        $ptb: PotentialTrendingBook(likedBy < 2 || isTrending == false)
+    then
+        delete($ptb)
+        System.out.println("Removed book: " + $ptb.id + ", with count: " + $ptb.likedBy);
+end
+
+
+rule "Discard previous new in trending books"
+agenda-group "trending"
+salience 98
+no-loop
+    when
+        PotentialTrendingBook($id : id, isTrending == true)
+        $trending: TrendingBook(book.id == $id, newInTrending == true)
+    then
+        modify($trending) { setNewInTrending(false); }
+        System.out.println("Previously trending book removed from new in trending: " + $trending.id + ", with title: " + $trending.book.title);
+end

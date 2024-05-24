@@ -56,8 +56,8 @@ public class ServiceApplication  {
     }
 
     public void LoadData() {
-        String path = "L:\\FTN\\sbnz\\data_processing\\sql\\";
-        //String path = "D:\\FTN\\librarian\\data_processing\\sql\\";
+        //String path = "L:\\FTN\\sbnz\\data_processing\\sql\\";
+        String path = "D:\\FTN\\librarian\\data_processing\\sql\\";
         // String path = "/home/zograf/librarian/data_processing/sql/";
         log.info("Loading authors");
         LoadAuthors(path + "author.csv");

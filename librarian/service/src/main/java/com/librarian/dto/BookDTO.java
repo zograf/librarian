@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import com.librarian.model.Book;
 import com.librarian.model.EAge;
 import com.librarian.model.ReadBook;
+import com.librarian.model.TrendingBook;
 
 public class BookDTO {
     public Long id; 
@@ -20,10 +21,11 @@ public class BookDTO {
     public String cover;
     public EAge age;
     public Boolean liked;
-    // ratings missing
+    public Boolean newToTrending;
 
     public BookDTO() { 
         this.liked = null;
+        this.newToTrending = null;
     }
 
     public BookDTO(Book book) {
@@ -38,6 +40,7 @@ public class BookDTO {
         this.cover = book.cover;
         this.age = book.age;
         this.liked = null;
+        this.newToTrending = null;
     }
 
     public BookDTO(ReadBook readBook) {
@@ -52,6 +55,22 @@ public class BookDTO {
         this.cover = readBook.book.cover;
         this.age = readBook.book.age;
         this.liked = readBook.didLike;
+        this.newToTrending = null;
+    }
+
+    public BookDTO(TrendingBook trending) {
+        this.id = trending.book.id;
+        this.title = trending.book.title;
+        this.category = new SubjectDTO(trending.book.category);
+        this.authors = trending.book.authors.stream().map(AuthorDTO::new).collect(Collectors.toList());
+        this.subjects = trending.book.getSubjects().stream().map(SubjectDTO::new).collect(Collectors.toList());
+        this.description = trending.book.description;
+        this.firstSentence = trending.book.firstSentence;
+        this.firstPublishedYear = trending.book.firstPublishedYear;
+        this.cover = trending.book.cover;
+        this.age = trending.book.age;
+        this.liked = null;
+        this.newToTrending = trending.newInTrending;
     }
 
     public Long getId() {

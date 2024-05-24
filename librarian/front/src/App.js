@@ -7,6 +7,7 @@ import UserRootLayout from './pages/root/UserRootLayout';
 import Preferences from './pages/home/preferences/Preferences';
 import Recommend from './pages/home/Recommend';
 import SearchBooks from './pages/home/books/SearchBooks';
+import Trending from './pages/home/Trending';
 
 export default function App() {
     return(
@@ -22,6 +23,7 @@ export default function App() {
                         <Route exact path='/preferences' element={<Preferences/>} />
                         <Route exact path='/recommend' element={<Recommend/>} />
                         <Route exact path='/books/search' element={<SearchBooks/>} />
+                        <Route exact path='/trending' element={<Trending/>} />
                     </Routes>
                 </UserRootLayout>
             </Router>

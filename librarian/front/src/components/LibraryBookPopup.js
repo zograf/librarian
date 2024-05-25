@@ -41,9 +41,10 @@ export default function LibraryBookPupup({book, token, popup, isLibraryView, isI
             "liked" : likedReadBook,
             "subjects" : selected
         }, { headers: {"Authorization" : `Bearer ${token}`} })
-        .then(resp => {
-            console.log(resp);
+        .then(res => {
+            console.log(res)
             popup.hidePopup()
+            onPrefUpdateCallback(res.data)
         })
     }
 

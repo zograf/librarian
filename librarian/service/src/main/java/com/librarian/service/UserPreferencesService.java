@@ -7,12 +7,14 @@ import org.apache.http.client.HttpResponseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.librarian.dto.MarkAsReadDTO;
 import com.librarian.dto.SubjectDTO;
 import com.librarian.dto.UserPreferencesDTO;
+import com.librarian.events.TrendingEvent;
 import com.librarian.model.Author;
 import com.librarian.model.Book;
 import com.librarian.model.ETargetYear;
@@ -43,7 +45,7 @@ public class UserPreferencesService {
     @Autowired
     private BooksRepo booksRepo;
     @Autowired 
-    private TrendingService trendingService;
+    private ApplicationEventPublisher eventPublisher;
 
     Logger logger = LoggerFactory.getLogger(UserPreferencesService.class);
 
@@ -150,7 +152,7 @@ public class UserPreferencesService {
             else preferences.getDislikedSubjects().add(subject);
         }
         UserPreferencesDTO retVal =  _save(preferences);
-        trendingService.updateTrendingBooks();
+        eventPublisher.publishEvent(new TrendingEvent(this));
         return retVal;
     }
 

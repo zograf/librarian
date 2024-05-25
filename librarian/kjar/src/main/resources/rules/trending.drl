@@ -1,5 +1,4 @@
 package rules;
-import org.kie.api.runtime.rule.RuleContext;
 
 import com.librarian.model.*;
 import java.util.List;
@@ -69,65 +68,4 @@ no-loop
     then
         System.out.println("Previously trending book removed from new in trending: " + $trending.book.id + ", with title: " + $trending.book.title);
         modify($trending) { setNewInTrending(false) }
-end
-
-rule "Test 2"
-agenda-group "trending"
-salience 97
-no-loop
-    when
-        $ptb: PotentialTrendingBook()
-    then
-        System.out.println("Print ALL: " + $ptb.id + ", with count: " + $ptb.likedBy + " and status: " + $ptb.isTrending);
-end
-
-rule "Test 1"
-agenda-group "trending"
-salience 97
-no-loop
-    when
-        $ptb: PotentialTrendingBook(trending == true)
-    then
-        System.out.println("FOUND TRENDING " + $ptb.id + ", with count: " + $ptb.likedBy + " and status: " + $ptb.isTrending);
-end
-
-// rule "Remove non trending"
-// agenda-group "trending"
-// salience 1
-// no-loop
-//     when
-//         $ptb: PotentialTrendingBook(isTrending == false)
-//     then
-//         System.out.println("Removed book: " + $ptb.id + ", with count: " + $ptb.likedBy);
-//         delete($ptb)
-// end
-
-rule "Remove Trending"
-agenda-group "trending-cleanup"
-salience 1
-no-loop
-    when
-        $tb: TrendingBook()
-    then
-        delete($tb);
-end
-
-rule "Remove Potential"
-agenda-group "trending-cleanup"
-salience 1
-no-loop
-    when
-        $ptb: PotentialTrendingBook()
-    then
-        delete($ptb);
-end
-
-rule "Remove User Preferences"
-agenda-group "trending-cleanup"
-salience 1
-no-loop
-    when
-        $up: UserPreferences()
-    then
-        delete($up);
 end

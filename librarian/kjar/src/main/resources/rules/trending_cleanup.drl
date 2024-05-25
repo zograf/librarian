@@ -1,0 +1,36 @@
+package rules;
+
+import com.librarian.model.*;
+
+
+rule "Remove Trending"
+agenda-group "trending-cleanup"
+salience 1
+no-loop
+    when
+        $tb: TrendingBook()
+    then
+        delete($tb);
+end
+
+
+rule "Remove Potential"
+agenda-group "trending-cleanup"
+salience 1
+no-loop
+    when
+        $ptb: PotentialTrendingBook()
+    then
+        delete($ptb);
+end
+
+
+rule "Remove User Preferences"
+agenda-group "trending-cleanup"
+salience 1
+no-loop
+    when
+        $up: UserPreferences()
+    then
+        delete($up);
+end

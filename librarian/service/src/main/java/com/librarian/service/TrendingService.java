@@ -41,6 +41,7 @@ public class TrendingService {
     public void init() {
         SessionBuilder sessionBuilder = new SessionBuilder();
         sessionBuilder.addRules("/rules/trending.drl");
+        sessionBuilder.addRules("/rules/trending_cleanup.drl");
         ksession = sessionBuilder.build();
 
         

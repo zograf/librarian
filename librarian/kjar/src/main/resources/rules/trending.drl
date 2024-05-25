@@ -4,6 +4,8 @@ import com.librarian.model.*;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Collections;
+import java.util.Comparator;
 
 
 rule "Collect Read Books"
@@ -64,8 +66,18 @@ salience 97
 no-loop
     when
         PotentialTrendingBook(trending)
-        $trending: TrendingBook(newInTrending)
+        $numOfBooks: Number(intValue > 1) from accumulate(
+            $tb: TrendingBook(newInTrending), 
+            count($tb)
+        )
+        $trendings: List() from collect(TrendingBook(newInTrending))
     then
-        System.out.println("Previously trending book removed from new in trending: " + $trending.book.id + ", with title: " + $trending.book.title);
-        modify($trending) { setNewInTrending(false) }
+        Collections.sort($trendings, new Comparator<TrendingBook>() {
+            @Override
+            public int compare(TrendingBook tb1, TrendingBook tb2) {
+                return Integer.compare(tb1.getLikedBy(), tb2.getLikedBy());
+            }
+        });
+
+        modify((TrendingBook) $trendings.get(0)) { setNewInTrending(false) }
 end

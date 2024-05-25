@@ -51,7 +51,7 @@ export default function BookCardWide({book, isInLibrary, isLibraryView, onClick,
                 }}>
             </div>
 
-            <p className="book-category-wide shadow">{book.category.keyword}</p>
+            <p className="book-category-wide">{book.category.keyword}</p>
 
             {isLibraryView && isRead && <div className={`floating-icon-circle-wide shadow flex center justify-center ${isLiked ? 'liked-icon-wide' : 'disliked-icon-wide'}`}>
                 <span className="material-symbols-outlined icon" style={{scale:'1.05'}}>{isLiked ? 'thumb_up' : 'thumb_down'}</span>

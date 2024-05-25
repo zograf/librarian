@@ -108,7 +108,7 @@ export default function LibraryBookPupup({book, token, popup, isLibraryView, isI
                                 </button>
                             </div>}
 
-                            {!isLibraryView && <div className="showing-top-slide">
+                            {!isLibraryView && !isRead && <div className="showing-top-slide">
                                 <button className="solid-accent-button w-100 flex center justify-center gap-xs" onClick={addToLib}>
                                     <span className="material-symbols-outlined icon">{inLibrary ? 'label_off' : 'new_label'}</span>
                                     {inLibrary ? 'Remove From Library' : 'Add To Library'}

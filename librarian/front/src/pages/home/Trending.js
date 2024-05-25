@@ -4,6 +4,7 @@ import LibraryBookPupup from "../../components/LibraryBookPopup"
 import { API } from "../../enviroment"
 import axios from "axios"
 import { usePopup } from "../../components/pop-up/PopUpFrame"
+import BookCardWide from "../../components/BookCardWide"
 
 export default function Trending() {
     const token = localStorage.getItem("token")
@@ -13,13 +14,19 @@ export default function Trending() {
 
     useEffect(() => {
         axios.get(API + '/user/preferences/',  { headers: {"Authorization" : `Bearer ${token}`} })
-            .then(res => { setPreferences(res.data) })
-            .catch(e => console.log(e))
-        axios.get(API + '/books/trending/',  { headers: {"Authorization" : `Bearer ${token}`} })
             .then(res => { 
-                console.log(res.data)
-                setTrending(res.data.filter(item => !item.newToTrending))
-                setHot(res.data.filter(item => item.newToTrending))
+
+                console.log(res.data); 
+                setPreferences(res.data) 
+
+                axios.get(API + '/books/trending/',  { headers: {"Authorization" : `Bearer ${token}`} })
+                    .then(res => { 
+                        console.log(res.data)
+                        setTrending(res.data.filter(item => !item.newToTrending))
+                        setHot(res.data.filter(item => item.newToTrending))
+                    })
+                    .catch(e => console.log(e))
+            
             })
             .catch(e => console.log(e))
     }, [])
@@ -36,32 +43,47 @@ export default function Trending() {
                 <p className="tutorial-text neutral">Curently there are not trending books.</p>
             </div>}
 
-            {hot.length != 0 && <div className="w-100 standard-padding showing gap-s" style={{display:'grid', gridTemplateColumns:'1fr 1fr 1fr 1fr 1fr'}}>
-                {hot.map(book => { return(<BookCardCompact 
-                    book={book} 
-                    isLibraryView={false}
-                    isInLibrary={preferences?.library?.find((item) => item.id == book.id) != undefined}
-                    onPrefUpdateCallback={handlePrefChanged}
-                    onClick={() => {
-                        setBook(book)
-                        detailsPopUp.showPopup()
-                    }}
-                />)})}
+            {hot.length != 0 && <div className="v-spacer-xl">
+                <p className="section-title">Hot Titles</p>
+                <div className="w-100 showing gap-s" style={{display:'grid', gridTemplateColumns:'1fr 1fr'}}>
+                    {hot.map(book => { return(<BookCardWide 
+                        book={book} 
+                        isLibraryView={false}
+                        isRead={preferences?.readBooks?.find((item) => item.id == book.id) != undefined}
+                        isInLibrary={preferences?.library?.find((item) => item.id == book.id) != undefined || preferences?.readBooks?.find((item) => item.id == book.id) != undefined}
+                        onPrefUpdateCallback={handlePrefChanged}
+                        onClick={() => {
+                            setBook(book)
+                            detailsPopUp.showPopup()
+                        }}
+                    />)})}
+                </div>
             </div>}
 
-            {trending.length != 0 && <div className="w-100 standard-padding showing gap-s" style={{display:'grid', gridTemplateColumns:'1fr 1fr 1fr 1fr 1fr'}}>
-                {trending.map(book => { return(<BookCardCompact 
-                    book={book} 
-                    isLibraryView={false}
-                    isInLibrary={preferences?.library?.find((item) => item.id == book.id) != undefined}
-                    onPrefUpdateCallback={handlePrefChanged}
-                    onClick={() => {
-                        setBook(book)
-                        detailsPopUp.showPopup()
-                    }}
-                />)})}
+            {trending.length != 0 && <div>
+                <p className="section-title">Other Trending Titles</p>
+                <div className="w-100 showing gap-s" style={{display:'grid', gridTemplateColumns:'1fr 1fr 1fr 1fr 1fr'}}>
+                    {trending.map(book => { return(<BookCardCompact 
+                        book={book} 
+                        isLibraryView={false}
+                        isRead={preferences?.readBooks?.find((item) => item.id == book.id) != undefined}
+                        isInLibrary={preferences?.library?.find((item) => item.id == book.id) != undefined}
+                        onPrefUpdateCallback={handlePrefChanged}
+                        onClick={() => {
+                            setBook(book)
+                            detailsPopUp.showPopup()
+                        }}
+                    />)})}
+                </div>
             </div>}
-            <LibraryBookPupup token={token} popup={detailsPopUp} book={book} isLibraryView={false} isInLibrary={preferences?.library?.find((item) => item.id == book?.id) != undefined} onPrefUpdateCallback={handlePrefChanged}/>
+            <LibraryBookPupup 
+                token={token} 
+                popup={detailsPopUp}
+                book={book} 
+                isLibraryView={false} 
+                isRead={preferences?.readBooks?.find((item) => item.id == book?.id) != undefined}
+                isInLibrary={preferences?.library?.find((item) => item.id == book?.id) != undefined} 
+                onPrefUpdateCallback={handlePrefChanged}/>
         </div>
     )
 }

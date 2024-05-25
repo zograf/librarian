@@ -16,7 +16,7 @@
 .taller-book-content {
     height: 125px;
 }
-.warrning-chip {
+.warrning-chip, .info-chip {
     margin: 8px;
     z-index: 1;
 }

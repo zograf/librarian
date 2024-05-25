@@ -1,4 +1,5 @@
 package rules;
+import org.kie.api.runtime.rule.RuleContext;
 
 import com.librarian.model.*;
 import java.util.List;
@@ -25,46 +26,108 @@ no-loop
                 }
             }
         }
-
-        for(Map.Entry<Long, Integer> entry : bookCount.entrySet()) {
-            insert(new PotentialTrendingBook(entry.getKey(), entry.getValue()));
-        }
+        bookCount.forEach((key, value) -> {
+            System.out.println("Found book " + key + ", with count: " + value);
+            insert(new PotentialTrendingBook(key, value));
+        });
 end
 
 
 rule "Check if trending"
 agenda-group "trending"
-salience 100
+salience 99
 no-loop
     when
         $ptb: PotentialTrendingBook($id : id, likedBy >= 2)
-        not TrendingBook(id == $id)
+        not TrendingBook(book.id == $id)
     then
-        modify($ptb) { setTrending(true); }
         System.out.println("Book became trending: " + $ptb.id + ", with count: " + $ptb.likedBy);
+        modify($ptb) { setTrending(true) }
 end
 
 
-rule "Remove non trending"
+rule "Update counts"
 agenda-group "trending"
 salience 99
 no-loop
     when
-        $ptb: PotentialTrendingBook(likedBy < 2 || isTrending == false)
+        $ptb: PotentialTrendingBook($id : id, $likedBy : likedBy)
+        $tb: TrendingBook(book.id == $id)
     then
-        delete($ptb)
-        System.out.println("Removed book: " + $ptb.id + ", with count: " + $ptb.likedBy);
+        System.out.println("Book rating updated: " + $ptb.id + ", from/to: " + $tb.likedBy + "/" + $ptb.likedBy);
+        modify($tb) { setLikedBy($likedBy) }
 end
 
 
 rule "Discard previous new in trending books"
 agenda-group "trending"
-salience 98
+salience 97
 no-loop
     when
-        PotentialTrendingBook($id : id, isTrending == true)
-        $trending: TrendingBook(book.id == $id, newInTrending == true)
+        PotentialTrendingBook(trending)
+        $trending: TrendingBook(newInTrending)
     then
-        modify($trending) { setNewInTrending(false); }
-        System.out.println("Previously trending book removed from new in trending: " + $trending.id + ", with title: " + $trending.book.title);
+        System.out.println("Previously trending book removed from new in trending: " + $trending.book.id + ", with title: " + $trending.book.title);
+        modify($trending) { setNewInTrending(false) }
+end
+
+rule "Test 2"
+agenda-group "trending"
+salience 97
+no-loop
+    when
+        $ptb: PotentialTrendingBook()
+    then
+        System.out.println("Print ALL: " + $ptb.id + ", with count: " + $ptb.likedBy + " and status: " + $ptb.isTrending);
+end
+
+rule "Test 1"
+agenda-group "trending"
+salience 97
+no-loop
+    when
+        $ptb: PotentialTrendingBook(trending == true)
+    then
+        System.out.println("FOUND TRENDING " + $ptb.id + ", with count: " + $ptb.likedBy + " and status: " + $ptb.isTrending);
+end
+
+// rule "Remove non trending"
+// agenda-group "trending"
+// salience 1
+// no-loop
+//     when
+//         $ptb: PotentialTrendingBook(isTrending == false)
+//     then
+//         System.out.println("Removed book: " + $ptb.id + ", with count: " + $ptb.likedBy);
+//         delete($ptb)
+// end
+
+rule "Remove Trending"
+agenda-group "trending-cleanup"
+salience 1
+no-loop
+    when
+        $tb: TrendingBook()
+    then
+        delete($tb);
+end
+
+rule "Remove Potential"
+agenda-group "trending-cleanup"
+salience 1
+no-loop
+    when
+        $ptb: PotentialTrendingBook()
+    then
+        delete($ptb);
+end
+
+rule "Remove User Preferences"
+agenda-group "trending-cleanup"
+salience 1
+no-loop
+    when
+        $up: UserPreferences()
+    then
+        delete($up);
 end

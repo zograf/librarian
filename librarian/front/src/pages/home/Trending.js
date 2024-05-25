@@ -26,6 +26,11 @@ export default function Trending() {
 
     return(
         <div className="w-100 standard-padding">
+            {trending.length == 0 && <div className="dashed-card flex column center" style={{margin:'12px 24px'}}>
+                <p className="section-title">Nothing To Show</p>
+                <p className="tutorial-text neutral">Curently there are not trending books.</p>
+            </div>}
+
             {trending.length != 0 && <div className="w-100 standard-padding showing gap-s" style={{display:'grid', gridTemplateColumns:'1fr 1fr 1fr 1fr 1fr'}}>
                 {trending.map(book => { return(<BookCardCompact 
                     book={book} 

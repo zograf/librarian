@@ -47,8 +47,9 @@ public class TrendingService {
     }
     
     private void initData() {
-        List<TrendingBook> trending = trendingRepo.findAllByNewInTrending();
+        List<TrendingBook> trending = trendingRepo.findAll();
         for (TrendingBook tb: trending) {
+            logger.info("Inserting book with id: " + Long.toString(tb.book.id) + " which is " + tb.newInTrending);
             ksession.insert(tb);
         }
 
@@ -60,9 +61,10 @@ public class TrendingService {
 
     private void handlePastTrending() {
         for (Object obj : ksession.getObjects(o -> o instanceof TrendingBook)) {
-            TrendingBook toRemove = (TrendingBook) obj;
-            TrendingBook trending = trendingRepo.findById(toRemove.id).get();
-            trending.setNewInTrending(false);
+            TrendingBook toUpdate = (TrendingBook) obj;
+            TrendingBook trending = trendingRepo.findById(toUpdate.id).get();
+            trending.setNewInTrending(toUpdate.newInTrending);
+            trending.setLikedBy(toUpdate.likedBy);
             trendingRepo.save(trending);
         }
     }
@@ -70,6 +72,7 @@ public class TrendingService {
     private void handleNewTrending() {
         for (Object obj : ksession.getObjects(o -> o instanceof PotentialTrendingBook)) {
             PotentialTrendingBook trending = (PotentialTrendingBook) obj;
+            if (!trending.isTrending) continue;
             Book book = booksRepo.findById(trending.id).get();
             logger.info("Got new Trending book! Title: " + book.title);
             trendingRepo.save(new TrendingBook(book, trending.likedBy, true));
@@ -84,6 +87,10 @@ public class TrendingService {
 
         handlePastTrending();
         handleNewTrending();
+
+        ksession.getAgenda().getAgendaGroup("trending-cleanup").setFocus();
+        count = ksession.fireAllRules();
+        logger.info("Executed " + count + " cleanup rules");
         
     }
 

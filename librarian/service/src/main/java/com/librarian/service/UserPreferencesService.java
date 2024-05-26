@@ -7,12 +7,14 @@ import org.apache.http.client.HttpResponseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.librarian.dto.MarkAsReadDTO;
 import com.librarian.dto.SubjectDTO;
 import com.librarian.dto.UserPreferencesDTO;
+import com.librarian.events.TrendingEvent;
 import com.librarian.model.Author;
 import com.librarian.model.Book;
 import com.librarian.model.ETargetYear;
@@ -39,11 +41,11 @@ public class UserPreferencesService {
     @Autowired 
     private  IUserRepository userRepo;
     @Autowired
-    private UserPreferencesRepo userPreferencesRepo;
-    @Autowired
     private ReadBookRepo readBookRepo;
     @Autowired
     private BooksRepo booksRepo;
+    @Autowired 
+    private ApplicationEventPublisher eventPublisher;
 
     Logger logger = LoggerFactory.getLogger(UserPreferencesService.class);
 
@@ -57,10 +59,10 @@ public class UserPreferencesService {
     private UserPreferences _get(Long id) throws HttpResponseException {
         logger.info("Service -> Fetching Preferences for id: " + Long.toString(id));
         try {
-            List<UserPreferences> found = userPreferencesRepo.findAllByIdCustom(id);
+            List<UserPreferences> found = repo.findAllByIdCustom(id);
             logger.info("Service -> Got a list of possible prefs of length: " + Integer.toString(found.size())); 
             UserPreferences prefs = found.get(0);
-            // UserPreferences prefs = userPreferencesRepo.findById(id).orElseThrow(() -> new HttpResponseException(HttpStatus.SC_NOT_FOUND, "User Preferences Not Found for id: " + id));
+            // UserPreferences prefs = repo.findById(id).orElseThrow(() -> new HttpResponseException(HttpStatus.SC_NOT_FOUND, "User Preferences Not Found for id: " + id));
             return prefs;
         }
         catch(IndexOutOfBoundsException ex) {
@@ -149,7 +151,9 @@ public class UserPreferencesService {
             if (readBook.isLiked()) preferences.getLikedSubjects().add(subject);
             else preferences.getDislikedSubjects().add(subject);
         }
-        return _save(preferences);
+        UserPreferencesDTO retVal =  _save(preferences);
+        eventPublisher.publishEvent(new TrendingEvent(this));
+        return retVal;
     }
 
 }

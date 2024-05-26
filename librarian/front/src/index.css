@@ -450,7 +450,7 @@ p {
 }
 
 .shadow {
-	box-shadow: rgba(17, 17, 26, 0.13) 0px 0px 16px;
+	box-shadow: rgba(17, 17, 26, 0.19) 0px 0px 16px;
 }
 
 .dashed-card {
@@ -949,7 +949,17 @@ textarea {
 	font-weight: 500;
 	padding: 0 12px;
 }
-
+.info-chip {
+    background-color: rgb(var(--primary-dark));
+	color: rgba(var(--on-primary-dark), 95%);
+	border-radius: var(--input-radius);
+	min-height: 40px;
+	letter-spacing: 0.01em;
+	font-size: 0.9em;
+	user-select: none;
+	font-weight: 500;
+	padding: 0 12px;
+}
 /* ------------------------------------------------------------------------------------------------------ Scrollable */
 .scrollable {
 	height: 100%;

@@ -1,0 +1,83 @@
+package rules;
+
+import com.librarian.model.*;
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Collections;
+import java.util.Comparator;
+
+
+rule "Collect Read Books"
+agenda-group "trending"
+salience 100
+no-loop
+    when
+        $userPrefs: List(size > 0) from collect(UserPreferences())
+    then
+        Map<Long, Integer> bookCount = new HashMap<Long, Integer>();
+        for (Object obj : $userPrefs) {
+            UserPreferences up = (UserPreferences) obj;
+            for (ReadBook rb : up.getReadBooks()) {
+                if (bookCount.containsKey(rb.book.id)) {
+                    bookCount.put(rb.book.id, bookCount.get(rb.book.id) + 1);
+                }
+                else {
+                    bookCount.put(rb.book.id, 1);
+                }
+            }
+        }
+        bookCount.forEach((key, value) -> {
+            System.out.println("Found book " + key + ", with count: " + value);
+            insert(new PotentialTrendingBook(key, value));
+        });
+end
+
+
+rule "Check if trending"
+agenda-group "trending"
+salience 99
+no-loop
+    when
+        $ptb: PotentialTrendingBook($id : id, likedBy >= 2)
+        not TrendingBook(book.id == $id)
+    then
+        System.out.println("Book became trending: " + $ptb.id + ", with count: " + $ptb.likedBy);
+        modify($ptb) { setTrending(true) }
+end
+
+
+rule "Update counts"
+agenda-group "trending"
+salience 99
+no-loop
+    when
+        $ptb: PotentialTrendingBook($id : id, $likedBy : likedBy)
+        $tb: TrendingBook(book.id == $id)
+    then
+        System.out.println("Book rating updated: " + $ptb.id + ", from/to: " + $tb.likedBy + "/" + $ptb.likedBy);
+        modify($tb) { setLikedBy($likedBy) }
+end
+
+
+rule "Discard previous new in trending books"
+agenda-group "trending"
+salience 97
+no-loop
+    when
+        PotentialTrendingBook(trending)
+        $numOfBooks: Number(intValue > 1) from accumulate(
+            $tb: TrendingBook(newInTrending), 
+            count($tb)
+        )
+        $trendings: List() from collect(TrendingBook(newInTrending))
+    then
+        Collections.sort($trendings, new Comparator<TrendingBook>() {
+            @Override
+            public int compare(TrendingBook tb1, TrendingBook tb2) {
+                return Integer.compare(tb1.getLikedBy(), tb2.getLikedBy());
+            }
+        });
+
+        modify((TrendingBook) $trendings.get(0)) { setNewInTrending(false) }
+end

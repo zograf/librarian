@@ -55,11 +55,17 @@ export default function BookCardCompact({book, isInLibrary, isLibraryView, onCli
                 <span className="material-symbols-outlined icon">{inLibrary ? 'label_off' : 'new_label'}</span>
             </button>}
 
-            <div className= {`flex space-between column standard-padding-xxs book-content-wrapper ${isLibraryView && !inLibrary? 'taller-book-content' : ''}`}>
+            <div className= {`flex space-between column standard-padding-xxs book-content-wrapper ${(isLibraryView && !inLibrary) || book?.newToTrending ? 'taller-book-content' : ''}`}>
                 {isLibraryView && !inLibrary && 
                     <div className="warrning-chip flex center gap-xs">
                         <span className="material-symbols-outlined icon">warning</span>
                         <p>Book removal pending</p>
+                    </div>
+                }
+                {book?.newToTrending != null && book?.newToTrending && 
+                    <div className="info-chip shadow flex center gap-xs" style={{width:'fit-content'}}>
+                        <span className="material-symbols-outlined icon">local_fire_department</span>
+                        <p className="bold h-spacer-xs">NEW</p>
                     </div>
                 }
                 <div className="book-content-inner">

@@ -13,19 +13,19 @@ public class UserPreferences {
     @OneToMany
     public Set<ReadBook> readBooks;
 
-    @OneToMany
+    @ManyToMany
     public Set<Book> library;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     public Set<Subject> likedSubjects;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     public Set<Subject> dislikedSubjects;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     public Set<Subject> additionalSubjects;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     public Set<Author> likedAuthors;
 
     @Column

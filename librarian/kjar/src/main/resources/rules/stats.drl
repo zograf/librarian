@@ -1,0 +1,27 @@
+package rules;
+
+rule "Find Most Read Category"
+agenda-group "stats"
+    when
+        Keyword($keyword: keyword)
+        isParent(parent, $keyword; )
+    then
+        insert(new String(parent));
+end
+
+
+rule "Delete Keywords"
+agenda-group "stats-cleanup"
+    when
+        $k: Keyword()
+    then
+        delete($k);
+end
+
+rule "Delete Strings"
+agenda-group "stats-cleanup"
+    when
+        $s: String()
+    then
+        delete($s);
+end

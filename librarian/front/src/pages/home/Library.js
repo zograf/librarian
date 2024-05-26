@@ -9,11 +9,17 @@ export default function LibraryPage() {
     let path = '/user/preferences/'
     const token = localStorage.getItem("token")
     const [preferences, setPreferences] = useState(undefined)
+    const [mostCommon, setMostCommon] = useState([])
 
     useEffect(() => {
         axios.get(API + path,  { headers: {"Authorization" : `Bearer ${token}`} })
-        .then(res => { console.log(res.data); setPreferences(res.data) })
-        .catch(e => console.log(e))
+            .then(res => { console.log(res.data); setPreferences(res.data) })
+            .catch(e => console.log(e))
+
+        axios.get(API + "/recommend/stats", { headers: {"Authorization" : `Bearer ${token}`} })
+            .then(res => { console.log(res.data); setMostCommon(res.data.mostCommonCategories) })
+            .catch(e => console.log(e))
+
     }, [])
 
     const handlePrefChanged = (prefs) => setPreferences(prefs)
@@ -23,6 +29,7 @@ export default function LibraryPage() {
 
     return(
         <div className="standard-padding">
+
             
             {preferences?.library?.length == 0 && preferences?.readBooks?.length == 0 && <div className="dashed-card flex column center">
                 <p className="section-title">Nothing in library</p>
@@ -39,6 +46,18 @@ export default function LibraryPage() {
                     }}/>
                 ) }
             )}
+            </div>}
+
+            {mostCommon.length > 0 && 
+                <div className="showing">
+                    <p className="section-title">Your most commonly read categories</p>
+                    <div className="flex center wrap gap-xs v-spacer-xl">
+                        {mostCommon.map((keyword) => {return (
+                            <div className="solid-chip flex center showing">
+                                <p>{keyword}</p>
+                            </div>
+                        )})}
+                    </div>
             </div>}
 
             {preferences?.readBooks?.length != 0 && <p className="section-title">Read</p>}

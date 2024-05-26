@@ -12,9 +12,9 @@ import java.util.Set;
 query isParent(String parent, String keyword)
     eval(parent != null && keyword != null && keyword.equals(parent))
     or
-    (Subject(parent, keyword; ) and eval(parent != null && !parent.equals("category")))
+    (sub: Subject(parent, keyword; ) and eval(parent != null && !parent.equals("category")))
     or
-    (Subject(x, keyword; ) and isParent(parent, x; ))
+    (sub: Subject(x, keyword; ) and isParent(parent, x; ))
 end
 
 // Nadjes knjigu recimo Book(Subject s(p1, k1), Subject ss(p2, k2), Subject sss(p3, k3), Subject c)

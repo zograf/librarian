@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.librarian.dto.MarkAsReadDTO;
+import com.librarian.dto.StatsDTO;
 import com.librarian.dto.SubjectDTO;
 import com.librarian.dto.UserPreferencesDTO;
 import com.librarian.events.TrendingEvent;

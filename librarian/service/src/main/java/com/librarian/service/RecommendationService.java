@@ -3,40 +3,49 @@ package com.librarian.service;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
 import org.apache.http.client.HttpResponseException;
+import org.bouncycastle.crypto.io.MacOutputStream;
 import org.drools.template.DataProvider;
 import org.drools.template.objects.ArrayDataProvider;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.rule.FactHandle;
+import org.kie.api.runtime.rule.QueryResults;
+import org.kie.api.runtime.rule.QueryResultsRow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.librarian.dto.BookDTO;
+import com.librarian.dto.StatsDTO;
 import com.librarian.helper.SessionBuilder;
 import com.librarian.model.Book;
 import com.librarian.model.BookRank;
+import com.librarian.model.Keyword;
 import com.librarian.model.Rating;
+import com.librarian.model.ReadBook;
 import com.librarian.model.RecommendingBook;
 import com.librarian.model.RecommendingPreferences;
 import com.librarian.model.Subject;
+import com.librarian.model.TrendingBook;
 import com.librarian.model.UserPreferences;
 import com.librarian.repository.BooksRepo;
 import com.librarian.repository.RatingsRepo;
 import com.librarian.repository.SubjectsRepo;
+import com.librarian.repository.UserPreferencesRepo;
 
 @Service
 public class RecommendationService {
 
     Logger logger = LoggerFactory.getLogger(RecommendationService.class);
-
-    UserPreferences u;
     KieSession ksession;
 
     @Autowired
@@ -50,6 +59,9 @@ public class RecommendationService {
 
     @Autowired
     private UserPreferencesService preferencesService;
+
+    @Autowired
+    private UserPreferencesRepo preferencesRepo;
 
     @PostConstruct
     public void init() {
@@ -94,6 +106,7 @@ public class RecommendationService {
         sessionBuilder.addRules("/rules/likedAuthors.drl");
         sessionBuilder.addRules("/rules/readBooks.drl");
         sessionBuilder.addRules("/rules/singleBook.drl");
+        sessionBuilder.addRules("/rules/stats.drl");
         sessionBuilder.addTemplate("/templates/ageTempl.drt", ageTemplProvider);
         sessionBuilder.addTemplate("/templates/filterAgeTempl.drt", filterAgeTemplProvider);
         sessionBuilder.addTemplate("/templates/categoryFilterTempl.drt", categoryFilterTemplProvider);
@@ -204,5 +217,47 @@ public class RecommendationService {
     public List<BookDTO> recommend(Long bookId) throws HttpResponseException {
         Book book = bookRepository.findById(bookId).orElseThrow(() -> new HttpResponseException(404, "Book with id " + Long.toString(bookId) + " not found."));
         return getRecommendedBooksForBook(book, 5).stream().map(BookDTO::new).collect(Collectors.toList());
+    }
+
+    public StatsDTO getMostCommonCategories(String username) throws HttpResponseException {
+        UserPreferences preferences = preferencesService._get(username);
+
+        for(ReadBook rb : preferences.readBooks) {
+            for(Subject s : rb.book.subjects) {
+                ksession.insert(new Keyword(s.keyword));
+            }
+        }
+
+        ksession.getAgenda().getAgendaGroup("stats").setFocus();
+        int count = ksession.fireAllRules();
+        logger.info("Executed " + count + " rules");
+
+        Map<String, Integer> parentOccurrence = new HashMap<String, Integer>();
+        for (Object obj : ksession.getObjects(o -> o instanceof String)) {
+            String parent = (String) obj;
+            if (parentOccurrence.containsKey(parent)) parentOccurrence.put(parent, parentOccurrence.get(parent) + 1);
+            else parentOccurrence.put(parent, 1);
+        }
+        Map<String, Integer> sortedParentsOccurrence = parentOccurrence.entrySet()
+            .stream()
+            .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
+            .collect(Collectors.toMap(
+                Map.Entry::getKey,
+                Map.Entry::getValue,
+                (e1, e2) -> e1,
+                LinkedHashMap::new
+            ));
+        List<String> picks = new ArrayList<>();
+        for (Map.Entry<String, Integer> entry : sortedParentsOccurrence.entrySet()) {
+            logger.info(entry.getKey() + " - " + Integer.toString(entry.getValue()));
+            picks.add(entry.getKey());
+        }
+
+        ksession.getAgenda().getAgendaGroup("stats-cleanup").setFocus();
+        count = ksession.fireAllRules();
+        logger.info("Executed " + count + " cleanup rules");
+
+        if (picks.size() > 3) return new StatsDTO(picks.subList(0, 3));
+        else return new StatsDTO(picks);
     }
 }

@@ -6,6 +6,7 @@ import { API } from "../../enviroment"
 import { usePopup } from "../../components/pop-up/PopUpFrame"
 import { DropDownSelect } from "../../components/drop-down/DropDown"
 import LoadingSpinner from "../../components/loading-spinner/LoadingSpinner"
+import "./Recommend.css"
 
 export default function Recommend() {    
 
@@ -91,21 +92,27 @@ export default function Recommend() {
                 <p className="tutorial-text neutral">Select the recommendation algorithm and hit recommend!.</p>
             </div>}
 
-            {isWaiting && <div className="dashed-card flex justify-center vi-spacer-m">
+            {isWaiting && <div className="dashed-card flex justify-center vi-spacer-m" style={{margin:'12px 24px'}}>
                 <LoadingSpinner label="Please wait while we get your recommendation!"/>    
             </div>}
 
-            {found.length != 0 && !isWaiting && <div className="w-100 showing standard-padding gap-s" style={{display:'grid', gridTemplateColumns:'1fr 1fr 1fr 1fr 1fr'}}>
-                {found.map(book => { return(<BookCardCompact 
-                    book={book}
-                    isLibraryView={false}
-                    isInLibrary={preferences?.library.find((item) => item.id == book.id) != undefined}
-                    onPrefUpdateCallback={handlePrefChanged}
-                    onClick={() => {
-                        setBook(book)
-                        detailsPopUp.showPopup()
-                    }}
-                />)})}
+            {found.length != 0 && !isWaiting && <div className="w-100 standard-padding gap-s" style={{display:'grid', gridTemplateColumns:'1fr 1fr 1fr 1fr 1fr'}}>
+                {found.map((book, index) => { return(
+                    <div className="recommendation-border" style={{animationDelay: index * 0.4 + 's'}}>
+                        <p className="recommendation-index">{index + 1}</p>
+                        <BookCardCompact
+                            delay={index * 0.4}
+                            book={book}
+                            isLibraryView={false}
+                            isInLibrary={preferences?.library.find((item) => item.id == book.id) != undefined}
+                            onPrefUpdateCallback={handlePrefChanged}
+                            onClick={() => {
+                                setBook(book)
+                                detailsPopUp.showPopup()
+                            }}
+                        />
+                    </div>
+                )})}
             </div>}
 
             <LibraryBookPupup token={token} popup={detailsPopUp} book={book} isLibraryView={false} isInLibrary={preferences?.library?.find((item) => item.id == book?.id) != undefined} onPrefUpdateCallback={handlePrefChanged}/>

@@ -3,7 +3,7 @@ import "./BookCardCompact.css"
 import { API } from "../enviroment";
 import { useEffect, useState } from "react";
 
-export default function BookCardCompact({book, isInLibrary, isLibraryView, onClick, isRead, isLiked = false, onPrefUpdateCallback = () => { }}) {
+export default function BookCardCompact({book, isInLibrary, isLibraryView, onClick, isRead, isLiked = false, onPrefUpdateCallback = () => { }, delay = 0}) {
 
     const token = localStorage.getItem("token")
     const [inLibrary, setInLibrary] = useState(isInLibrary)
@@ -41,7 +41,8 @@ export default function BookCardCompact({book, isInLibrary, isLibraryView, onCli
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",
-                position: "relative"
+                position: "relative",
+                animationDelay: delay + "s"
             }}
             onClick={onClick}
         >

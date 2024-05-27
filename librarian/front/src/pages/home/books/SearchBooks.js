@@ -92,16 +92,16 @@ export default function SearchBooks() {
                     <span className="material-symbols-outlined icon input-icon">search</span>
                     <input placeholder={byTitle ? 'Search By Title' : 'Search For Author'} value={phrase} onChange={handlePhrase} onKeyUp={search}/>
                 </div>
-                {phrase.length > 0 && ((byTitle && phrase.length < 3) || (!byTitle && phrase.length < 4)) &&
+                {(phrase.length > 0 && ((byTitle && phrase.length < 3) || (!byTitle && phrase.length < 4)) || foundBooks.length != 0) &&
                     <p className="flex center showing card-body" 
                         style={{
                             height:'50px', 
                             transition:'all 0.08s ease-in-out', 
-                            backgroundColor: 'rgb(var(--error))', 
-                            color: 'rgb(var(--on-error))',
+                            backgroundColor: foundBooks.length == 0 ? 'rgb(var(--error))' : 'rgb(var(--accent))', 
+                            color: foundBooks.length < 3 ? 'rgb(var(--on-error))' : 'rgb(var(--on-primary-dark))',
                             borderRadius:'var(--input-radius)',
                             padding:'0 16px'
-                        }}>Phrase Too Short</p>
+                        }}>{foundBooks.length == 0 ? 'Phrase Too Short' : foundBooks.length + ' Results'}</p>
                     }
             </div>
 

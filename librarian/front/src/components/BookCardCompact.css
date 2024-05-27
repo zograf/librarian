@@ -37,22 +37,33 @@
     -webkit-box-orient: vertical;
     transition: all 0.15s ease-in-out;
 }
+.top-right-container {
+    position: absolute;
+    right: 6px;
+    top: 6px;
+    visibility: collapse;
+    opacity: 0;
+    translate: 0 -40px;
+    transition: all 0.15s ease-in-out;
+}
 .book-category {
     background-color: rgb(var(--primary-dark));
     color: rgb(var(--on-primary-dark));
     padding: 4px 8px;
     border-radius: 50px;
     width: fit-content;
-    position: absolute;
-    right: 6px;
-    top: 6px;
     text-transform: uppercase;
     font-weight: 500;
-    visibility: collapse;
-    opacity: 0;
-    translate: 0 -40px;
-    transition: all 0.15s ease-in-out;
     z-index: 2;
+}
+.read-by-chip {
+    min-width: 29px;
+    text-align: center;
+    padding: 4px;
+    border-radius: var(--card-radius);
+    left: calc((100% - 40px)/2);
+    background-color: rgb(var(--primary-dark));
+    color: rgb(var(--on-primary-dark));
 }
 .save-button {
     position: absolute;
@@ -75,7 +86,7 @@
 .book-card:hover {
     cursor: pointer;
 }
-.book-card:hover .book-category {
+.book-card:hover .top-right-container {
     visibility: visible;
     opacity: 1;
     translate: 0 0;

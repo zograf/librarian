@@ -3,7 +3,7 @@ import "./BookCardCompact.css"
 import { API } from "../enviroment";
 import { useEffect, useState } from "react";
 
-export default function BookCardCompact({book, isInLibrary, isLibraryView, onClick, isRead, isLiked = false, onPrefUpdateCallback = () => { }, delay = 0}) {
+export default function BookCardCompact({book, isInLibrary, isLibraryView, onClick, isRead, isLiked = false, onPrefUpdateCallback = () => { }, delay = 0, readBy = -1}) {
 
     const token = localStorage.getItem("token")
     const [inLibrary, setInLibrary] = useState(isInLibrary)
@@ -46,7 +46,10 @@ export default function BookCardCompact({book, isInLibrary, isLibraryView, onCli
             }}
             onClick={onClick}
         >
-            <p className="book-category shadow">{book.category.keyword}</p>
+            <div className="flex center gap-xxs top-right-container">
+                {readBy != -1 && <p className="read-by-chip shadow">{readBy}</p>}
+                <p className="book-category shadow">{book.category.keyword}</p>
+            </div>
 
             {isLibraryView && isRead && <div className={`floating-icon-circle shadow flex center justify-center ${isLiked ? 'liked-icon' : 'disliked-icon'}`}>
                 <span className="material-symbols-outlined icon" style={{scale:'1.05'}}>{isLiked ? 'thumb_up' : 'thumb_down'}</span>
@@ -55,6 +58,7 @@ export default function BookCardCompact({book, isInLibrary, isLibraryView, onCli
             {!isRead && <button className="solid-icon-button shadow save-button" onClick={addToLib}>
                 <span className="material-symbols-outlined icon">{inLibrary ? 'label_off' : 'new_label'}</span>
             </button>}
+
 
             <div className= {`flex space-between column standard-padding-xxs book-content-wrapper ${(isLibraryView && !inLibrary) || book?.newToTrending ? 'taller-book-content' : ''}`}>
                 {isLibraryView && !inLibrary && 

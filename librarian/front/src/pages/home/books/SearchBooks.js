@@ -98,7 +98,7 @@ export default function SearchBooks() {
                             height:'50px', 
                             transition:'all 0.08s ease-in-out', 
                             backgroundColor: foundBooks.length == 0 ? 'rgb(var(--error))' : 'rgb(var(--accent))', 
-                            color: foundBooks.length < 3 ? 'rgb(var(--on-error))' : 'rgb(var(--on-primary-dark))',
+                            color: foundBooks.length == 3 ? 'rgb(var(--on-error))' : 'rgb(var(--on-primary-dark))',
                             borderRadius:'var(--input-radius)',
                             padding:'0 16px'
                         }}>{foundBooks.length == 0 ? 'Phrase Too Short' : foundBooks.length + ' Results'}</p>

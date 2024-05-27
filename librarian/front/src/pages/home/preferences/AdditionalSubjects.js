@@ -10,10 +10,7 @@ export default function AdditionalSubjects({subjects}) {
     const handlePhrase = (e) => setPhrase(e.target.value)
 
     const [items, setItems] = useState([])
-    useEffect(() => { 
-        setItems(subjects) 
-        setEditMode(subjects.length == 0)
-    }, [subjects])
+    useEffect(() => { setItems(subjects) }, [subjects])
 
     const [found, setFound] = useState([])
     const [searchSent, setSearchSent] = useState(false)
@@ -60,9 +57,9 @@ export default function AdditionalSubjects({subjects}) {
 
     return(
         <div>
-            <div className="flex center space-between gap-l vi-spacer-xl">
+            <div className="flex center gap-l vi-spacer-xl">
                 <p className="section-title hi-spacer-xs">Additional Keywords</p>
-                <button className="text-button v-spacer-s" onClick={() => setEditMode(!editMode)}>{editMode ? 'Save' : 'Edit Subjects'}</button>
+                <button className={`small-button showing v-spacer-xs ${editMode ? 'solid-button': 'outline-button'}`} onClick={() => setEditMode(!editMode)}>{editMode ? 'Save' : 'Edit Subjects'}</button>
             </div>
             {items.length > 0 && <div className="showing">
                 <div className="flex center wrap gap-xs">{
@@ -107,16 +104,16 @@ export default function AdditionalSubjects({subjects}) {
                         )
                 }</div>
                 
-                {(!searchSent || (searchSent && phrase.length < 3)) && <div className="dashed-card showing flex column gap-xs center justify-center">
-                    <p className="card-title neutral">About Keywords</p>
-                    <p className="card-body">Each book has multiple keywords that describe it's content. Adding keywords to your favorites will fine tune your recommendations.</p>
-                </div>}
-                
                 {searchSent && phrase.length >= 3 && found.length == 0 && <div className="dashed-card showing flex column gap-xs center justify-center">
                     <p className="card-title neutral">No Results</p>
                     <p className="card-body">Try something different!</p>
                 </div>}
             
+            </div>}
+
+            {((editMode && (!searchSent || (searchSent && phrase.length < 3))) || (!editMode && items.length == 0)) && <div className="dashed-card showing flex column gap-xs center justify-center">
+                <p className="card-title neutral">About Keywords</p>
+                <p className="card-body">Each book has multiple keywords that describe it's content. Adding keywords to your favorites will fine tune your recommendations.</p>
             </div>}
 
         </div>   

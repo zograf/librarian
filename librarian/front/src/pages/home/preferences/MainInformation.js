@@ -7,19 +7,25 @@ export default function MainInformation({age : userAge, targetYear : year}) {
 
     const token = localStorage.getItem("token")
     const targetYearOptions = [{ label: "Any Age", value: "NOT_IMPORTANT" }, { label: "Old Books", value: "OLD" }, { label: "Modern Books", value: "MODERN" }, { label: "New Books", value: "NEW" }]
+    const [notSaved, setNotSaved] = useState(false)
 
     const [age, setAge] = useState(undefined)
-    const handleAge = (e) => setAge(e.target.value)
+    const handleAge = (e) => {
+        setAge(e.target.value)
+        setNotSaved(e.target.value != userAge)
+    }
     useEffect(() => setAge(userAge), [userAge])
 
     const [targetYear, setTargetYear] = useState(0)
-    const handleTargetYear = (val) => { setTargetYear(val) }
+    const handleTargetYear = (val) => { 
+        setTargetYear(val) 
+        setNotSaved(val != year)
+    }
     useEffect(() => { setTargetYear(year) }, [year])
 
-    const [editMode, setEditMode] = useState(false)
 
     const save = () => {
-        if (editMode) {
+        if (notSaved) {
             let payload = new FormData()
             payload.append('age', age)
             payload.append('targetYear', targetYear)
@@ -27,26 +33,26 @@ export default function MainInformation({age : userAge, targetYear : year}) {
                 .then(res => {
                     setAge(res.data.age)
                     setTargetYear(res.data.targetYear)
+                    setNotSaved(false)
                 })
                 .catch(e => alert(e))
         }
-        setEditMode(!editMode)
     }
     
     return(
         <div>
             
-            <div className="flex center space-between gap-l">
-                <p className="section-title hi-spacer-xs">Main Information</p>
-                <button className="text-button v-spacer-s" onClick={save}>{editMode ? 'Save' : 'Edit Main Information'}</button>
+            <div className="flex center gap-l v-spacer-xs">
+                <p className="section-title hi-spacer-xs vi-spacer-xxs">Main Information</p>
+                {notSaved && <button className="solid-button small-button showing v-spacer-xs" onClick={save}>Save</button>}
             </div>
             
             <div className="flex gap-xs">
                 <div className="input-wrapper regular-border v-spacer-xs">
                     <span className="material-symbols-outlined icon input-icon">elderly</span>
-                    <input placeholder="Age" type="number" disabled={!editMode} min={5} value={age} onChange={handleAge}/>
+                    <input placeholder="Age" type="number" min={5} value={age} onChange={handleAge}/>
                 </div>
-                <DropDownSelect placeholder={"Prefered Book Age"} icon={"menu_book"} enabled={editMode} options={targetYearOptions} initialValue={targetYear} callback={handleTargetYear}/>
+                <DropDownSelect placeholder={"Prefered Book Age"} icon={"menu_book"} options={targetYearOptions} initialValue={targetYear} callback={handleTargetYear}/>
             </div>
 
         </div>

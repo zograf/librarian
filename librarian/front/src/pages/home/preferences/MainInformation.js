@@ -6,7 +6,7 @@ import { API } from "../../../enviroment"
 export default function MainInformation({age : userAge, targetYear : year}) {
 
     const token = localStorage.getItem("token")
-    const targetYearOptions = [{ label: "Old Books", value: "OLD" }, { label: "Modern Books", value: "MODERN" }, { label: "New Books", value: "NEW" }]
+    const targetYearOptions = [{ label: "Any Age", value: "NOT_IMPORTANT" }, { label: "Old Books", value: "OLD" }, { label: "Modern Books", value: "MODERN" }, { label: "New Books", value: "NEW" }]
 
     const [age, setAge] = useState(undefined)
     const handleAge = (e) => setAge(e.target.value)

@@ -22,8 +22,8 @@ code {
 	--primary-light: 250, 250, 250;
 	--on-primary-light: 8, 8, 8;
 
-	--neutral: 165 165 165;
-	--neutral-half: 100 100 100;
+	--neutral: 165, 165, 165;
+	--neutral-half: 100, 100, 100;
 	--accent: 250, 250, 250;
 
 	--surface: 8, 12, 16;
@@ -926,7 +926,7 @@ textarea {
 
 /* ------------------------------------------------------------------------------------------------------ Chips */
 .solid-chip {
-    background-color: rgb(var(--neutral));
+    background-color: rgba(var(--neutral), 50%);
 	color: rgba(var(--on-background), 85%);
 	border-radius: var(--input-radius);
 	height: 40px;

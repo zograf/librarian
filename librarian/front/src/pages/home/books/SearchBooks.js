@@ -12,8 +12,21 @@ export default function SearchBooks() {
     const [phrase, setPhrase] = useState("")
     const handlePhrase = (e) => setPhrase(e.target.value)
     const [preferences, setPreferences] = useState(undefined)
-    const [found, setFound] = useState([])
+    const handlePrefChanged = (prefs) => setPreferences(prefs)
+    const [foundBooks, setFoundBooks] = useState([])
+    const [foundAuthors, setFoundAuthors] = useState([])
     const [isSearching, setIsSearching] = useState(false)
+    const [byTitle, setByTitle] = useState(true)
+    const handleSearchTypeChange = (val) => {
+        if(val != byTitle) {
+            setPhrase("")
+            setFoundBooks([])
+            setFoundAuthors([])
+            setTargetAuthorId(-1)
+        }
+        setByTitle(val)
+    }
+    const [targetAuthorId, setTargetAuthorId] = useState(-1)
 
     useEffect(() => {
         axios.get(API + '/user/preferences/',  { headers: {"Authorization" : `Bearer ${token}`} })
@@ -21,16 +34,39 @@ export default function SearchBooks() {
         .catch(e => console.log(e))
     }, [])
 
-    const handlePrefChanged = (prefs) => setPreferences(prefs)
-
     const search = (e) => {
-        if (e.code == 'Enter' && phrase.length >= 3 && !isSearching) {
+        if (byTitle && e.code == 'Enter' && phrase.length >= 3 && !isSearching) {
             setIsSearching(true)
             axios.post(API + "/books/like", null, { params: { phrase : phrase }})
                 .then(resp => {
                     console.log(resp);
                     setIsSearching(false)
-                    setFound(resp.data)
+                    setFoundBooks(resp.data)
+                })
+        }
+        else if (!byTitle && phrase.length >= 4) {
+            axios.post(API + "/authors/like", null, { params: { phrase : phrase }})
+            .then(resp => {
+                setFoundAuthors(resp.data)
+                setTargetAuthorId(-1)
+            })
+        }
+        else if (!byTitle && phrase.length == 0) {
+            setFoundAuthors([])
+            setFoundBooks([])
+            setTargetAuthorId(-1)
+        }
+    }
+
+    const searchByAuthor = (id) => {
+        setTargetAuthorId(id)
+        if (id != -1) {
+            setIsSearching(true)
+            axios.post(API + "/books/author", null, { params: { authorId : id }})
+                .then(resp => {
+                    console.log(resp);
+                    setIsSearching(false)
+                    setFoundBooks(resp.data)
                 })
         }
     }
@@ -41,22 +77,58 @@ export default function SearchBooks() {
     return(
         <div className="w-100 standard-padding">
             
-            <div className={`input-wrapper regular-border v-spacer-xs ${isSearching ? 'disabled-input' : ''}`} style={{margin:'0 24px'}}>
-                <span className="material-symbols-outlined icon input-icon">search</span>
-                <input placeholder="Search By Title" value={phrase} onChange={handlePhrase} onKeyUp={search}/>
+            <div className="flex center gap-xs" style={{margin:'0 24px'}}>
+                <div className="radio-inputs regular_border vi-spacer-xxs"> 
+                    <label className="radio">
+                        <input type="radio" checked={byTitle} onClick={() => handleSearchTypeChange(true)}/>
+                        <span className="name">By Title</span>
+                    </label>
+                    <label className="radio">
+                        <input type="radio" checked={!byTitle} onClick={() => handleSearchTypeChange(false)}/>
+                        <span className="name">By Author</span>
+                    </label>
+                </div>
+                <div className={`input-wrapper regular-border ${isSearching ? 'disabled-input' : ''}`}>
+                    <span className="material-symbols-outlined icon input-icon">search</span>
+                    <input placeholder={byTitle ? 'Search By Title' : 'Search For Author'} value={phrase} onChange={handlePhrase} onKeyUp={search}/>
+                </div>
+                {phrase.length > 0 && ((byTitle && phrase.length < 3) || (!byTitle && phrase.length < 4)) &&
+                    <p className="flex center showing card-body" 
+                        style={{
+                            height:'50px', 
+                            transition:'all 0.08s ease-in-out', 
+                            backgroundColor: 'rgb(var(--error))', 
+                            color: 'rgb(var(--on-error))',
+                            borderRadius:'var(--input-radius)',
+                            padding:'0 16px'
+                        }}>Phrase Too Short</p>
+                    }
             </div>
 
-            {found.length == 0 && !isSearching && <div className="dashed-card flex column center" style={{margin:'12px 24px'}}>
-                <p className="section-title">Nothing To Show</p>
-                <p className="tutorial-text neutral">Search for books by their title.</p>
-            </div>}
+            {foundAuthors.length > 0 && <div className="flex center wrap gap-xs" style={{margin:'12px 24px'}}>{
+                foundAuthors.map((item) => {
+                    return (<button className={`flex center showing ${targetAuthorId == item.id ? 'text-button-selected' : 'outline-button'}`} onClick={() => { searchByAuthor(item.id) }}>
+                        {item.name} 
+                    </button>)}
+                )
+            }</div>}
+
+            {((!byTitle && foundAuthors.length == 0) || (!byTitle && foundAuthors.length > 0 && foundBooks.length == 0) || (byTitle && foundBooks.length == 0)) && !isSearching && 
+                <div className="dashed-card flex column center" style={{margin:'12px 24px'}}>
+                    <p className="section-title">Nothing To Show</p>
+                    <p className="tutorial-text neutral">{
+                        byTitle ? 'Search for books by their title.' : 
+                        !byTitle && foundAuthors.length == 0 ? 'Search for books by author.' : 'Select the Author to get your results.'
+                    }</p>
+                </div>
+            }
 
             {isSearching && <div className="dashed-card flex justify-center vi-spacer-m" style={{margin:'12px 24px'}}>
                 <LoadingSpinner label="Please wait while we get your results!"/>    
             </div>}
             
-            {found.length != 0 && !isSearching && <div className="w-100 standard-padding showing gap-s" style={{display:'grid', gridTemplateColumns:'1fr 1fr 1fr 1fr 1fr'}}>
-                {found.map(book => { return(<BookCardCompact 
+            {foundBooks.length != 0 && !isSearching && <div className="w-100 showing gap-s" style={{display:'grid', gridTemplateColumns:'1fr 1fr 1fr 1fr 1fr', margin:'12px 24px'}}>
+                {foundBooks.map(book => { return(<BookCardCompact 
                     book={book} 
                     isLibraryView={false}
                     isInLibrary={preferences.library.find((item) => item.id == book.id) != undefined}

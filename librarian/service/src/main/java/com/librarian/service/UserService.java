@@ -20,6 +20,7 @@ import com.librarian.dto.LoginDTO;
 import com.librarian.dto.RegisterDTO;
 import com.librarian.dto.TokenDTO;
 import com.librarian.model.ERole;
+import com.librarian.model.ETargetYear;
 import com.librarian.model.User;
 import com.librarian.model.UserPreferences;
 import com.librarian.repository.IUserRepository;
@@ -104,6 +105,7 @@ public class UserService {
         UserPreferences preferences = new UserPreferences();
         preferences.setAge(dto.getAge());
         preferences.setGender(dto.getGender());
+        preferences.setTargetYear(ETargetYear.NOT_IMPORTANT);
         user.setPreferences(userPreferencesRepo.save(preferences));
         
         logger.info("Registered new user!");

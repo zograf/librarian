@@ -35,6 +35,11 @@
     font-size: 1.4rem;
     font-weight: 400;
 }
+.top-right-container-wide {
+    position: absolute;
+    left: 6px;
+    bottom: 6px;
+}
 .book-category-wide {
     background-color: rgb(var(--primary-dark));
     color: rgb(var(--on-primary-dark));
@@ -42,9 +47,6 @@
     padding: 4px 8px;
     border-radius: 50px;
     width: fit-content;
-    position: absolute;
-    left: 6px;
-    bottom: 6px;
     text-transform: uppercase;
     font-weight: 500;
     transition: all 0.15s ease-in-out;

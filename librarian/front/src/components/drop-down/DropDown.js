@@ -53,7 +53,7 @@ export function DropDownInput({options, icon, placeholder, callback}) {
     ) 
 }
 
-export function DropDownSelect({options, icon, placeholder, callback, enabled, initialValue}) {
+export function DropDownSelect({options, icon, placeholder, callback, enabled = true, initialValue}) {
     const [value, setValue] = useState("")
     const [isVisible, setIsVisible] = useState(false)
     const [showError, setError] = useState(false)

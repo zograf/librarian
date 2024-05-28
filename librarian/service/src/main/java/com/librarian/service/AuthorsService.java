@@ -16,7 +16,7 @@ public class AuthorsService {
     private AuthorsRepo repo;
 
     public List<AuthorDTO> findByKeyword(String phrase) {
-        return repo.findByNameContains(phrase).stream().map(AuthorDTO::new).collect(Collectors.toList());
+        return repo.findByNameContainsIgnoreCase(phrase).stream().map(AuthorDTO::new).collect(Collectors.toList());
     }
 
 }

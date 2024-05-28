@@ -22,10 +22,12 @@ public class BookDTO {
     public EAge age;
     public Boolean liked;
     public Boolean newToTrending;
+    public Integer readBy;
 
     public BookDTO() { 
         this.liked = null;
         this.newToTrending = null;
+        this.readBy = -1;
     }
 
     public BookDTO(Book book) {
@@ -41,6 +43,7 @@ public class BookDTO {
         this.age = book.age;
         this.liked = null;
         this.newToTrending = null;
+        this.readBy = -1;
     }
 
     public BookDTO(ReadBook readBook) {
@@ -56,6 +59,7 @@ public class BookDTO {
         this.age = readBook.book.age;
         this.liked = readBook.didLike;
         this.newToTrending = null;
+        this.readBy = -1;
     }
 
     public BookDTO(TrendingBook trending) {
@@ -71,6 +75,7 @@ public class BookDTO {
         this.age = trending.book.age;
         this.liked = null;
         this.newToTrending = trending.newInTrending;
+        this.readBy = trending.likedBy;
     }
 
     public Long getId() {

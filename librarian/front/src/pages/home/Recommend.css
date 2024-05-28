@@ -1,0 +1,49 @@
+.recommendation-border {
+    border-radius: var(--card-radius);
+    /* border: 2px solid rgba(var(--neutral), 50%); */
+    padding: 8px;
+    overflow: hidden;
+    background-color: rgba(var(--neutral), 0%);
+    animation: recommended-fade-in 0.2s ease-in-out;
+    animation-fill-mode: forwards;
+}
+.recommendation-index {
+    /* text-shadow: -1px -1px 0 rgba(var(--neutral), 50%), 1px -1px 0 rgba(var(--neutral), 50%), -1px 1px 0 rgba(var(--neutral), 50%), 1px 1px 0 rgba(var(--neutral), 50%); */
+    color: rgb(var(--background));
+    font-size: 12.5rem;
+    font-weight: bold;
+    translate: -27px -71px;
+    height: 200px;
+}
+.recommendation-border .book-card {
+    border-radius: 16px;
+    margin-bottom: 1px;
+    translate: 0 -120px;
+    opacity: 0;
+    animation: recommended-slide-down 0.2s ease-in;
+    animation-fill-mode: forwards;
+}
+
+@keyframes recommended-slide-down {
+	from {
+		opacity: 0;
+		translate: 0 -120px;
+	}
+
+	to {
+		opacity: 1;
+		translate: 0 0;
+	}
+}
+
+@keyframes recommended-fade-in {
+	0% {
+		background-color: rgba(var(--neutral), 0%);
+	}
+    50% {
+		background-color: rgba(var(--neutral), 0%);
+    }
+	100% {
+		background-color: rgba(var(--neutral), 15%);
+	}
+}

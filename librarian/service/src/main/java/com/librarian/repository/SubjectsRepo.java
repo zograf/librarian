@@ -7,6 +7,5 @@ import java.util.List;
 
 @Repository
 public interface SubjectsRepo extends JpaRepository<Subject, Long> {
-    List<Subject> findByKeyword(String keyword);
-    List<Subject> findByKeywordContains(String phrase);
+    List<Subject> findByKeywordContainsIgnoreCase(String phrase);
 }

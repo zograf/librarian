@@ -23,4 +23,8 @@ public class BooksService {
         return bookRepository.findByTitleContains(phrase.toLowerCase()).stream().map(BookDTO::new).collect(Collectors.toList());
     }
 
+    public List<BookDTO> findByAuthor(Long authorId) {
+        return bookRepository.findAllByAuthorId(authorId).stream().map(BookDTO::new).collect(Collectors.toList());
+    }
+
 }

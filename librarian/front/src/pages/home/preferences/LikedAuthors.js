@@ -10,10 +10,7 @@ export default function LikedAuthors({authors}) {
     const handlePhrase = (e) => setPhrase(e.target.value)
  
     const [items, setItems] = useState([])
-    useEffect(() => { 
-        setItems(authors)
-        setEditMode(authors.length == 0)
-    }, [authors])
+    useEffect(() => { setItems(authors) }, [authors])
     
     const [found, setFound] = useState([])
     const [searchSent, setSearchSent] = useState(false)
@@ -58,9 +55,9 @@ export default function LikedAuthors({authors}) {
  
     return(
         <div>
-            <div className="flex center space-between gap-l">
-                <p className="section-title hi-spacer-xs vi-spacer-xl">Liked Authors</p>
-                <button className="text-button v-spacer-s" onClick={() => setEditMode(!editMode)}>{editMode ? 'Save' : 'Edit Authors'}</button>
+            <div className="flex center gap-l vi-spacer-xl">
+                <p className="section-title hi-spacer-xs">Liked Authors</p>
+                <button className={`small-button showing v-spacer-xs ${editMode ? 'solid-button': 'outline-button'}`} onClick={() => setEditMode(!editMode)}>{editMode ? 'Save' : 'Edit Authors'}</button>
             </div>
             {items.length > 0 && <div className="showing">
                 <div className="flex center wrap gap-xs">{
@@ -106,16 +103,16 @@ export default function LikedAuthors({authors}) {
                         )
                 }</div>
                 
-                {(!searchSent || (searchSent && phrase.length < 3)) && <div className="dashed-card showing flex column gap-xs center justify-center">
-                    <p className="card-title neutral">About Authors</p>
-                    <p className="card-body">Adding authors to your liked ones will fine tune your recommendations.</p>
-                </div>}
-                
                 {searchSent && phrase.length >= 3 && found.length == 0 && <div className="dashed-card showing flex column gap-xs center justify-center">
                     <p className="card-title neutral">No Results</p>
                     <p className="card-body">Try someone else!</p>
                 </div>}
 
+            </div>}
+
+            {((editMode && (!searchSent || (searchSent && phrase.length < 3))) || (!editMode && items.length == 0)) && <div className="dashed-card showing flex column gap-xs center justify-center">
+                <p className="card-title neutral">About Authors</p>
+                <p className="card-body">Adding authors to your liked ones will fine tune your recommendations.</p>
             </div>}
 
         </div>

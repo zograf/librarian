@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.GetMapping;
 
-
-
 @RestController
 @RequestMapping(value = "/api/books")
 public class BooksController {
@@ -30,6 +28,12 @@ public class BooksController {
     public List<BookDTO> getFiltered(@RequestParam String phrase) {
         return service.findByName(phrase);
     }
+
+    @PostMapping("/author")
+    public List<BookDTO> findByAuthor(@RequestParam Long authorId) {
+        return service.findByAuthor(authorId);
+    }
+    
 
     @GetMapping("/trending")
     public List<BookDTO> getTrending() {

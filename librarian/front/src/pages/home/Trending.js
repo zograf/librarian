@@ -65,6 +65,7 @@ export default function Trending() {
                 <div className="w-100 showing gap-s" style={{display:'grid', gridTemplateColumns:'1fr 1fr 1fr 1fr 1fr'}}>
                     {trending.map(book => { return(<BookCardCompact 
                         book={book} 
+                        readBy={book.readBy}
                         isLibraryView={false}
                         isRead={preferences?.readBooks?.find((item) => item.id == book.id) != undefined}
                         isInLibrary={preferences?.library?.find((item) => item.id == book.id) != undefined}

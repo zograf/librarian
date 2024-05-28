@@ -8,4 +8,5 @@ import java.util.List;
 @Repository
 public interface SubjectsRepo extends JpaRepository<Subject, Long> {
     List<Subject> findByKeywordContainsIgnoreCase(String phrase);
+    List<Subject> findByParent(String parent);
 }

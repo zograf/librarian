@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { DropDownSelect } from "../../components/drop-down/DropDown"
 import axios from "axios"
 import { API } from "../../enviroment"
@@ -6,7 +6,6 @@ import { API } from "../../enviroment"
 export default function AddEditBook() {
 
     const [title, setTitle] = useState("")
-    const [categoryId, setCategoryId] = useState(-1)
     const [authors, setAuthors] = useState([])
     const [subjects, setSubjects] = useState([])
     const [description, setDescription] = useState("")
@@ -83,16 +82,37 @@ export default function AddEditBook() {
         })
     }
 
+    // Save
+    const save = () => {
+        // TODO Save book
+        cleanUp()
+    }
+    const cleanUp = () => {
+        clearAuthors()
+        clearSubjects()
+        setTitle("")
+        setAuthors([])
+        setSubjects([])
+        setDescription("")
+        setFirstSentence("")
+        setFirstPublishedYear("")
+        setCoverUrl("")
+        setAge(-1)
+        // Or refresh ?? :D
+    }
+
     return(
         <div className="standard-padding">
-            <p className="section-title">Main Information</p>
+            <div className="flex center space-between v-spacer-m">
+                <p className="section-title" style={{marginBottom:'0'}}>Main Information</p>
+                <button className="solid-button" onClick={save}>Save new book</button>
+            </div>
             <div className="gap-xs" style={{display:'grid', gridTemplateColumns:'1fr 1fr'}}>
                 <div>
                     <div className="input-wrapper regular-border v-spacer-xs">
                         <span className="material-symbols-outlined icon input-icon">titlecase</span>
                         <input placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
                     </div>
-                    {/* Category */}
                     <div className="input-wrapper regular-border v-spacer-xs">
                         <span className="material-symbols-outlined icon input-icon">auto_stories</span>
                         <input placeholder="First Sentence [Optional]" value={firstSentence} onChange={(e) => setFirstSentence(e.target.value)} />
@@ -135,7 +155,7 @@ export default function AddEditBook() {
                 )})
                 }</div>
             </div>}
-            <div className="flex center wrap gap-xs">{
+            <div className="flex center wrap gap-xs vi-spacer-s">{
                 foundSubjects.map((keyword) => {
                         var found = subjects.find(x => x.id == keyword.id) != undefined
                         return (<button className={`flex center showing ${found ? 'text-button-selected' : 'outline-button'}`} onClick={() => { if(!found) addSubject(keyword) }}>
@@ -157,7 +177,7 @@ export default function AddEditBook() {
                 </div>
             </div>
             {authors.length > 0 && <div className="showing">
-                <div className="flex center wrap gap-xs v-spacer-s">{
+                <div className="flex center wrap gap-xs">{
                     authors.map((author) => {return (
                         <div className="solid-chip flex center showing" style={{paddingRight:'0px'}}>
                             <p>{author.name}</p>
@@ -165,7 +185,7 @@ export default function AddEditBook() {
                         </div>
                 )})}</div>
             </div>}
-            <div className="flex center wrap gap-xs">{
+            <div className="flex center wrap gap-xs vi-spacer-s">{
                 foundAuthors.map((author) => {
                         var found = authors.find(x => x.id == author.id) != undefined
                         return (<button className={`flex center showing ${found ? 'text-button-selected' : 'outline-button'}`} onClick={() => { if(!found) addAuthor(author) }}>

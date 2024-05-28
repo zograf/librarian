@@ -19,16 +19,17 @@ no-loop
         for (Object obj : $userPrefs) {
             UserPreferences up = (UserPreferences) obj;
             for (ReadBook rb : up.getReadBooks()) {
-                if (bookCount.containsKey(rb.book.id)) {
-                    bookCount.put(rb.book.id, bookCount.get(rb.book.id) + 1);
-                }
-                else {
-                    bookCount.put(rb.book.id, 1);
+                if (rb.didLike) {
+                    if (bookCount.containsKey(rb.book.id)) {
+                        bookCount.put(rb.book.id, bookCount.get(rb.book.id) + 1);
+                    }
+                    else {
+                        bookCount.put(rb.book.id, 1);
+                    }
                 }
             }
         }
         bookCount.forEach((key, value) -> {
-            System.out.println("Found book " + key + ", with count: " + value);
             insert(new PotentialTrendingBook(key, value));
         });
 end
@@ -42,7 +43,6 @@ no-loop
         $ptb: PotentialTrendingBook($id : id, likedBy >= 2)
         not TrendingBook(book.id == $id)
     then
-        System.out.println("Book became trending: " + $ptb.id + ", with count: " + $ptb.likedBy);
         modify($ptb) { setTrending(true) }
 end
 

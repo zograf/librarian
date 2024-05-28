@@ -8,8 +8,10 @@ import Preferences from './pages/home/preferences/Preferences';
 import Recommend from './pages/home/Recommend';
 import SearchBooks from './pages/home/books/SearchBooks';
 import Trending from './pages/home/Trending';
+import AddEditBook from './pages/crud/AddEditBook';
 
 export default function App() {
+    const isAdmin = localStorage.getItem("isAdmin")
     return(
         <main>
             <Router>
@@ -24,6 +26,7 @@ export default function App() {
                         <Route exact path='/recommend' element={<Recommend/>} />
                         <Route exact path='/books/search' element={<SearchBooks/>} />
                         <Route exact path='/trending' element={<Trending/>} />
+                        <Route exact path='/admin/book/new' element={<AddEditBook/>}/>
                     </Routes>
                 </UserRootLayout>
             </Router>

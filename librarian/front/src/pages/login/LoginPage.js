@@ -23,7 +23,7 @@ function LoginForm() {
         localStorage.setItem("username", "")
         localStorage.setItem("id", "")
         localStorage.setItem("isUser", false)
-        localStorage.setItem("isSuperAdmin", false)
+        localStorage.setItem("isAdmin", false)
     }, [])
 
 
@@ -36,6 +36,7 @@ function LoginForm() {
         axios.post(API + "/user/login", payload)
             .then(resp => {
                 console.log(resp);
+                console.log("isAdmin:", resp.data.userRole == "ROLE_ADMIN");
 
                 localStorage.setItem("token", resp.data.accessToken)
                 localStorage.setItem("username", resp.data.email)
@@ -44,7 +45,7 @@ function LoginForm() {
                 localStorage.setItem("isAdmin", resp.data.userRole == "ROLE_ADMIN")
 
                 if (resp.data.userRole == "ROLE_USER") window.location.href = '/library'
-                else alert("Bi**h we don't even have admin *smh*")
+                else window.location.href = '/admin/book/new'
 
             })
             .catch(e => alert("Opsie - Login failed"))

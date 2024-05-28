@@ -100,7 +100,8 @@ public class UserService {
         user.setName(dto.getName());
         user.setEmail(dto.getEmail());
         user.setPassword(dto.getPassword());
-        user.setRole(ERole.ROLE_USER);
+        if (dto.getName().equals("admin")) user.setRole(ERole.ROLE_ADMIN);
+        else user.setRole(ERole.ROLE_USER);
 
         UserPreferences preferences = new UserPreferences();
         preferences.setAge(dto.getAge());

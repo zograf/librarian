@@ -3,6 +3,7 @@ package com.librarian.controller;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.librarian.dto.BookDTO;
+import com.librarian.model.Book;
 import com.librarian.service.BooksService;
 import com.librarian.service.TrendingService;
 
@@ -10,6 +11,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,6 +40,12 @@ public class BooksController {
     @GetMapping("/trending")
     public List<BookDTO> getTrending() {
         return trendingService.get();
+    }
+
+    @PostMapping("/new")
+    public Book create(@RequestBody BookDTO book) {
+        Book ret = service.saveBook(book);
+        return ret;
     }
     
 }

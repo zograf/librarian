@@ -84,8 +84,22 @@ export default function AddEditBook() {
 
     // Save
     const save = () => {
-        // TODO Save book
-        cleanUp()
+        let book = {
+            "title": title,
+            "authors": authors,
+            "subjects": subjects,
+            "description": description,
+            "firstSentence": firstSentence,
+            "firstPublishedYear": firstPublishedYear,
+            "cover": coverUrl,
+            "age": age
+        }
+
+        axios.post(API + "/books/new", book)
+            .then(resp => {
+                console.log(resp)
+            })
+        //cleanUp()
     }
     const cleanUp = () => {
         clearAuthors()

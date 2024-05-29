@@ -24,4 +24,7 @@ public interface BooksRepo extends JpaRepository<Book, Long> {
     @Query("SELECT DISTINCT book FROM Book book JOIN FETCH book.subjects JOIN FETCH book.authors author WHERE author.id = :id")
     List<Book> findAllByAuthorId(@Param("id") Long authorId);
 
+    @Query("SELECT MAX(book.id) FROM Book book")
+    Long findMaxId();
+
 }

@@ -32,7 +32,7 @@ salience 10
         $b: BookRank(book.category.keyword == s)
     then
         Integer r = $b.getRating();
-        modify($b) { setRating(r + 5) }
+        modify($b) { setRating(r + 25) }
 end
 
 // Nadjes knjigu recimo Book(Subject s(p1, k1), Subject ss(p2, k2), Subject sss(p3, k3), Subject c)
@@ -48,22 +48,22 @@ salience 10
         $rb: RecommendingBook($bs: book.subjects)
         $br: BookRank($brs: book.subjects)
     then
-        Integer points = calculatePoints($bs, $brs, 5);
+        Integer points = calculatePoints($bs, $brs, 10);
         Integer r = $br.getRating();
         modify($br) { setRating(r + points) }
 end
 
-rule "Add points for rating"
-agenda-group "singleBook"
-salience 10
-no-loop
-    when
-        $br: BookRank($id: book.id)
-        $ra: Rating(book.id == $id, $r: rating)
-    then
-        Integer rating = $br.getRating();
-        modify($br) { setRating(rating + $r - 3) }
-end
+//rule "Add points for rating"
+//agenda-group "singleBook"
+//salience 10
+//no-loop
+//    when
+//        $br: BookRank($id: book.id)
+//        $ra: Rating(book.id == $id, $r: rating)
+//    then
+//        Integer rating = $br.getRating();
+//        modify($br) { setRating(rating + $r - 3) }
+//end
 
 
 rule "Add book ranks"

@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 import com.librarian.dto.BookDTO;
 import com.librarian.dto.StatsDTO;
 import com.librarian.helper.SessionBuilder;
+import com.librarian.model.Author;
 import com.librarian.model.Book;
 import com.librarian.model.BookRank;
 import com.librarian.model.Keyword;
@@ -153,9 +154,9 @@ public class RecommendationService {
         //     ksession.delete(handle);
         // }
 
-        //ksession.getAgenda().getAgendaGroup("cleanup").setFocus();
-        //count = ksession.fireAllRules();
-        //logger.info("Executed " + count + " rules");
+        ksession.getAgenda().getAgendaGroup("cleanup2").setFocus();
+        count = ksession.fireAllRules();
+        logger.info("Executed " + count + " rules");
         return books;
     }
 
@@ -196,14 +197,14 @@ public class RecommendationService {
                 books.add(bb);
             }
             
-            // Integer top = ranks.get(0).getRating();
-            // Integer i = 0;
-            // for (BookRank br: ranks) {
-            //     if (br.getRating() != top) break;
-            //     Book bb = ranks.get(i).getBook();
-            //     ArrayList<Author> a = new ArrayList<>(bb.getAuthors());
-            //     logger.info("BOOK " + Integer.toString(i+1) + ": " + bb.getTitle() + " WRITTEN BY: " + a.get(0).getName());
-            // }
+            //Integer top = ranks.get(0).getRating();
+            //Integer i = 0;
+            //for (BookRank br: ranks) {
+            //    if (br.getRating() != top) break;
+            //    Book bb = ranks.get(i).getBook();
+            //    ArrayList<Author> a = new ArrayList<>(bb.getAuthors());
+            //    logger.info("BOOK " + Integer.toString(i+1) + ": " + bb.getTitle() + " WRITTEN BY: " + a.get(0).getName());
+            //}
 
         }
 

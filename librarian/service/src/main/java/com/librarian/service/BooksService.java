@@ -20,11 +20,25 @@ public class BooksService {
     private BooksRepo bookRepository;
 
     public List<BookDTO> findByName(String phrase) {
-        return bookRepository.findByTitleContains(phrase.toLowerCase()).stream().map(BookDTO::new).collect(Collectors.toList());
+        List<BookDTO> bookDTOs = bookRepository.findByTitleContains(phrase.toLowerCase())
+                                               .stream()
+                                               .map(BookDTO::new)
+                                               .collect(Collectors.toList());
+        if (bookDTOs.size() < 500)
+            return bookDTOs;
+        else
+            return bookDTOs.subList(0, 500);
     }
 
     public List<BookDTO> findByAuthor(Long authorId) {
-        return bookRepository.findAllByAuthorId(authorId).stream().map(BookDTO::new).collect(Collectors.toList());
+        List<BookDTO> bookDTOs = bookRepository.findAllByAuthorId(authorId)
+                                               .stream()
+                                               .map(BookDTO::new)
+                                               .collect(Collectors.toList());
+        if (bookDTOs.size() < 500)
+            return bookDTOs;
+        else
+            return bookDTOs.subList(0, 500);
     }
 
 }

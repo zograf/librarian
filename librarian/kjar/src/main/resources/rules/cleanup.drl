@@ -96,12 +96,22 @@ no-loop
         delete($rp);
 end
 
-rule "Remove recommending book"
-agenda-group "cleanup"
+rule "Remove recommending book from singleBook"
+agenda-group "cleanup2"
 salience 1
 no-loop
     when
         $rb: RecommendingBook()
     then
         delete($rb);
+end
+
+rule "Remove recommending bookranks from singleBook"
+agenda-group "cleanup2"
+salience 1
+no-loop
+    when
+        $br: BookRank()
+    then
+        delete($br);
 end

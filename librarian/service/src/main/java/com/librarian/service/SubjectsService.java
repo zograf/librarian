@@ -20,4 +20,8 @@ public class SubjectsService {
     public List<SubjectDTO> findByKeyword(String phrase) {
         return repo.findByKeywordContainsIgnoreCase(phrase).stream().sorted(Comparator.comparing(Subject::getRelevance).reversed()).map(SubjectDTO::new).collect(Collectors.toList());
     }
+
+    public List<SubjectDTO> findMainCategories() {
+        return repo.findByParent("category").stream().map(SubjectDTO::new).collect(Collectors.toList());
+    }
 }

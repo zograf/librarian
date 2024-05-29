@@ -127,7 +127,7 @@ export default function SearchBooks() {
                 <LoadingSpinner label="Please wait while we get your results!"/>    
             </div>}
             
-            {foundBooks.length != 0 && !isSearching && <div className="w-100 showing gap-s" style={{display:'grid', gridTemplateColumns:'1fr 1fr 1fr 1fr 1fr', margin:'12px 24px'}}>
+            {foundBooks.length != 0 && !isSearching && <div className="w-100 showing gap-s" style={{display:'grid', gridTemplateColumns:'1fr 1fr 1fr 1fr 1fr', padding:'12px 24px'}}>
                 {foundBooks.map(book => { return(<BookCardCompact 
                     book={book} 
                     isLibraryView={false}

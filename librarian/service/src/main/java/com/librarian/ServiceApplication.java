@@ -52,7 +52,7 @@ public class ServiceApplication  {
 
     @PostConstruct
     public void onApplicationStart() {
-        // LoadData();
+        LoadData();
     }
 
     public void LoadData() {

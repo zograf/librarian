@@ -53,39 +53,6 @@ salience 2
         delete($br);
 end
 
-rule "Remove adult flag"
-agenda-group "cleanup"
-salience 1
-no-loop
-    when
-        $f: Flag(name == "flag_adult", $rp: rp)
-    then
-        delete($rp);
-        delete($f);
-end
-
-rule "Remove young adult flag"
-agenda-group "cleanup"
-salience 1
-no-loop
-    when
-        $f: Flag(name == "flag_ya", $rp: rp)
-    then
-        delete($rp);
-        delete($f);
-end
-
-rule "Remove juvenile flag"
-agenda-group "cleanup"
-salience 1
-no-loop
-    when
-        $f: Flag(name == "flag_juvenile", $rp: rp)
-    then
-        delete($rp);
-        delete($f);
-end
-
 rule "Remove recommending user preference"
 agenda-group "cleanup"
 salience 1

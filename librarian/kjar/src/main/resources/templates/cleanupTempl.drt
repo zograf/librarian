@@ -1,0 +1,19 @@
+template header
+name
+
+package rules;
+import com.librarian.model.*;
+
+template "cleanup first"
+
+rule "Cleanup flag @{row.rowNumber}"
+agenda-group "cleanup"
+salience 1
+    when
+        $f: Flag(name == @{name}, $rp: rp)
+    then
+        delete($rp);
+        delete($f);
+end
+
+end template

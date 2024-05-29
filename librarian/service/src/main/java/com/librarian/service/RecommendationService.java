@@ -99,6 +99,17 @@ public class RecommendationService {
             new String[] {"\"thriller\""},
         });
 
+        DataProvider cleanupTemplProvider = new ArrayDataProvider(new String [][]{
+            new String[] {"\"flag_adult\""},
+            new String[] {"\"flag_ya\""},
+            new String[] {"\"flag_juvenile\""}
+        });
+
+        DataProvider cleanupSBTemplProvider = new ArrayDataProvider(new String [][]{
+            new String[] {"RecommendingBook()"},
+            new String[] {"RecommendingPreferences()"}
+        });
+
         SessionBuilder sessionBuilder = new SessionBuilder();
         sessionBuilder.addRules("/rules/librarian.drl");
         sessionBuilder.addRules("/rules/cleanup.drl");
@@ -111,6 +122,8 @@ public class RecommendationService {
         sessionBuilder.addTemplate("/templates/ageTempl.drt", ageTemplProvider);
         sessionBuilder.addTemplate("/templates/filterAgeTempl.drt", filterAgeTemplProvider);
         sessionBuilder.addTemplate("/templates/categoryFilterTempl.drt", categoryFilterTemplProvider);
+        sessionBuilder.addTemplate("/templates/cleanupTempl.drt", cleanupTemplProvider);
+        sessionBuilder.addTemplate("/templates/cleanupSBTempl.drt", cleanupSBTemplProvider);
         ksession = sessionBuilder.build();
 
         List<Book> books = bookRepository.findAllBooks();

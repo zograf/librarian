@@ -1,0 +1,18 @@
+template header
+obj
+
+package rules;
+import com.librarian.model.*;
+
+template "cleanup second"
+
+rule "Cleanup single book @{row.rowNumber}"
+agenda-group "cleanup2"
+salience 1
+    when
+        $i: @{obj} 
+    then
+        delete($i);
+end
+
+end template

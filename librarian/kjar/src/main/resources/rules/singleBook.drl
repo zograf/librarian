@@ -70,7 +70,8 @@ rule "Add book ranks"
 agenda-group "singleBook"
 salience 100
     when
-        $b: Book()
+        $rb: RecommendingBook($id: book.id)
+        $b: Book(id != $id)
     then
         BookRank $bookRank = new BookRank();
         $bookRank.setBook($b);

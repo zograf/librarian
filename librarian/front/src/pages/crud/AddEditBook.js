@@ -99,7 +99,7 @@ export default function AddEditBook() {
             .then(resp => {
                 console.log(resp)
             })
-        //cleanUp()
+        cleanUp()
     }
     const cleanUp = () => {
         clearAuthors()

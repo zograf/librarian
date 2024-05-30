@@ -833,7 +833,7 @@ textarea {
 .showing-bottom-slide {
 	opacity: 1;
 	translate: 0 0;
-	animation: slide-up-bottom 0.2s ease-in-out;
+	animation: slide-up-bottom 0.08s ease-in-out;
 }
 
 @keyframes slide-up-bottom {
@@ -851,7 +851,7 @@ textarea {
 .showing-top-slide {
 	opacity: 1;
 	translate: 0 0;
-	animation: slide-down 0.2s ease-in-out;
+	animation: slide-down 0.08s ease-in-out;
 }
 
 @keyframes slide-down {

@@ -26,12 +26,12 @@ public class RecommendationController {
     private RecommendationService service;
 
     @GetMapping("/by/preferences")
-    public List<BookDTO> postMethodName(@AuthenticationPrincipal UserDetails user) throws HttpResponseException {
+    public List<BookDTO> getByPrefrence(@AuthenticationPrincipal UserDetails user) throws HttpResponseException {
         return service.recommend(user.getUsername());
     }
 
     @GetMapping("/by/book/{bookId}")
-    public List<BookDTO> getMethodName(@AuthenticationPrincipal UserDetails user, @PathVariable Long bookId) throws HttpResponseException {
+    public List<BookDTO> getByBook(@AuthenticationPrincipal UserDetails user, @PathVariable Long bookId) throws HttpResponseException {
         return service.recommend(bookId);
     }
 
